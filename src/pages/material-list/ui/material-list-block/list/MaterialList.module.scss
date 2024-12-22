@@ -1,0 +1,18 @@
+// MaterialList.module.scss
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%; // Занимает всю высоту родительского контейнера
+  width: 100%; // Занимает всю ширину
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap; // Перенос карточек на следующую строку
+  justify-content: flex-start; // Карточки выравниваются по левому краю
+  align-items: flex-start; // Карточки начинаются с верхнего края
+  gap: 10px; // Расстояние между карточками
+  padding: 0; // Убираем лишние отступы
+  height: 100%; // Занимает всю высоту, чтобы карточки размещались от верхнего угла
+  box-sizing: border-box; // Учитываем padding в размерах
+}

@@ -1,0 +1,18 @@
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  border: var(--default-border);
+  border-radius: var(--dropdown-menu-border-radius);
+  background-color: var(--block-bg-color);
+  padding: var(--dropdown-menu-padding);
+  gap: var(--dropdown-menu-gap);
+  width: var(--dropdown-menu-width);
+}
+
+.select {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  width: 100%;
+}

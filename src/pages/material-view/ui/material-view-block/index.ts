@@ -1,0 +1,1 @@
+export { MaterialViewBlock } from './ModuleViewBlock';

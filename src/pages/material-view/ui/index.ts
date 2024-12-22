@@ -1,0 +1,1 @@
+export { MaterialViewPage } from './MaterialViewPage';

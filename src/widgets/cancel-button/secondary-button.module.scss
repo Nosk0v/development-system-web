@@ -1,0 +1,25 @@
+.secondary_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+
+  font-size: var(--font-size-m);
+  background-color: var(--secondary-button-bg-color);
+  color: var(--black-font-color);
+  border: var(--secondary-button-border);
+  border-radius: var(--main-button-border-radius);
+  padding: var(--main-button-padding);
+
+  &:hover {
+    background-color: var(--secondary-button-bg-hover-color);
+  }
+}
+
+.disabled {
+  background-color: var(--disabled-button);
+  cursor: not-allowed;
+
+  pointer-events: none;
+}

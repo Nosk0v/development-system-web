@@ -1,0 +1,30 @@
+.wrapper {
+  cursor: grab;
+  transition: box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.competency {
+  background-color: var(--white-font-color);
+  border: var(--default-border);
+  font-size: var(--font-size-m);
+  border-radius: var(--competency-border-radius);
+  width: var(--competency-width);
+  padding: var(--competency-padding);
+
+}
+
+.competency:active {
+  cursor: grabbing;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.delete {
+  cursor: pointer;
+}
+
+.delete:hover {
+  background: var(--competency-delete-bg-hover-color);
+}

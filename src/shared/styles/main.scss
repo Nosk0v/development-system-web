@@ -1,0 +1,140 @@
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-Thin.woff2"),
+       url("../fonts/Inter-Thin.woff"),
+       url("../fonts/Inter-Thin.ttf");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-ExtraLight.woff2"),
+       url("../fonts/Inter-ExtraLight.woff"),
+       url("../fonts/Inter-ExtraLight.ttf");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-Light.woff2"),
+       url("../fonts/Inter-Light.woff"),
+       url("../fonts/Inter-Light.ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-Regular.woff2"),
+       url("../fonts/Inter-Regular.woff"),
+       url("../fonts/Inter-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-Medium.woff2"),
+       url("../fonts/Inter-Medium.woff"),
+       url("../fonts/Inter-Medium.ttf");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-SemiBold.woff2"),
+       url("../fonts/Inter-SemiBold.woff"),
+       url("../fonts/Inter-SemiBold.ttf");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-Bold.woff2"),
+       url("../fonts/Inter-Bold.woff"),
+       url("../fonts/Inter-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-ExtraBold.woff2"),
+       url("../fonts/Inter-ExtraBold.woff"),
+       url("../fonts/Inter-ExtraBold.ttf");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("../fonts/Inter-Black.woff2"),
+       url("../fonts/Inter-Black.woff"),
+       url("../fonts/Inter-Black.ttf");
+  font-weight: 900;
+  font-style: normal;
+}
+
+
+* {
+  font-family: Inter, sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  min-height: 100vh;
+  background-color: var(--default-ph-bg-color);
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: #EEEEEE;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #EEEEEE;
+    border-radius: 44px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #fff;
+  }
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 100vh;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+input,
+button,
+textarea,
+select {
+  padding: 0;
+  margin: 0;
+  font: inherit;
+}
+
+p {
+  margin: 0;
+}

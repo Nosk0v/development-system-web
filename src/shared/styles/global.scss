@@ -1,0 +1,84 @@
+:root {
+  --default-ph-bg-color: #EEF2F8;
+  --default-bg-color: #FFFFFF;
+  --default-border: 1px solid #D8E1EF;
+  --default-border-radius: 12px;
+
+  --disabled-button: #ccc;
+
+
+  // * Fonts
+  --font-size-l: 20px;
+  --font-size-m: 16px;
+  --font-size-s: 12px;
+
+  --font-weight-eb: 800;
+
+
+  --white-font-color: #FFFFFF;
+  --black-font-color: #000000;
+
+  // * Block
+  --block-min-width: 500px;
+
+  --block-bg-color: #FFFFFF;
+  --block-border-radius: 12px;
+  --block-padding: 10px 20px 10px 20px;
+
+  // * Button
+  --main-button-bg-color: #F91F71;
+  --main-button-bg-hover-color: #db3070;
+  --main-button-border-radius: 8px;
+  --main-button-padding: 10px 15px 10px 15px;
+
+  // * Secondary-button
+  --secondary-button-bg-color: #FFFFFF;
+  --secondary-button-bg-hover-color: #f3f0f0;
+  --secondary-button-border-radius: 8px;
+  --secondary-button-padding: 10px 15px 10px 15px;
+  --secondary-button-border: #C9D4E7 1px solid;
+
+
+  // * Input
+  --input-border-radius: 8px;
+  --input-padding: 10px 15px 10px 15px;
+  --input-gap: 10px;
+  --input-width: 100%;
+
+  // * Label
+  --label-color: #A0ABBE;
+  --label-padding: 0 0 0 2px;
+
+  // * TextArea
+  --text-area-width: 100%;
+  --text-area-border-radius: 8px;
+  --text-area-padding: 10px 15px 10px 15px;
+
+  // * Competency
+  --competency-width: 100%;
+  --competency-border-radius: 8px;
+  --competency-padding: 10px 15px 10px 15px;
+  --competency-delete-bg-hover-color: red;
+
+
+  // * Dropdown Menu
+  --dropdown-menu-border-radius: 8px;
+  --dropdown-menu-padding: 10px 15px 10px 15px;
+  --dropdown-menu-gap: 10px;
+  --dropdown-menu-width: 100%;
+
+  --question-type-padding: 6px;
+  --question-type-border-radius: 8px;
+
+
+  // * Material Item
+  --material-list-item-bg-color: #D9D9D9;
+  --material-list-holder-bg-color: #BEBEBE;
+  --material-list-item-border-radius: 8px;
+  --material-list-item-padding: 10px 12px;
+
+  // * QuestionForm
+  --question-form-padding: 10px 15px 10px 15px;
+  --question-form-gap: 24px;
+  --question-form-margin-bottom: 10px;
+}

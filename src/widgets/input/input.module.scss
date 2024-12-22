@@ -1,0 +1,20 @@
+.wrapper {
+  display: block;
+  align-items: center;
+  border: var(--default-border);
+  border-radius: var(--input-border-radius);
+  background-color: var(--block-bg-color);
+  padding: var(--input-padding);
+  gap: var(--input-gap);
+  width: var(--input-width);
+}
+
+.inputField {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: var(--font-size-m);
+  background-color: transparent;
+}
+
+

@@ -1,0 +1,1 @@
+export { MaterialCreatePage } from './MaterialCreatePage';
