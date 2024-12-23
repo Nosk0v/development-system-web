@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import css from './MaterialListControl.module.scss';
+
 import { MainButton } from '../../../../../widgets/button/button';
 import { Label } from '../../../../../widgets/input-label/label';
 import { Input } from '../../../../../widgets/input/input';
@@ -10,7 +11,7 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 	const searchId = useId();
 
 	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		onSearch(event.target.value); // Передаём значение в родительский компонент
+		onSearch(event.target.value); // Передаем значение в родительский компонент
 	};
 
 	const onCreateMaterialClick = () => {
@@ -24,9 +25,10 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 				color="black"
 				id={searchId}
 			>
-				<Input id={searchId} onChange={handleSearchChange} />
+				<Input className={css.input} id={searchId} onChange={handleSearchChange} />
 			</Label>
 			<MainButton
+				className={css.mainButton}
 				text="Создать"
 				onClick={onCreateMaterialClick}
 			/>

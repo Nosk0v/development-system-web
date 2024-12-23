@@ -1,24 +1,49 @@
-.main_button {
+/* Стили для элемента управления списком материалов */
+.wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-
-  cursor: pointer;
-
-  font-size: var(--font-size-m);
-  background-color: var(--main-button-bg-color);
-  color: var(--white-font-color);
-  border-radius: var(--main-button-border-radius);
-  padding: var(--main-button-padding);
-
-  &:hover {
-    background-color: var(--main-button-bg-hover-color);
-  }
+  flex-direction: column;
+  gap: 10px;
 }
 
-.disabled {
-  background-color: var(--disabled-button);
-  cursor: not-allowed;
+/* Поле поиска */
+.input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #D8E1EF;
+  font-size: 14px;
+  color: #000000;
+}
 
-  pointer-events: none;
+.input:focus {
+  outline: none;
+  border-color: #F91F71; /* Основной красный цвет */
+  box-shadow: 0 0 4px rgba(249, 31, 113, 0.3);
+}
+
+/* Основная кнопка */
+.mainButton {
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background-color: #F91F71; /* Красный основной цвет */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.mainButton:hover {
+  background-color: #db3070;
+  transform: scale(1.02);
+}
+
+.mainButton:active {
+  background-color: #b8155b;
+}
+
+.mainButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }

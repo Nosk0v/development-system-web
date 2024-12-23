@@ -5,7 +5,8 @@ interface InputProps {
 	width?: number;
 	height?: number;
 	id?: string;
-	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void; // Добавляем onChange
+	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	className?: string;  // Добавляем className для гибкости
 }
 
 export const Input = (props: InputProps) => {
@@ -14,18 +15,19 @@ export const Input = (props: InputProps) => {
 		width,
 		height,
 		id,
-		onChange, // Получаем onChange из props
+		onChange,
+		className, // Получаем className для добавления кастомных стилей
 	} = props;
 
 	return (
-		<div className={css.wrapper} style={{ width, height }}>
+		<div className={`${css.wrapper} ${className}`} style={{ width, height }}>
 			<div className={css.inputContainer}>
 				<input
 					id={id}
 					className={css.inputField}
-					placeholder={placeholder}
+					placeholder={placeholder || 'Введите текст...'}  // Добавляем значение по умолчанию для placeholder
 					style={{ height }}
-					onChange={onChange} // Привязываем обработчик
+					onChange={onChange} // Обработчик onChange
 				/>
 			</div>
 		</div>

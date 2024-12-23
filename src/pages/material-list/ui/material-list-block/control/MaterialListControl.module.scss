@@ -1,13 +1,49 @@
+/* Стили для элемента управления списком материалов */
 .wrapper {
   display: flex;
   flex-direction: column;
-  background: white;
-  border-radius: 15px;
-  //align-items: center;
-  padding: 10px;
-
   gap: 10px;
-  //justify-content: center;
-  //
-  //background: var(--material-list-item-bg-color);
+}
+
+/* Поле поиска */
+.input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #D8E1EF;
+  font-size: 14px;
+  color: #000000;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #F91F71; /* Основной красный цвет */
+  box-shadow: 0 0 4px rgba(249, 31, 113, 0.3);
+}
+
+/* Основная кнопка */
+.mainButton {
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background-color: #F91F71; /* Красный основной цвет */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.mainButton:hover {
+  background-color: #db3070;
+  transform: scale(1.02);
+}
+
+.mainButton:active {
+  background-color: #b8155b;
+}
+
+.mainButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
