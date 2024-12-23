@@ -1,18 +1,33 @@
-// MaterialList.module.scss
 .wrapper {
   display: flex;
-  flex-direction: column;
-  height: 100%; // Занимает всю высоту родительского контейнера
-  width: 100%; // Занимает всю ширину
+  //width: 1100px;
+  //width: 100%;
+  //height: 100vh;
+  //box-sizing: border-box;
+  //flex-direction: column;
+  //padding: 0 41px;
+  //position: relative;
 }
 
 .list {
   display: flex;
-  flex-wrap: wrap; // Перенос карточек на следующую строку
-  justify-content: flex-start; // Карточки выравниваются по левому краю
-  align-items: flex-start; // Карточки начинаются с верхнего края
-  gap: 10px; // Расстояние между карточками
-  padding: 0; // Убираем лишние отступы
-  height: 100%; // Занимает всю высоту, чтобы карточки размещались от верхнего угла
-  box-sizing: border-box; // Учитываем padding в размерах
+  flex-wrap: wrap;
+
+  justify-content: flex-start;
+
+  //padding: 0 0 100px;
+  gap: 10px;
 }
+//.listContainer {
+//
+//  display: flex;
+//  flex-direction: column;
+//  flex-grow: 1;
+//}
+//
+//.listWrapper {
+//  display: flex;
+//  flex-wrap: wrap;
+//  gap: 20px;
+//  padding-bottom: 20px;
+//}

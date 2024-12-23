@@ -13,19 +13,20 @@ import {
 } from '@dnd-kit/sortable';
 import css from './competencies.module.scss';
 import { Competency } from './item/competency';
-import {useState} from "react";
+import { useState, useEffect } from 'react';
 
 interface CompetenciesProps {
-	initialCompetencies: string[];
+	initialCompetencies: string[]; // Начальный список компетенций
 }
 
-export const Competencies = (props: CompetenciesProps) => {
-	const { initialCompetencies } = props;
-	
-	// Хранение порядка компетенций в состоянии
+export const Competencies = ({ initialCompetencies }: CompetenciesProps) => {
 	const [competencies, setCompetencies] = useState<string[]>(initialCompetencies);
 
-	// Настройка сенсоров
+	// Обновление списка компетенций при изменении initialCompetencies
+	useEffect(() => {
+		setCompetencies(initialCompetencies);
+	}, [initialCompetencies]);
+
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
 			activationConstraint: {
@@ -34,7 +35,6 @@ export const Competencies = (props: CompetenciesProps) => {
 		}),
 	);
 
-	// Обработка завершения перетаскивания
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event;
 		if (over && active.id !== over.id) {
@@ -42,6 +42,13 @@ export const Competencies = (props: CompetenciesProps) => {
 			const newIndex = competencies.indexOf(over.id as string);
 			setCompetencies(arrayMove(competencies, oldIndex, newIndex));
 		}
+	};
+
+	// Функция удаления компетенции
+	const handleDeleteCompetency = (competencyToDelete: string) => {
+		setCompetencies((prevCompetencies) =>
+			prevCompetencies.filter((competency) => competency !== competencyToDelete)
+		);
 	};
 
 	return (
@@ -52,10 +59,12 @@ export const Competencies = (props: CompetenciesProps) => {
 		>
 			<SortableContext items={competencies} strategy={verticalListSortingStrategy}>
 				<div className={css.competencies}>
+					{/* Добавляем компонент Competency для каждой компетенции */}
 					{competencies.map((competency) => (
 						<Competency
 							key={competency}
 							competency={competency}
+							onDelete={handleDeleteCompetency} // Передаём функцию удаления
 						/>
 					))}
 				</div>

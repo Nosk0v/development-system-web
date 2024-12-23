@@ -1,13 +1,30 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-
   width: 500px;
-
-  gap: 20px;
-
+  gap: 20px; /* Общий отступ между полями формы */
   background: var(--default-bg-color);
   border-radius: var(--default-border-radius);
-
   padding: 20px;
+}
+
+/* Добавим отступ после каждой метки */
+label {
+  margin-bottom: 20px; /* Отступ после каждой метки */
+}
+
+.addCompetencyButton {
+  margin-top: 20px;
+  background-color: #F91F71; /* Красный фон */
+  color: #FFFFFF; /* Белый шрифт */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.addCompetencyButton:hover {
+  background-color: #db3070; /* Цвет фона при наведении */
 }

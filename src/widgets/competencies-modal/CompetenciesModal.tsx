@@ -1,19 +1,24 @@
-import { useFetchCompetenciesQuery } from '../../api/materialApi.ts';
 import css from './CompetenciesModal.module.scss';
-import {useState} from "react";
+import { useState, useEffect } from "react";
 
 interface CompetenciesModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSelect: (selectedCompetencies: string[]) => void;
+    selectedCompetencies?: string[];  // Добавим возможность передавать выбранные компетенции
+    competencyNames: Map<string, string>;  // Список имен компетенций
 }
 
-export const CompetenciesModal = ({ isOpen, onClose, onSelect }: CompetenciesModalProps) => {
-    const { data, error, isLoading } = useFetchCompetenciesQuery();
-    const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>([]);
+export const CompetenciesModal = ({ isOpen, onClose, onSelect, selectedCompetencies = [], competencyNames }: CompetenciesModalProps) => {
+    const [selected, setSelected] = useState<string[]>(selectedCompetencies);
+
+    // Обновляем состояние выбранных компетенций, если они переданы извне
+    useEffect(() => {
+        setSelected(selectedCompetencies);
+    }, [selectedCompetencies]);
 
     const handleCompetencyToggle = (competencyId: string) => {
-        setSelectedCompetencies((prev) =>
+        setSelected((prev) =>
             prev.includes(competencyId)
                 ? prev.filter((id) => id !== competencyId)
                 : [...prev, competencyId]
@@ -21,14 +26,11 @@ export const CompetenciesModal = ({ isOpen, onClose, onSelect }: CompetenciesMod
     };
 
     const handleSave = () => {
-        onSelect(selectedCompetencies);
-        onClose();
+        onSelect(selected); // Передаем выбранные компетенции в родительский компонент
+        onClose(); // Закрываем модальное окно
     };
 
     if (!isOpen) return null;
-
-    if (isLoading) return <div className={css.loading}>Загрузка компетенций...</div>;
-    if (error) return <div className={css.error}>Ошибка загрузки компетенций</div>;
 
     return (
         <div className={css.modal}>
@@ -36,13 +38,13 @@ export const CompetenciesModal = ({ isOpen, onClose, onSelect }: CompetenciesMod
             <div className={css.content}>
                 <h2>Выберите компетенции</h2>
                 <ul className={css.list}>
-                    {data?.data.map((competency) => (
+                    {Array.from(competencyNames.entries()).map(([competencyId, competencyName]) => (
                         <li
-                            key={competency.competency_id}
-                            className={selectedCompetencies.includes(String(competency.competency_id)) ? css.selected : ''}
-                            onClick={() => handleCompetencyToggle(String(competency.competency_id))}
+                            key={competencyId}
+                            className={selected.includes(competencyId) ? css.selected : ''}
+                            onClick={() => handleCompetencyToggle(competencyId)}
                         >
-                            {competency.name}
+                            {competencyName}
                         </li>
                     ))}
                 </ul>

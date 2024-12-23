@@ -4,12 +4,11 @@ import css from './competency.module.scss';
 import SvgCollection from '../../../utils/SvgCollection';
 
 interface CompetencyProps {
-    competency: string;
+	competency: string;
+	onDelete: (competency: string) => void; // Проп для удаления
 }
 
-export const Competency = (props: CompetencyProps) => {
-	const { competency } = props;
-
+export const Competency = ({ competency, onDelete }: CompetencyProps) => {
 	const {
 		attributes, listeners, setNodeRef, transform, transition,
 	} = useSortable({ id: competency });
@@ -20,7 +19,7 @@ export const Competency = (props: CompetencyProps) => {
 	};
 
 	const onDeleteClick = () => {
-		console.log('123');
+		onDelete(competency); // Вызываем функцию удаления, передавая имя компетенции
 	};
 
 	return (
@@ -35,9 +34,7 @@ export const Competency = (props: CompetencyProps) => {
 				className="competency-svg"
 				dangerouslySetInnerHTML={{ __html: SvgCollection.DRAG_POINT }}
 			/>
-			<div
-				className={css.competency}
-			>
+			<div className={css.competency}>
 				{competency}
 			</div>
 			<button
@@ -47,6 +44,5 @@ export const Competency = (props: CompetencyProps) => {
 				dangerouslySetInnerHTML={{ __html: SvgCollection.DELETE_POINT }}
 			/>
 		</div>
-
 	);
 };
