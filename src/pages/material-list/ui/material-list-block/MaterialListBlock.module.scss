@@ -1,9 +1,26 @@
 .wrapper {
-  display: grid;
-  grid-template-columns: 1fr 0.2fr;
+  display: flex;
+  height: 100vh; /* Высота на весь экран */
+  gap: 20px; // Расстояние между блоками
+}
 
-  height: 100vh;
-  //align-items: center;
-  //justify-content: center;
+.listWrapper {
+  flex: 1; // Список материалов занимает всё доступное место
+  display: flex;
+  flex-direction: column;
+}
 
+.controlWrapper {
+  width: 14%; /* Фиксированная ширина */
+  height: 100%; /* Полная высота экрана */
+  position: fixed; /* Блок закрепляется в правом краю */
+  top: 0;
+  right: 0;
+  background: white;
+  border-left: 1px solid #e0e0e0; /* Разделительная линия */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Тень для акцента */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 10px;
 }

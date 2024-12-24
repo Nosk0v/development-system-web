@@ -43,7 +43,14 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 	return (
 		<div className={css.wrapper}>
 			<div className={css.list}>
-				{items.length > 0 ? items : <div>Материалы отсутствуют</div>}
+				{items.length > 0 ? (
+					items
+				) : (
+					<div className={css.noMaterials}>
+						<div className={css.emoji}>😞</div>
+						Материалы отсутствуют
+					</div>
+				)}
 			</div>
 		</div>
 	);
