@@ -45,11 +45,7 @@ export const Competencies = ({ initialCompetencies }: CompetenciesProps) => {
 	};
 
 	// Функция удаления компетенции
-	const handleDeleteCompetency = (competencyToDelete: string) => {
-		setCompetencies((prevCompetencies) =>
-			prevCompetencies.filter((competency) => competency !== competencyToDelete)
-		);
-	};
+
 
 	return (
 		<DndContext
@@ -64,7 +60,6 @@ export const Competencies = ({ initialCompetencies }: CompetenciesProps) => {
 						<Competency
 							key={competency}
 							competency={competency}
-							onDelete={handleDeleteCompetency} // Передаём функцию удаления
 						/>
 					))}
 				</div>

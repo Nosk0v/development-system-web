@@ -23,11 +23,3 @@
   font-size: var(--font-size-m);
 }
 
-.delete {
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.delete:hover {
-  background: var(--competency-delete-bg-hover-color);
-}

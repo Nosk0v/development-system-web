@@ -3,22 +3,23 @@ import css from './MaterialCreateControl.module.scss';
 import { MainButton } from '../../../../../widgets/button/button';
 import { SecondaryButton } from '../../../../../widgets/cancel-button/secondary-button';
 
-export const MaterialCreateControl = () => {
-	const navigate = useNavigate();
+interface MaterialCreateControlProps {
+	onSave: () => void;
+}
 
-	const onSave = () => {
-		alert('Сохранено');
-	};
+export const MaterialCreateControl = ({ onSave }: MaterialCreateControlProps) => {
+	const navigate = useNavigate();
 
 	const onClose = () => {
 		navigate('/');
+		window.location.reload();
 	};
 
 	return (
 		<div className={css.wrapper}>
 			<MainButton
 				text="Сохранить"
-				onClick={onSave}
+				onClick={onSave} // Вызов метода сохранения
 			/>
 			<SecondaryButton
 				text="Закрыть"

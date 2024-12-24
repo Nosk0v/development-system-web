@@ -7,6 +7,7 @@ interface InputProps {
 	id?: string;
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	className?: string;  // Добавляем className для гибкости
+	value?: string;  // Добавляем value для контролируемого компонента
 }
 
 export const Input = (props: InputProps) => {
@@ -16,7 +17,8 @@ export const Input = (props: InputProps) => {
 		height,
 		id,
 		onChange,
-		className, // Получаем className для добавления кастомных стилей
+		className,
+		value,  // Получаем value для передачи в input
 	} = props;
 
 	return (
@@ -25,9 +27,10 @@ export const Input = (props: InputProps) => {
 				<input
 					id={id}
 					className={css.inputField}
-					placeholder={placeholder || 'Введите текст...'}  // Добавляем значение по умолчанию для placeholder
+					placeholder={placeholder || 'Введите текст...'}  // Значение по умолчанию для placeholder
 					style={{ height }}
 					onChange={onChange} // Обработчик onChange
+					value={value}  // Привязываем value для контролируемого компонента
 				/>
 			</div>
 		</div>

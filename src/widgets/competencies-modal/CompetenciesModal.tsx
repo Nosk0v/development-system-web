@@ -1,23 +1,29 @@
 import css from './CompetenciesModal.module.scss';
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 interface CompetenciesModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSelect: (selectedCompetencies: string[]) => void;
-    selectedCompetencies?: string[];  // Добавим возможность передавать выбранные компетенции
-    competencyNames: Map<string, string>;  // Список имен компетенций
+    onSelect: (selectedCompetencies: number[]) => void; // Передаем массив ID компетенций
+    selectedCompetencies?: number[];  // Массив ID выбранных компетенций
+    competencyNames: Map<number, string>;  // Список имен компетенций, где ключ - это ID компетенции
 }
 
-export const CompetenciesModal = ({ isOpen, onClose, onSelect, selectedCompetencies = [], competencyNames }: CompetenciesModalProps) => {
-    const [selected, setSelected] = useState<string[]>(selectedCompetencies);
+export const CompetenciesModal = ({
+                                      isOpen,
+                                      onClose,
+                                      onSelect,
+                                      selectedCompetencies = [],
+                                      competencyNames
+                                  }: CompetenciesModalProps) => {
+    const [selected, setSelected] = useState<number[]>(selectedCompetencies);
 
     // Обновляем состояние выбранных компетенций, если они переданы извне
     useEffect(() => {
         setSelected(selectedCompetencies);
     }, [selectedCompetencies]);
 
-    const handleCompetencyToggle = (competencyId: string) => {
+    const handleCompetencyToggle = (competencyId: number) => {
         setSelected((prev) =>
             prev.includes(competencyId)
                 ? prev.filter((id) => id !== competencyId)
