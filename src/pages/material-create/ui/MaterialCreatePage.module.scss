@@ -1,6 +1,9 @@
+/* MaterialCreatePage.module.scss */
 .wrapper {
   display: flex;
   justify-content: center;
-
+  align-items: flex-start; /* Выравнивание контента сверху */
   padding: 20px;
+  min-height: 100vh; /* Установка минимальной высоты страницы */
+  box-sizing: border-box; /* Учитываем padding в высоте */
 }

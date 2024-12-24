@@ -11,10 +11,10 @@ import { useFetchCompetenciesQuery } from '../../../../api/materialApi.ts';
 
 export const MaterialCreateBlock = () => {
 	const materialTypes = [
-		{ value: 'chooseType', label: 'Выберите тип материала' },
-		{ value: 'article', label: 'Статья' },
-		{ value: 'video', label: 'Видео' },
-		{ value: 'book', label: 'Книга' },
+		{ value: '', label: 'Выберите тип материала' },
+		{ value: '1', label: 'Статья' },
+		{ value: '2', label: 'Видео' },
+		{ value: '3', label: 'Книга' },
 	];
 
 	const { data, error, isLoading } = useFetchCompetenciesQuery();
@@ -25,6 +25,7 @@ export const MaterialCreateBlock = () => {
 	const titleId = useId();
 	const typeId = useId();
 	const descriptionId = useId();
+	const contentId = useId();
 
 	const toggleModal = () => setIsModalOpen((prevState) => !prevState);
 
@@ -76,33 +77,38 @@ export const MaterialCreateBlock = () => {
 
 	return (
 		<div className={css.wrapper}>
-			<MaterialCreateControl />
-			<Label label="Название" id={titleId}>
-				<Input id={titleId} />
-			</Label>
-			<Label label="Тип материала" id={typeId}>
-				<DropdownMenu options={materialTypes} id={typeId} />
-			</Label>
-			<Label label="Содержание материала" id={descriptionId}>
-				<TextArea id={descriptionId} height={100} />
-			</Label>
-			<Label label="Компетенции" color="black" fontSize="20px">
-				<Competencies
-					initialCompetencies={competencies} // Передаем массив имен компетенций
-				/>
-				<button
-					onClick={toggleModal}
-					className={css.addCompetencyButton}
-				>
-					Добавить компетенции
-				</button>
-			</Label>
+			<MaterialCreateControl/>
+			<div className={css.form}>
+				<Label label="Название" id={titleId}>
+					<Input id={titleId}/>
+				</Label>
+				<Label label="Тип материала" id={typeId}>
+					<DropdownMenu options={materialTypes} id={typeId}/>
+				</Label>
+				<Label label="Описание материала" id={descriptionId}>
+					<TextArea id={descriptionId} height={100}/>
+				</Label>
+				<Label label="Контент материала" id={contentId}>
+					<TextArea id={contentId} height={200}/>
+				</Label>
+				<Label label="Компетенции" color="black" fontSize="20px">
+					<Competencies
+						initialCompetencies={competencies} // Передаем массив имен компетенций
+					/>
+					<button
+						onClick={toggleModal}
+						className={css.addCompetencyButton}
+					>
+						Добавить компетенции
+					</button>
+				</Label>
+			</div>
 			<CompetenciesModal
 				isOpen={isModalOpen}
 				onClose={toggleModal}
 				onSelect={handleCompetenciesSelect}
-				selectedCompetencies={competencies}  // Передаем имена выбранных компетенций
-				competencyNames={competencyNames}  // Передаем имена компетенций в модальное окно
+				selectedCompetencies={competencies} // Передаем имена выбранных компетенций
+				competencyNames={competencyNames} // Передаем имена компетенций в модальное окно
 			/>
 		</div>
 	);

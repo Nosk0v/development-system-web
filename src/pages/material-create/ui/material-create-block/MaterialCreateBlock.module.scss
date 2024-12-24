@@ -1,30 +1,43 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  width: 500px;
-  gap: 20px; /* Общий отступ между полями формы */
+  width: 600px;
   background: var(--default-bg-color);
   border-radius: var(--default-border-radius);
   padding: 20px;
 }
 
-/* Добавим отступ после каждой метки */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Отступ между полями */
+   /* Максимальная высота формы */
+  overflow-y: auto; /* Вертикальная прокрутка */
+  padding-right: 10px; /* Отступ для скролла */
+}
+
+label:first-of-type {
+  margin-top: 10px; /* Отступ сверху у первого поля */
+}
+
 label {
-  margin-bottom: 20px; /* Отступ после каждой метки */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Отступ между label и вложенным элементом */
+  margin-bottom: 10px;
 }
 
 .addCompetencyButton {
   margin-top: 20px;
-  background-color: #F91F71; /* Красный фон */
-  color: #FFFFFF; /* Белый шрифт */
+  background-color: #F91F71;
+  color: #FFFFFF;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
   transition: background-color 0.3s;
 }
 
 .addCompetencyButton:hover {
-  background-color: #db3070; /* Цвет фона при наведении */
+  background-color: #db3070;
 }

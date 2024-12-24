@@ -8,30 +8,37 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3); /* Легкий фон */
 }
 
 .overlay {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6); /* Тёмная полупрозрачная оверлей для фокуса */
 }
 
 .content {
   position: relative;
-  min-width: var(--block-min-width);
-  background: var(--block-bg-color);
-  border-radius: var(--block-border-radius);
-  padding: var(--block-padding);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  min-width: 400px; /* Минимальная ширина для блока */
+  background-color: #ffffff; /* Белый фон контента */
+  border-radius: 12px; /* Скругленные углы */
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Тень для выделения блока */
+  transition: all 0.3s ease; /* Плавные переходы */
+}
+
+.content:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Более выраженная тень при наведении */
 }
 
 h2 {
   margin-bottom: 20px;
-  font-size: var(--font-size-l);
-  font-weight: var(--font-weight-eb);
+  font-size: 1.5rem; /* Увеличенный размер шрифта */
+  font-weight: 700; /* Полужирный шрифт */
   text-align: center;
-  color: var(--black-font-color);
+  color: #333; /* Темный цвет шрифта */
+  letter-spacing: 1px; /* Расстояние между буквами */
 }
 
 .list {
@@ -40,32 +47,49 @@ h2 {
   max-height: 300px;
   overflow-y: auto;
   margin-bottom: 20px;
+  background-color: #f9f9f9; /* Светлый фон списка */
+  border-radius: 8px; /* Скругленные углы списка */
 }
 
 .list li {
-  padding: var(--competency-padding);
+  padding: 15px;
   margin: 5px 0;
-  background: var(--default-ph-bg-color);
+  background: #e0e0e0; /* Фон элементов списка */
   cursor: pointer;
-  border-radius: var(--competency-border-radius);
-  transition: background-color 0.3s, color 0.3s;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
   display: flex;
   align-items: center;
+  color: #555; /* Темный цвет текста */
 }
 
 .list li:hover {
-  background: var(--material-list-holder-bg-color);
+  background: #d3d3d3; /* Светлый эффект при наведении */
 }
 
 .selected {
-  background: var(--material-list-item-bg-color) !important;
+  background: #ffcccb !important; /* Легкое выделение для выбранного элемента (бледно-красный) */
+  color: #800000 !important; /* Темно-красный цвет текста */
 }
 
 .actions {
   display: flex;
   justify-content: space-between;
   gap: 10px;
+  margin-top: 15px;
 }
 
+.actions button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #F91F71; /* Красный цвет кнопки */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-
+.actions button:hover {
+  background-color: #db3070; /* Темно-красный цвет кнопки при наведении */
+}
