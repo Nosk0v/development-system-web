@@ -14,10 +14,20 @@ interface Material {
     material_id: number;
     title: string;
     description: string;
-    type_name: string;
+    type_name: string;  // Это поле для получения данных, его не нужно менять
     content: string;
-    competencies: string[];  // Мы оставляем компетенции как массив строк
+    competencies: string[];
     create_date: string;
+}
+
+// Интерфейс для запроса на создание материала
+interface CreateMaterialRequest {
+    title: string;
+    description: string;
+    type_id: number;  // ID типа материала
+    content: string;
+    competencies: number[];  // Компетенции передаются как массив чисел (ID компетенций)
+    imageUrl?: string;  // Опциональное поле для URL изображения
 }
 
 // Типы для ответов
@@ -29,25 +39,42 @@ interface CompetenciesApiResponse {
     data: Competency[];
 }
 
+interface CreateMaterialResponse {
+    material: Material;
+    message: string;
+}
+
 export const materialsApi = createApi({
     reducerPath: 'materialsApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080' }),
     endpoints: (builder) => ({
         fetchMaterials: builder.query<MaterialsApiResponse, void>({
-            query: () => '/materials', // Запрос на получение всех материалов
+            query: () => '/materials',
             transformResponse: (response: Material[]): MaterialsApiResponse => {
-                // Преобразуем данные, чтобы вернуть объект с полем data, как требует тип
                 return { data: response };
             },
         }),
         fetchCompetencies: builder.query<CompetenciesApiResponse, void>({
-            query: () => '/competencies', // Запрос на получение всех компетенций
+            query: () => '/competencies',
             transformResponse: (response: Competency[]): CompetenciesApiResponse => {
-                // Преобразуем данные, чтобы вернуть объект с полем data, как требует тип
                 return { data: response };
+            },
+        }),
+        createMaterial: builder.mutation<CreateMaterialResponse, CreateMaterialRequest>({
+            query: (newMaterial) => ({
+                url: '/materials',
+                method: 'POST',
+                body: newMaterial,  // Отправляем данные для создания нового материала
+            }),
+            transformResponse: (response: { material: Material, message: string }): CreateMaterialResponse => {
+                return response;
             },
         }),
     }),
 });
 
-export const { useFetchMaterialsQuery, useFetchCompetenciesQuery } = materialsApi;
+export const {
+    useFetchMaterialsQuery,
+    useFetchCompetenciesQuery,
+    useCreateMaterialMutation
+} = materialsApi;
