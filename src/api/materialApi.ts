@@ -44,6 +44,10 @@ interface CreateMaterialResponse {
     message: string;
 }
 
+interface DeleteMaterialResponse {
+    message: string; // Сообщение об успешном удалении
+}
+
 export const materialsApi = createApi({
     reducerPath: 'materialsApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080' }),
@@ -70,11 +74,21 @@ export const materialsApi = createApi({
                 return response;
             },
         }),
+        deleteMaterial: builder.mutation<DeleteMaterialResponse, number>({
+            query: (materialId) => ({
+                url: `/materials/${materialId}`,
+                method: 'DELETE',
+            }),
+            transformResponse: (response: { message: string }): DeleteMaterialResponse => {
+                return response;
+            },
+        }),
     }),
 });
 
 export const {
     useFetchMaterialsQuery,
     useFetchCompetenciesQuery,
-    useCreateMaterialMutation
+    useCreateMaterialMutation,
+    useDeleteMaterialMutation
 } = materialsApi;
