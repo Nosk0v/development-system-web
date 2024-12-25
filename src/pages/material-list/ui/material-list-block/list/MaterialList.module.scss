@@ -35,61 +35,75 @@
   margin-bottom: 10px;
 }
 
+/* Модальное окно */
 .modal {
   position: fixed;
   top: 50%;
-  left: 45%;
-  transform: translate(-50%, -50%);
+  left: 50%;
+  transform: translate(-50%, -50%); /* Центрирование */
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: auto; /* Добавлено для предотвращения проблем с кликами */
+  pointer-events: auto;
 }
 
+/* Контент модального окна */
 .modalContent {
   background: white;
   padding: 30px;
-  border-radius: 12px; /* Углы чуть округлены */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Более глубокая тень для эффекта */
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   text-align: center;
   width: 100%;
   max-width: 450px;
-  animation: slideIn 0.3s ease-out; /* Плавное появление контента */
+  animation: slideIn 0.3s ease-out;
 }
 
+/* Действия в модальном окне */
 .modalActions {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-
-  button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:first-of-type {
-      background: #d5608e;
-      color: white;
-      &:hover {
-        background: #bf4d79; /* Темный оттенок при наведении */
-      }
-    }
-
-    &:last-of-type {
-      background: #e5e5e5;
-      color: #333;
-      &:hover {
-        background: #ccc; /* Темнее при наведении */
-      }
-    }
-  }
+  gap: 15px; /* Пространство между кнопками */
+  flex-wrap: wrap;
 }
 
+.modalActions button {
+  padding: 15px 30px; /* Увеличенные отступы для более вытянутых кнопок */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  flex: 1 1 45%; /* Делаем кнопки гибкими, чтобы они занимали больше ширины */
+  min-width: 150px; /* Устанавливаем минимальную ширину для кнопок */
+  text-align: center;
+}
+
+/* Кнопка "Да" */
+.modalActions button:first-of-type {
+  background: #d5608e;
+  color: white;
+}
+
+.modalActions button:first-of-type:hover {
+  background: #bf4d79;
+}
+
+/* Кнопка "Нет" */
+.modalActions button:last-of-type {
+  background: #e5e5e5;
+  color: #333;
+}
+
+.modalActions button:last-of-type:hover {
+  background: #ccc;
+}
+
+/* Анимации */
 @keyframes fadeIn {
   0% {
     opacity: 0;
