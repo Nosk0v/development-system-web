@@ -17,7 +17,7 @@ export const TextArea = (props: TextAreaProps) => {
 	return (
 		<textarea
 			className={css.textarea}
-			placeholder={placeholder}
+			placeholder={placeholder  || 'Введите текст...'}
 			style={{ width, height }}
 			id={id}
 			value={value}  // Привязываем значение

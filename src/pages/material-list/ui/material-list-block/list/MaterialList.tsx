@@ -23,7 +23,7 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 	// Преобразуем данные и добавляем изображение, если отсутствует
 	const materials: Material[] = data?.data.map((item) => ({
 		...item,
-		imageUrl: item.imageUrl || 'https://picsum.photos/200/300',
+		imageUrl: item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
 	})) || [];
 
 	// Фильтруем материалы на основе поискового запроса
