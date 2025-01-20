@@ -1,7 +1,7 @@
+import { MainButton } from '../../../../../widgets/button/button.tsx';
+import { SecondaryButton } from '../../../../../widgets/cancel-button/secondary-button.tsx';
 import { useNavigate } from 'react-router-dom';
 import css from './MaterialCreateControl.module.scss';
-import { MainButton } from '../../../../../widgets/button/button';
-import { SecondaryButton } from '../../../../../widgets/cancel-button/secondary-button';
 
 interface MaterialCreateControlProps {
 	onSave: () => void;
@@ -17,14 +17,8 @@ export const MaterialCreateControl = ({ onSave }: MaterialCreateControlProps) =>
 
 	return (
 		<div className={css.wrapper}>
-			<MainButton
-				text="Сохранить"
-				onClick={onSave} // Вызов метода сохранения
-			/>
-			<SecondaryButton
-				text="Закрыть"
-				onClick={onClose}
-			/>
+			<MainButton text="Сохранить" onClick={onSave} />
+			<SecondaryButton text="Закрыть" onClick={onClose} />
 		</div>
 	);
 };

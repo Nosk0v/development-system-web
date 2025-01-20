@@ -1,5 +1,5 @@
 import css from './MaterialCreateBlock.module.scss';
-import { MaterialCreateControl } from './material-create-control';
+import { MaterialCreateControl } from '../../../material-form/material-create-control';
 import { Label } from '../../../../widgets/input-label/label';
 import { Input } from '../../../../widgets/input/input';
 import { DropdownMenu } from '../../../../widgets/dropdown-menu/dropdown-menu';
