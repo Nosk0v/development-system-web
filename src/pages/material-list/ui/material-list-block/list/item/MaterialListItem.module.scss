@@ -52,7 +52,7 @@
   overflow-x: auto; /* Горизонтальная прокрутка */
   white-space: nowrap; /* Оставить элементы в одну строку */
 
-  scrollbar-width: none; /* Узкий скроллбар */
+  scrollbar-width: none;
 
   .competency {
     background: var(--material-list-item-bg-color);

@@ -7,19 +7,15 @@ export const MaterialView = () => {
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
 
-	// Функция для закрытия и возврата на главную страницу
 	const onClose = () => {
 		navigate('/');
 		window.location.reload();
 	};
 
-
 	const { data, isLoading, error } = useFetchMaterialsQuery();
-
 
 	const material =
 		data?.data.find((item) => item.material_id === Number(id)) || null;
-
 
 	if (isLoading) {
 		return <div className={css.loading}>Загрузка...</div>;
@@ -39,12 +35,15 @@ export const MaterialView = () => {
 
 	return (
 		<div className={css.wrapper}>
-			<SecondaryButton text="Закрыть" onClick={onClose}/>
+			<SecondaryButton text="Закрыть" onClick={onClose} />
 
 			<div className={css.contentContainer}>
 				<div className={css.leftColumn}>
 					<img
-						src={material.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'}
+						src={
+							material.imageUrl ||
+							'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+						}
 						alt={material.title}
 						className={css.image}
 					/>
@@ -60,8 +59,9 @@ export const MaterialView = () => {
 							<p>{material.description}</p>
 						</div>
 					</div>
-					<div className={css.type}>
-						Тип материала: {material.type_name}
+					<div>
+						<label>Тип материала:</label>
+						<div className={css.typeValue}>{material.type_name}</div>
 					</div>
 					<div>
 						<label>Содержание:</label>
@@ -74,8 +74,8 @@ export const MaterialView = () => {
 						<div className={css.competenciesList}>
 							{material.competencies.map((comp) => (
 								<span key={comp} className={css.competency}>
-							{comp}
-						</span>
+									{comp}
+								</span>
 							))}
 						</div>
 					</div>
