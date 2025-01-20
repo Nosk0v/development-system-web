@@ -23,7 +23,7 @@
   flex-direction: column;
   justify-content: space-between;
   max-height: 100%;
-  overflow: hidden;
+  overflow: hidden; /* Скрыть лишний контент */
 }
 
 .title {
@@ -48,11 +48,11 @@
   border: 1px solid #e5e5e5;
   padding: 8px;
   border-radius: 8px;
-  overflow-x: auto;
-  white-space: nowrap;
 
-  scrollbar-width: none;
+  overflow-x: auto; /* Горизонтальная прокрутка */
+  white-space: nowrap; /* Оставить элементы в одну строку */
 
+  scrollbar-width: none; /* Узкий скроллбар */
 
   .competency {
     background: var(--material-list-item-bg-color);
@@ -80,6 +80,7 @@
     border: 1px solid #e5e5e5; /* Light gray border */
   }
 }
+
 .deleteButton {
   background: none;
   border: none;
@@ -96,4 +97,3 @@
     color: #ff0000;
   }
 }
-

@@ -1,1 +1,1 @@
-export { MaterialViewPage } from './MaterialViewPage';
+export { MaterialView } from './MaterialView.tsx';

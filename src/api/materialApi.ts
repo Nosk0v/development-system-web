@@ -27,7 +27,6 @@ interface CreateMaterialRequest {
     type_id: number;  // ID типа материала
     content: string;
     competencies: number[];  // Компетенции передаются как массив чисел (ID компетенций)
-    imageUrl?: string;  // Опциональное поле для URL изображения
 }
 
 // Типы для ответов

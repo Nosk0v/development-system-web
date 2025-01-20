@@ -6,9 +6,9 @@ import { DropdownMenu } from '../../../../widgets/dropdown-menu/dropdown-menu';
 import { TextArea } from '../../../../widgets/textarea/textarea';
 import { Competencies } from '../../../../widgets/competencies/competencies';
 import { CompetenciesModal } from '../../../../widgets/competencies-modal/CompetenciesModal';
-import { useId, useState, useEffect } from 'react';
+import {useId, useState, useEffect, ChangeEvent} from 'react';
 import { useFetchCompetenciesQuery } from '../../../../api/materialApi.ts';
-import { useCreateMaterialMutation } from '../../../../api/materialApi.ts';  // Подключаем мутацию для создания материала
+import { useCreateMaterialMutation } from '../../../../api/materialApi.ts';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -23,14 +23,13 @@ export const MaterialCreateBlock = () => {
 	const [competencies, setCompetencies] = useState<number[]>([]);  // Храним ID компетенций
 	const [competencyNames, setCompetencyNames] = useState<Map<number, string>>(new Map());
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [materialType, setMaterialType] = useState<string>(''); // Состояние для типа материала
+	const [materialType, setMaterialType] = useState<string>('');
 
-	// Состояния для текстовых полей
 	const [title, setTitle] = useState<string>(''); // Название материала
 	const [description, setDescription] = useState<string>(''); // Описание материала
 	const [content, setContent] = useState<string>(''); // Контент материала
 
-	const [createMaterial] = useCreateMaterialMutation();  // Мутация для отправки данных
+	const [createMaterial] = useCreateMaterialMutation();
 
 	const titleId = useId();
 	const descriptionId = useId();
@@ -38,29 +37,26 @@ export const MaterialCreateBlock = () => {
 
 	const toggleModal = () => setIsModalOpen((prevState) => !prevState);
 
-	// Обновление состояния компетенций при выборе
 	const handleCompetenciesSelect = (selectedCompetencies: number[]) => {
-		setCompetencies(selectedCompetencies);  // Сохраняем ID компетенций
+		setCompetencies(selectedCompetencies);
 	};
 
-	// Преобразуем ID компетенций в их имена
 	const competencyIdsToNames = (ids: number[]) => {
 		return ids.map((id) => competencyNames.get(id) || '');
 	};
 
-	const handleMaterialTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setMaterialType(e.target.value); // Обновляем состояние при изменении
+	const handleMaterialTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
+		setMaterialType(e.target.value);
 	};
 
-	// Обновляем список имен компетенций при получении данных
 	useEffect(() => {
 		if (data) {
 			const names = data.data.reduce((acc, competency) => {
-				const id = competency.competency_id;  // Используем ID как ключ
+				const id = competency.competency_id;
 				const name = competency.name;
 
 				if (id && name) {
-					acc.set(id, name);  // Формируем Map с ID и именами
+					acc.set(id, name);
 				} else {
 					console.warn('Некорректные данные для компетенции:', competency);
 				}
@@ -71,7 +67,6 @@ export const MaterialCreateBlock = () => {
 	}, [data]);
 
 	const handleSave = async () => {
-		// Храним ошибки
 		let hasError = false;
 
 		// Валидация: проверяем все поля
@@ -100,25 +95,24 @@ export const MaterialCreateBlock = () => {
 			hasError = true;
 		}
 
-		// Если есть ошибки, не отправляем данные
 		if (hasError) return;
 
-		// Если нет ошибок, создаем новый материал
+
 		const newMaterial = {
-			title,  // Название материала
-			type_id: parseInt(materialType, 10),  // Преобразуем type_id в число
-			description,  // Описание материала
-			content,  // Контент материала
-			competencies,  // Список компетенций (ID)
+			title,
+			type_id: parseInt(materialType, 10),
+			description,
+			content,
+			competencies,
 		};
 
 		try {
 			const response = await createMaterial(newMaterial).unwrap();
 			console.log('Material saved successfully:', response);
-			toast.success('Материал сохранен!');  // Показываем уведомление об успехе
+			toast.success('Материал сохранен!');
 		} catch (error) {
 			console.error('Error saving material:', error);
-			toast.error('Ошибка при сохранении материала');  // Показываем уведомление об ошибке
+			toast.error('Ошибка при сохранении материала');
 		}
 	};
 
@@ -132,7 +126,7 @@ export const MaterialCreateBlock = () => {
 				<Label label="Название" id={titleId}>
 					<Input
 						id={titleId}
-						value={title}  // Привязка значения
+						value={title}
 						onChange={(e) => setTitle(e.target.value)}  // Обработчик для изменения названия
 					/>
 				</Label>
@@ -140,29 +134,29 @@ export const MaterialCreateBlock = () => {
 					<DropdownMenu
 						options={materialTypes}
 						id="typeId"
-						value={materialType}  // Передаем выбранный тип
-						onChange={handleMaterialTypeChange}  // Обработчик изменений
+						value={materialType}
+						onChange={handleMaterialTypeChange}
 					/>
 				</Label>
 				<Label label="Описание материала" id={descriptionId}>
 					<TextArea
 						id={descriptionId}
-						value={description}  // Привязка значения
+						value={description}
 						height={100}
-						onChange={(e) => setDescription(e.target.value)}  // Обработчик для изменения описания
+						onChange={(e) => setDescription(e.target.value)}
 					/>
 				</Label>
 				<Label label="Контент материала" id={contentId}>
 					<TextArea
 						id={contentId}
-						value={content}  // Привязка значения
+						value={content}
 						height={200}
-						onChange={(e) => setContent(e.target.value)}  // Обработчик для изменения контента
+						onChange={(e) => setContent(e.target.value)}
 					/>
 				</Label>
 				<Label label="Компетенции" color="black" fontSize="20px">
 					<Competencies
-						initialCompetencies={competencyIdsToNames(competencies)}  // Преобразуем ID в имена
+						initialCompetencies={competencyIdsToNames(competencies)}
 					/>
 					<button
 						onClick={toggleModal}
@@ -176,10 +170,10 @@ export const MaterialCreateBlock = () => {
 				isOpen={isModalOpen}
 				onClose={toggleModal}
 				onSelect={handleCompetenciesSelect}
-				selectedCompetencies={competencies}  // Передаем ID компетенций
-				competencyNames={competencyNames}  // Передаем Map с ID и именами компетенций
+				selectedCompetencies={competencies}
+				competencyNames={competencyNames}
 			/>
-			<ToastContainer />  {/* Добавляем контейнер для уведомлений */}
+			<ToastContainer />
 		</div>
 	);
 };

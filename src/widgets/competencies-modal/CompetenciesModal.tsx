@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 interface CompetenciesModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSelect: (selectedCompetencies: number[]) => void; // Передаем массив ID компетенций
-    selectedCompetencies?: number[];  // Массив ID выбранных компетенций
-    competencyNames: Map<number, string>;  // Список имен компетенций, где ключ - это ID компетенции
+    onSelect: (selectedCompetencies: number[]) => void;
+    selectedCompetencies?: number[];
+    competencyNames: Map<number, string>;
 }
 
 export const CompetenciesModal = ({

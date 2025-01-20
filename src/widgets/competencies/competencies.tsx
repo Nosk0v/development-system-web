@@ -44,7 +44,7 @@ export const Competencies = ({ initialCompetencies }: CompetenciesProps) => {
 		}
 	};
 
-	// Функция удаления компетенции
+
 
 
 	return (
