@@ -29,6 +29,15 @@ interface CreateMaterialRequest {
     competencies: number[];  // Компетенции передаются как массив чисел (ID компетенций)
 }
 
+// Интерфейс для запроса на обновление материала
+interface UpdateMaterialRequest {
+    title: string;
+    description: string;
+    type_id: number;
+    content: string;
+    competencies: number[];
+}
+
 // Типы для ответов
 interface MaterialsApiResponse {
     data: Material[];
@@ -39,6 +48,11 @@ interface CompetenciesApiResponse {
 }
 
 interface CreateMaterialResponse {
+    material: Material;
+    message: string;
+}
+
+interface UpdateMaterialResponse {
     material: Material;
     message: string;
 }
@@ -73,6 +87,16 @@ export const materialsApi = createApi({
                 return response;
             },
         }),
+        updateMaterial: builder.mutation<UpdateMaterialResponse, { material_id: number; updatedData: UpdateMaterialRequest }>({
+            query: ({ material_id, updatedData }) => ({
+                url: `/materials/${material_id}`,
+                method: 'PUT',
+                body: updatedData,  // Отправляем обновленные данные материала
+            }),
+            transformResponse: (response: { material: Material, message: string }): UpdateMaterialResponse => {
+                return response;
+            },
+        }),
         deleteMaterial: builder.mutation<DeleteMaterialResponse, number>({
             query: (materialId) => ({
                 url: `/materials/${materialId}`,
@@ -89,5 +113,6 @@ export const {
     useFetchMaterialsQuery,
     useFetchCompetenciesQuery,
     useCreateMaterialMutation,
+    useUpdateMaterialMutation,  // Добавлено обновление материала
     useDeleteMaterialMutation
 } = materialsApi;

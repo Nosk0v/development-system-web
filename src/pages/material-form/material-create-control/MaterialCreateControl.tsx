@@ -1,5 +1,5 @@
-import { MainButton } from '../../../../../widgets/button/button.tsx';
-import { SecondaryButton } from '../../../../../widgets/cancel-button/secondary-button.tsx';
+import { MainButton } from '../../../widgets/button/button.tsx';
+import { SecondaryButton } from '../../../widgets/cancel-button/secondary-button.tsx';
 import { useNavigate } from 'react-router-dom';
 import css from './MaterialCreateControl.module.scss';
 

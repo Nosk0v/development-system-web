@@ -1,88 +1,116 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useFetchMaterialsQuery, useCreateMaterialMutation, useUpdateMaterialMutation } from '../../../api/materialApi.ts';
+import css from './MaterialForm.module.scss';
 import { MaterialCreateControl } from './material-create-control';
-import { Label } from '../../../../widgets/input-label/label';
-import { Input } from '../../../../widgets/input/input';
-import { DropdownMenu } from '../../../../widgets/dropdown-menu/dropdown-menu';
-import { TextArea } from '../../../../widgets/textarea/textarea';
-import { Competencies } from '../../../../widgets/competencies/competencies';
-import { ToastContainer, toast } from 'react-toastify';
+import { Label } from '../../widgets/input-label/label';
+import { Input } from '../../widgets/input/input';
+import { DropdownMenu } from '../../widgets/dropdown-menu/dropdown-menu';
+import { TextArea } from '../../widgets/textarea/textarea';
+import { Competencies } from '../../widgets/competencies/competencies';
+import { CompetenciesModal } from '../../widgets/competencies-modal/CompetenciesModal';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import React from "react";
 
-const MaterialForm = ({ isUpdate }: { isUpdate: boolean }) => {
-    const { id } = useParams<{ id: string }>();
-    const { data: materialsData, isLoading, error } = useFetchMaterialsQuery();
-    const [createMaterial] = useCreateMaterialMutation();
-    const [updateMaterial] = useUpdateMaterialMutation();
+interface MaterialFormProps {
+    title: string;
+    description: string;
+    content: string;
+    materialType: string;
+    competencies: number[]; // Список id компетенций
+    competencyNames: Map<number, string>; // Карта id -> название компетенции
+    isModalOpen: boolean;
+    toggleModal: () => void;
+    handleCompetenciesSelect: (selectedCompetencies: number[]) => void;
+    handleTitleChange: (value: string) => void;
+    handleDescriptionChange: (value: string) => void;
+    handleContentChange: (value: string) => void;
+    handleMaterialTypeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onSave: () => void; // Общая функция сохранения
+}
 
-    const material = isUpdate
-        ? materialsData?.data.find((item) => item.material_id === Number(id))
-        : null;
-
-    const [title, setTitle] = useState(material?.title || '');
-    const [description, setDescription] = useState(material?.description || '');
-    const [content, setContent] = useState(material?.content || '');
-    const [materialType, setMaterialType] = useState(material?.type_name || '');
-    const [competencies, setCompetencies] = useState(material?.competencies || []);
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (isUpdate && material) {
-            setTitle(material.title);
-            setDescription(material.description);
-            setContent(material.content);
-            setMaterialType(material.type_name);
-            setCompetencies(material.competencies);
-        }
-    }, [isUpdate, material]);
-
-    const handleSave = async () => {
-        const newMaterial = {
-            title,
-            type_name: materialType,
-            description,
-            content,
-            competencies,
-        };
-
-        try {
-            if (isUpdate) {
-                await updateMaterial({ id: Number(id), ...newMaterial }).unwrap();
-                toast.success('Материал обновлен');
-            } else {
-                await createMaterial(newMaterial).unwrap();
-                toast.success('Материал создан');
-            }
-        } catch (error) {
-            toast.error('Ошибка при сохранении материала');
-        }
-    };
-
-    if (isLoading) return <div>Загрузка...</div>;
-    if (error) return <div>Ошибка при загрузке данных</div>;
+export const MaterialForm = ({
+                                 title,
+                                 description,
+                                 content,
+                                 materialType,
+                                 competencies,
+                                 competencyNames,
+                                 isModalOpen,
+                                 toggleModal,
+                                 handleCompetenciesSelect,
+                                 handleTitleChange,
+                                 handleDescriptionChange,
+                                 handleContentChange,
+                                 handleMaterialTypeChange,
+                                 onSave,
+                             }: MaterialFormProps) => {
+    // Преобразуем список id компетенций в массив объектов { id, name }
+    const initialCompetencies = competencies.map((id) => ({
+        id,
+        name: competencyNames.get(id) || 'Неизвестная компетенция',
+    }));
 
     return (
-        <div>
-            <MaterialCreateControl onSave={handleSave} />
-    <div>
-    <Label label="Название">
-    <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-    </Label>
-    <Label label="Тип материала">
-    <DropdownMenu value={materialType} onChange={(e) => setMaterialType(e.target.value)} />
-    </Label>
-    <Label label="Описание материала">
-    <TextArea value={description} onChange={(e) => setDescription(e.target.value)} />
-    </Label>
-    <Label label="Контент материала">
-    <TextArea value={content} onChange={(e) => setContent(e.target.value)} />
-    </Label>
-    <Label label="Компетенции">
-    <Competencies initialCompetencies={competencies} onChange={setCompetencies} />
-    </Label>
-    </div>
-    <ToastContainer />
-    </div>
-);
+        <div className={css.wrapper}>
+            {/* Передача пропсов в MaterialCreateControl */}
+            <MaterialCreateControl onSave={onSave} />
+
+            <div className={css.form}>
+                <Label label="Название">
+                    <Input
+                        value={title}
+                        onChange={(e) => handleTitleChange(e.target.value)}
+                    />
+                </Label>
+                <Label label="Тип материала">
+                    <DropdownMenu
+                        options={[
+                            { value: '1', label: 'Статья' },
+                            { value: '2', label: 'Книга' },
+                            { value: '3', label: 'Видео' },
+                        ]}
+                        value={materialType}
+                        onChange={handleMaterialTypeChange}
+                    />
+                </Label>
+                <Label label="Описание материала">
+                    <TextArea
+                        value={description}
+                        height={100}
+                        onChange={(e) => handleDescriptionChange(e.target.value)}
+                    />
+                </Label>
+                <Label label="Контент материала">
+                    <TextArea
+                        value={content}
+                        height={200}
+                        onChange={(e) => handleContentChange(e.target.value)}
+                    />
+                </Label>
+                <Label label="Компетенции">
+                    <Competencies
+                        initialCompetencies={initialCompetencies}
+                        onUpdateCompetencies={(updatedCompetencies) =>
+                            handleCompetenciesSelect(updatedCompetencies.map((c) => c.id))
+                        }
+                    />
+                    <button
+                        onClick={toggleModal}
+                        className={css.addCompetencyButton}
+                    >
+                        Добавить компетенции
+                    </button>
+                </Label>
+            </div>
+
+            <CompetenciesModal
+                isOpen={isModalOpen}
+                onClose={toggleModal}
+                onSelect={handleCompetenciesSelect}
+                selectedCompetencies={competencies}
+                competencyNames={competencyNames}
+            />
+
+            <ToastContainer />
+        </div>
+    );
 };

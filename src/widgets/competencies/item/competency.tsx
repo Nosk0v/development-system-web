@@ -4,20 +4,19 @@ import css from './competency.module.scss';
 import SvgCollection from '../../../utils/SvgCollection';
 
 interface CompetencyProps {
-	competency: string;
+	id: string;   // Добавляем id в типы
+	name: string; // Добавляем name в типы
 }
 
-export const Competency = ({ competency}: CompetencyProps) => {
+export const Competency = ({ id, name }: CompetencyProps) => {
 	const {
 		attributes, listeners, setNodeRef, transform, transition,
-	} = useSortable({ id: competency });
+	} = useSortable({ id }); // id передается как строка
 
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
 	};
-
-
 
 	return (
 		<div
@@ -32,7 +31,7 @@ export const Competency = ({ competency}: CompetencyProps) => {
 				dangerouslySetInnerHTML={{ __html: SvgCollection.DRAG_POINT }}
 			/>
 			<div className={css.competency}>
-				{competency}
+				{name} {/* Отображаем имя компетенции */}
 			</div>
 		</div>
 	);
