@@ -10,10 +10,14 @@
 .form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
   gap: 20px; /* Отступ между полями */
-   /* Максимальная высота формы */
-  overflow-y: hidden; /* Вертикальная прокрутка */
-  overflow-x: hidden;
+  overflow-y: auto; /* Вертикальная прокрутка */
   padding-right: 10px; /* Отступ для скролла */
 }
 
@@ -26,6 +30,19 @@ label {
   flex-direction: column;
   gap: 10px; /* Отступ между label и вложенным элементом */
   margin-bottom: 10px;
+}
+.competenciesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.competencyItem {
+  background: var(--primary-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 .addCompetencyButton {

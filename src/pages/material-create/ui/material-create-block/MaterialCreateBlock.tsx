@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import { MaterialForm } from '../../../material-form/MaterialForm';
+import { MaterialForm } from '../../../material-form/MaterialForm.tsx';
 
 import { useCreateMaterialMutation, useFetchCompetenciesQuery } from '../../../../api/materialApi.ts';
 import { toast } from 'react-toastify';

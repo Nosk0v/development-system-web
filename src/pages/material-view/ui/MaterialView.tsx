@@ -33,9 +33,23 @@ export const MaterialView = () => {
 		return <div className={css.notFound}>Материал не найден</div>;
 	}
 
+	const onEdit = () => {
+		// Навигация на страницу редактирования, передаем id материала
+		navigate(`/material/${id}`);
+	};
+
 	return (
 		<div className={css.wrapper}>
-			<SecondaryButton text="Закрыть" onClick={onClose} />
+			<div className={css.buttonContainer}>
+				<SecondaryButton text="Закрыть" onClick={onClose} />
+				{/* Кнопка редактирования прямо в компоненте */}
+				<button
+					className={css.editButton}
+					onClick={onEdit}
+				>
+					Редактировать
+				</button>
+			</div>
 
 			<div className={css.contentContainer}>
 				<div className={css.leftColumn}>

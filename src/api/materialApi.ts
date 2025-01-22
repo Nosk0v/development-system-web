@@ -17,6 +17,7 @@ interface Material {
     type_name: string;  // Это поле для получения данных, его не нужно менять
     content: string;
     competencies: string[];
+    type_id: number;
     create_date: string;
 }
 
@@ -81,7 +82,7 @@ export const materialsApi = createApi({
             query: (newMaterial) => ({
                 url: '/materials',
                 method: 'POST',
-                body: newMaterial,  // Отправляем данные для создания нового материала
+                body: newMaterial,
             }),
             transformResponse: (response: { material: Material, message: string }): CreateMaterialResponse => {
                 return response;
@@ -91,7 +92,7 @@ export const materialsApi = createApi({
             query: ({ material_id, updatedData }) => ({
                 url: `/materials/${material_id}`,
                 method: 'PUT',
-                body: updatedData,  // Отправляем обновленные данные материала
+                body: updatedData,
             }),
             transformResponse: (response: { material: Material, message: string }): UpdateMaterialResponse => {
                 return response;
@@ -106,6 +107,10 @@ export const materialsApi = createApi({
                 return response;
             },
         }),
+        // Новый endpoint для получения материала по ID
+        fetchMaterialById: builder.query<Material, number>({
+            query: (materialId) => `/materials/${materialId}`, // Запрос по id
+        }),
     }),
 });
 
@@ -113,6 +118,7 @@ export const {
     useFetchMaterialsQuery,
     useFetchCompetenciesQuery,
     useCreateMaterialMutation,
-    useUpdateMaterialMutation,  // Добавлено обновление материала
-    useDeleteMaterialMutation
+    useUpdateMaterialMutation,
+    useDeleteMaterialMutation,
+    useFetchMaterialByIdQuery, // Новый хук для получения материала по ID
 } = materialsApi;

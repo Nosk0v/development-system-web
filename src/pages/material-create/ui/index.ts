@@ -1,1 +1,1 @@
-export { MaterialCreatePage } from './MaterialCreatePage';
+export { MaterialCreatePage } from './MaterialCreatePage.tsx';

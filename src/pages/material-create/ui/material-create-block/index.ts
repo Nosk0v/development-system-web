@@ -1,1 +1,1 @@
-export { MaterialCreateBlock } from './MaterialCreateBlock';
+export { MaterialCreateBlock } from './MaterialCreateBlock.tsx';

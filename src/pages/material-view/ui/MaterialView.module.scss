@@ -4,15 +4,35 @@
   align-items: flex-start;
   gap: 20px;
   background-color: #ffffff;
-
   padding: 24px;
   border: 1px solid #e0e0e0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
   overflow-y: auto;
   min-height: 100vh;
   box-sizing: border-box;
   scroll-behavior: smooth;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 10px; /* Расстояние между кнопками */
+  justify-content: space-between;
+  width: 100%;
+}
+
+.editButton {
+  background-color: #F91F71; /* Розовый цвет кнопки */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.editButton:hover {
+  background-color: #db3070;
 }
 
 .contentContainer {
@@ -74,7 +94,6 @@ label {
   height: 100px; /* Фиксированная высота */
   user-select: none;
   scrollbar-width: none;
-
 }
 
 .content {
@@ -89,7 +108,6 @@ label {
   height: 240px;
   user-select: text;
   scrollbar-width: thin;
-
 }
 
 .type {

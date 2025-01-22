@@ -3,6 +3,7 @@ import css from './Router.module.scss';
 import { MaterialListPage } from '../../pages/material-list';
 import { MaterialCreatePage } from '../../pages/material-create';
 import { MaterialView } from '../../pages/material-view';
+import {MaterialUpdatePage} from "../../pages/material-update";
 
 const Router = () => (
 	<div className={css.router}>
@@ -10,6 +11,7 @@ const Router = () => (
 			<Route path="/" element={<MaterialListPage />} />
 			<Route path="/create-material" element={<MaterialCreatePage />} />
 			<Route path="/materials/:id" element={<MaterialView />} />
+			<Route path="/material/:id" element={<MaterialUpdatePage />} />
 		</Routes>
 	</div>
 );

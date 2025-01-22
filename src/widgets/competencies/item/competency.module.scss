@@ -3,14 +3,11 @@
   align-items: center;
   gap: 5px;
 
-  cursor: grab;
   transition: box-shadow 0.2s ease;
+  border-radius: 4px;
 }
 
-.wrapper:active {
-  cursor: grabbing;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
+
 
 .competency {
   background-color: var(--white-font-color);

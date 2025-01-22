@@ -15,4 +15,9 @@
   outline: none;
   background-color: transparent;
   width: 100%;
+  color: black; /* Обычный цвет текста */
+}
+
+.select.placeholder {
+  color: gray; /* Серый цвет, если выбрано placeholder-значение */
 }
