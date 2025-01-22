@@ -51,7 +51,7 @@ export const MaterialForm = ({
 
     return (
         <div className={css.wrapper}>
-            {/* Передача пропсов в MaterialCreateControl */}
+            {/* Передача пропсов в MaterialUpdateControl */}
             <MaterialCreateControl onSave={onSave} />
 
             <div className={css.form}>

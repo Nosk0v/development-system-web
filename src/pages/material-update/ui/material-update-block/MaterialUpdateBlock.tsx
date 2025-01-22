@@ -1,123 +1,72 @@
 import { useParams } from 'react-router-dom';
-import { useFetchMaterialByIdQuery } from '../../../../api/materialApi.ts';
-import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-
+import React, { useState, useEffect } from 'react';
+import { useFetchMaterialsQuery } from '../../../../api/materialApi.ts';
+import { MaterialUpdateForm } from '../../../material-update-form/MaterialUpdateForm.tsx';
 
 export const MaterialUpdateBlock = () => {
 	const { id } = useParams<{ id: string }>();
 
-	// Fetch material data by ID
-	const { data: materialData, error: materialError, isLoading: isMaterialLoading } = useFetchMaterialByIdQuery(Number(id));
+	const { data, isLoading, error } = useFetchMaterialsQuery();
 
-	// Form states
-	const [title, setTitle] = useState<string>('');
-	const [description, setDescription] = useState<string>('');
-	const [content, setContent] = useState<string>('');
+	const [title, setTitle] = useState('');
+	const [description, setDescription] = useState('');
+	const [content, setContent] = useState('');
+	const [competencies, setCompetencies] = useState<string[]>([]); // Теперь массив строк
 	const [materialType, setMaterialType] = useState<string>('');
-	const [competencies, setCompetencies] = useState<number[]>([]);
-	const [competencyNames, setCompetencyNames] = useState<Map<number, string>>(new Map());
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
-	// Initialize form fields from API data
+	// Наполняем список компетенций строками (заменяем id на строки)
 	useEffect(() => {
-		if (materialData) {
-			setTitle(materialData.title || '');
-			setMaterialType(materialData.type_id?.toString() || '');
-			setDescription(materialData.description || '');
-			setContent(materialData.content || '');
-
-			const competenciesArray = materialData.competencies.map((comp) => parseInt(comp, 10));
-			setCompetencies(competenciesArray);
-
-			const competencyNamesMap = new Map<number, string>();
-			competenciesArray.forEach((compId) => {
-				competencyNamesMap.set(compId, `Компетенция ${compId}`); // Example names
-			});
-			setCompetencyNames(competencyNamesMap);
+		if (data) {
+			const material = data.data.find((item) => item.material_id === Number(id));
+			if (material) {
+				console.log("Material Competencies:", material.competencies); // Добавьте это для отладки
+				const { title, description, content, competencies, type_id } = material;
+				setTitle(title);
+				setDescription(description);
+				setContent(content);
+				setCompetencies(competencies); // Просто передаем массив строк
+				setMaterialType(String(type_id));
+			}
 		}
-	}, [materialData]);
+	}, [data, id]);
 
-	if (isMaterialLoading) return <div>Загрузка...</div>;
-	if (materialError) return <div>Ошибка загрузки материала</div>;
+	const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-	// Handle checkbox toggle for competencies
-	const handleCompetencyToggle = (competencyId: number) => {
-		setCompetencies((prev) =>
-			prev.includes(competencyId)
-				? prev.filter((id) => id !== competencyId)
-				: [...prev, competencyId]
-		);
+	const handleCompetenciesSelect = (selectedCompetencies: string[]) => {
+		setCompetencies(selectedCompetencies); // Изменен тип на строковый массив
 	};
 
+	const handleTitleChange = (value: string) => setTitle(value);
+	const handleDescriptionChange = (value: string) => setDescription(value);
+	const handleContentChange = (value: string) => setContent(value);
+	const handleMaterialTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => setMaterialType(e.target.value);
+
+	if (isLoading) {
+		return <div>Загрузка...</div>;
+	}
+
+	if (error) {
+		return <div>Ошибка: {(error as Error).message}</div>;
+	}
+
 	return (
-		<form className={css.form}>
-			<h1>Редактирование материала</h1>
-
-			<div className={css.field}>
-				<label htmlFor="title">Название:</label>
-				<input
-					id="title"
-					type="text"
-					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-				/>
-			</div>
-
-			<div className={css.field}>
-				<label htmlFor="description">Описание:</label>
-				<textarea
-					id="description"
-					value={description}
-					onChange={(e) => setDescription(e.target.value)}
-				/>
-			</div>
-
-			<div className={css.field}>
-				<label htmlFor="content">Содержание:</label>
-				<textarea
-					id="content"
-					value={content}
-					onChange={(e) => setContent(e.target.value)}
-				/>
-			</div>
-
-			<div className={css.field}>
-				<label htmlFor="materialType">Тип материала:</label>
-				<select
-					id="materialType"
-					value={materialType}
-					onChange={(e) => setMaterialType(e.target.value)}
-				>
-					<option value="" disabled>Выберите тип</option>
-					<option value="1">Тип 1</option>
-					<option value="2">Тип 2</option>
-					{/* Add additional types as needed */}
-				</select>
-			</div>
-
-			<div className={css.field}>
-				<label>Компетенции:</label>
-				<ul className={css.competenciesList}>
-					{Array.from(competencyNames.entries()).map(([competencyId, competencyName]) => (
-						<li key={competencyId}>
-							<label>
-								<input
-									type="checkbox"
-									checked={competencies.includes(competencyId)}
-									onChange={() => handleCompetencyToggle(competencyId)}
-								/>
-								{competencyName}
-							</label>
-						</li>
-					))}
-				</ul>
-			</div>
-
-			<div className={css.actions}>
-				<button type="button" onClick={() => toast.info('Сохранение пока не реализовано')}>
-					Сохранить
-				</button>
-			</div>
-		</form>
+		<div>
+			<MaterialUpdateForm
+				title={title}
+				description={description}
+				content={content}
+				materialType={materialType}
+				competencies={competencies} // Передаем массив строк компетенций
+				isModalOpen={isModalOpen}
+				toggleModal={toggleModal}
+				handleCompetenciesSelect={handleCompetenciesSelect}
+				handleTitleChange={handleTitleChange}
+				handleDescriptionChange={handleDescriptionChange}
+				handleContentChange={handleContentChange}
+				handleMaterialTypeChange={handleMaterialTypeChange}
+				onSave={() => {}}
+			/>
+		</div>
 	);
 };

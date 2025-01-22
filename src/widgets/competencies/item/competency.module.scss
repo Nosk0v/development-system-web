@@ -18,5 +18,10 @@
   padding: var(--competency-padding);
 
   font-size: var(--font-size-m);
+  transition: box-shadow 0.2s ease;
+}
+
+.competency:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 

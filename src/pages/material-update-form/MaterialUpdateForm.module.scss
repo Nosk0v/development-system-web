@@ -1,0 +1,76 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  background: var(--default-bg-color);
+  border-radius: var(--default-border-radius);
+  padding: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Отступ между полями */
+  overflow-y: hidden; /* Вертикальная прокрутка */
+  overflow-x: hidden;
+  padding-right: 10px; /* Отступ для скролла */
+}
+
+label:first-of-type {
+  margin-top: 10px; /* Отступ сверху у первого поля */
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Отступ между label и вложенным элементом */
+  margin-bottom: 10px;
+}
+
+.addCompetencyButton {
+  margin-top: 20px;
+  background-color: #F91F71;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.addCompetencyButton:hover {
+  background-color: #db3070;
+}
+
+/* Новый контейнер для компетенций (оставляем только его изменения) */
+.competenciesList {
+  display: flex;
+  flex-direction: column; /* Компетенции идут друг под другом */
+  gap: 8px; /* Расстояние между компетенциями */
+  padding: 5px;
+}
+
+/* Стиль для каждого элемента компетенции */
+.competency {
+  background-color: var(--white-font-color);
+  border: var(--default-border);
+  border-radius: var(--competency-border-radius);
+  width: auto; /* Ширина настраивается автоматически */
+  padding: var(--competency-padding);
+  font-size: var(--font-size-m);
+
+  /* Эффект при наведении */
+  transition: box-shadow 0.2s ease;
+}
+
+.competency:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.wrapperCompetency {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: box-shadow 0.2s ease;
+  border-radius: 4px;
+}

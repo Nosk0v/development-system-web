@@ -1,19 +1,22 @@
 import css from './MaterialUpdateForm.module.scss';
-import { MaterialCreateControl } from './material-create-control';
+import { MaterialUpdateControl } from './material-update-control';
 import { Label } from '../../widgets/input-label/label';
 import { Input } from '../../widgets/input/input';
 import { DropdownMenu } from '../../widgets/dropdown-menu/dropdown-menu';
 import { TextArea } from '../../widgets/textarea/textarea';
-import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import React from "react";
 
 interface MaterialUpdateFormProps {
     title: string;
     description: string;
     content: string;
     materialType: string;
-    competencies: number[];
-    competencyNames: Map<number, string>;
-    handleCompetenciesSelect: (selectedCompetencies: number[]) => void;
+    competencies: string[]; // Изменили на массив строк
+    isModalOpen: boolean;
+    toggleModal: () => void;
+    handleCompetenciesSelect: (selectedCompetencies: string[]) => void; // Изменили на массив строк
     handleTitleChange: (value: string) => void;
     handleDescriptionChange: (value: string) => void;
     handleContentChange: (value: string) => void;
@@ -27,30 +30,16 @@ export const MaterialUpdateForm = ({
                                        content,
                                        materialType,
                                        competencies,
-                                       competencyNames,
-                                       handleCompetenciesSelect,
+                                       toggleModal,
                                        handleTitleChange,
                                        handleDescriptionChange,
                                        handleContentChange,
                                        handleMaterialTypeChange,
                                        onSave,
                                    }: MaterialUpdateFormProps) => {
-
-    const availableCompetencies = Array.from(competencyNames.entries()).map(([id, name]) => ({
-        id,
-        name,
-    }));
-
-    const toggleCompetency = (id: number) => {
-        const updatedCompetencies = competencies.includes(id)
-            ? competencies.filter((compId) => compId !== id)
-            : [...competencies, id];
-        handleCompetenciesSelect(updatedCompetencies);
-    };
-
     return (
         <div className={css.wrapper}>
-            <MaterialCreateControl onSave={onSave} />
+            <MaterialUpdateControl onSave={onSave} />
 
             <div className={css.form}>
                 <Label label="Название">
@@ -84,22 +73,25 @@ export const MaterialUpdateForm = ({
                         onChange={(e) => handleContentChange(e.target.value)}
                     />
                 </Label>
+
                 <Label label="Компетенции">
-                    <div className={css.competenciesSelector}>
-                        {availableCompetencies.map((comp) => (
-                            <div
-                                key={comp.id}
-                                className={`${css.competencyItem} ${
-                                    competencies.includes(comp.id) ? css.selected : ''
-                                }`}
-                                onClick={() => toggleCompetency(comp.id)}
-                            >
-                                {comp.name}
-                            </div>
+                    <div className={css.competenciesList}>
+                        {competencies.map((competency, index) => (
+                            <span key={index} className={css.competency}>
+                                {competency}
+                            </span>
                         ))}
                     </div>
+                    <button
+                        onClick={toggleModal}
+                        className={css.addCompetencyButton}
+                    >
+                        Добавить компетенции
+                    </button>
                 </Label>
             </div>
+
+            <ToastContainer />
         </div>
     );
 };

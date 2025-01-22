@@ -35,7 +35,7 @@ export const MaterialView = () => {
 
 	const onEdit = () => {
 		// Навигация на страницу редактирования, передаем id материала
-		navigate(`/material/${id}`);
+		navigate(`/update-material/${id}`);
 	};
 
 	return (

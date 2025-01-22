@@ -11,7 +11,7 @@ const Router = () => (
 			<Route path="/" element={<MaterialListPage />} />
 			<Route path="/create-material" element={<MaterialCreatePage />} />
 			<Route path="/materials/:id" element={<MaterialView />} />
-			<Route path="/material/:id" element={<MaterialUpdatePage />} />
+			<Route path="/update-material/:id" element={<MaterialUpdatePage />} />
 		</Routes>
 	</div>
 );
