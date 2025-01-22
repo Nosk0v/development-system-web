@@ -7,9 +7,18 @@ export const MaterialView = () => {
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
 
-	const onClose = () => {
-		navigate('/');
-		window.location.reload();
+	const { refetch } = useFetchMaterialsQuery();
+
+	const onClose = async () => {
+		try {
+			// Перезапрашиваем список материалов
+			await refetch();
+
+			// После обновления данных навигация на главную страницу
+			navigate('/');
+		} catch (error) {
+			console.error('Ошибка при перезагрузке списка:', error);
+		}
 	};
 
 	const { data, isLoading, error } = useFetchMaterialsQuery();
