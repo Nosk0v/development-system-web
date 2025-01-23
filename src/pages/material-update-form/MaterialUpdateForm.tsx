@@ -6,7 +6,7 @@ import { DropdownMenu } from '../../widgets/dropdown-menu/dropdown-menu';
 import { TextArea } from '../../widgets/textarea/textarea';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UpdateModal } from '../../widgets/update-modal/UpdateModal'; // Импортируем UpdateModal
 
 interface MaterialUpdateFormProps {
@@ -15,8 +15,6 @@ interface MaterialUpdateFormProps {
     content: string;
     materialType: string;
     competencies: string[]; // Массив строк
-    isModalOpen: boolean;
-    toggleModal: () => void;
     handleCompetenciesSelect: (selectedCompetencies: string[]) => void; // Принимает массив строк
     handleTitleChange: (value: string) => void;
     handleDescriptionChange: (value: string) => void;
@@ -36,7 +34,6 @@ export const MaterialUpdateForm = ({
                                        handleContentChange,
                                        handleMaterialTypeChange,
                                        onSave,
-
                                    }: MaterialUpdateFormProps) => {
 
     // Модальное окно для выбора компетенций
@@ -46,7 +43,21 @@ export const MaterialUpdateForm = ({
         setIsModalOpen(!isModalOpen); // Переключаем состояние модального окна
     };
 
+    // Добавим useEffect, чтобы управлять прокруткой страницы
+    useEffect(() => {
+        if (isModalOpen) {
+            // Отключаем прокрутку на теле документа, когда модальное окно открыто
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Включаем прокрутку снова, когда модальное окно закрыто
+            document.body.style.overflow = 'auto';
+        }
 
+        // Очищаем эффект, когда компонент будет размонтирован
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isModalOpen]);
 
     return (
         <div className={css.wrapper}>
@@ -110,7 +121,6 @@ export const MaterialUpdateForm = ({
             <UpdateModal
                 isOpen={isModalOpen}
                 onClose={toggleModalWindow} // Закрытие модального окна
-
             />
 
             <ToastContainer />

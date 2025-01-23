@@ -8,7 +8,7 @@ import { Competencies } from '../../widgets/competencies/competencies';
 import { CompetenciesModal } from '../../widgets/competencies-modal/CompetenciesModal';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React from "react";
+import React, {useEffect} from "react";
 
 interface MaterialFormProps {
     title: string;
@@ -49,6 +49,20 @@ export const MaterialForm = ({
         name: competencyNames.get(id) || 'Неизвестная компетенция',
     }));
 
+    useEffect(() => {
+        if (isModalOpen) {
+            // Отключаем прокрутку на теле документа, когда модальное окно открыто
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Включаем прокрутку снова, когда модальное окно закрыто
+            document.body.style.overflow = 'auto';
+        }
+
+        // Очищаем эффект, когда компонент будет размонтирован
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isModalOpen]);
     return (
         <div className={css.wrapper}>
             {/* Передача пропсов в MaterialUpdateControl */}

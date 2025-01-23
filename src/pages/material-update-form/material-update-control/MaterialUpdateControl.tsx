@@ -19,7 +19,7 @@ export const MaterialUpdateControl = ({ onSave }: MaterialUpdateControlProps) =>
 
 			// После обновления данных навигация на главную страницу
 			navigate(`/view-materials/${id}`);
-			window.location.reload()
+
 		} catch (error) {
 			console.error('Ошибка при перезагрузке списка:', error);
 		}

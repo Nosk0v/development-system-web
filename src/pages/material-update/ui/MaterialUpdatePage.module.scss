@@ -6,4 +6,6 @@
   padding: 20px;
   min-height: 100vh; /* Установка минимальной высоты страницы */
   box-sizing: border-box; /* Учитываем padding в высоте */
+ scroll-behavior: smooth;
+  scrollbar-width: none;
 }

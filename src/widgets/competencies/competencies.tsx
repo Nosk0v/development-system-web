@@ -15,6 +15,7 @@ export const Competencies = ({ initialCompetencies, onUpdateCompetencies }: Comp
 		setCompetencies(initialCompetencies);
 	}, [initialCompetencies]);
 
+	// Обработчик удаления
 	const handleCompetencyDelete = (id: number) => {
 		const updatedCompetencies = competencies.filter(competency => competency.id !== id);
 		setCompetencies(updatedCompetencies);
@@ -25,10 +26,12 @@ export const Competencies = ({ initialCompetencies, onUpdateCompetencies }: Comp
 		<div className={css.competencies}>
 			{/* Отображаем компетенции с их ID и именами */}
 			{competencies.map((competency) => (
-				<div key={competency.id} className={css.competencyItem}>
-					<Competency name={competency.name} />
-					<button onClick={() => handleCompetencyDelete(competency.id)}>Удалить</button>
-				</div>
+				<Competency
+					key={competency.id}
+					id={competency.id}
+					name={competency.name}
+					onDelete={handleCompetencyDelete} // Передаем функцию удаления
+				/>
 			))}
 		</div>
 	);
