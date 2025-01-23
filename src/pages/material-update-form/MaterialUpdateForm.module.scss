@@ -5,7 +5,6 @@
   background: var(--default-bg-color);
   border-radius: var(--default-border-radius);
   padding: 20px;
-  scrollbar-width: none;
 }
 
 .form {
@@ -49,29 +48,50 @@ label {
   flex-direction: column; /* Компетенции идут друг под другом */
   gap: 8px; /* Расстояние между компетенциями */
   padding: 5px;
+  border-radius: 20px;
 }
 
-/* Стиль для каждого элемента компетенции */
-.competency {
-  background-color: var(--white-font-color);
-  border: var(--default-border);
-  border-radius: var(--competency-border-radius);
-  width: auto; /* Ширина настраивается автоматически */
-  padding: var(--competency-padding);
-  font-size: var(--font-size-m);
 
-  /* Эффект при наведении */
-  transition: box-shadow 0.2s ease;
-}
 
-.competency:hover {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-}
 
 .wrapperCompetency {
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between; /* Имя и кнопка на разных сторонах */
+  gap: 8px;
+  background-color: var(--white-font-color);
+  border: var(--default-border);
+  border-radius: var(--competency-border-radius);
+  padding: 10px;
   transition: box-shadow 0.2s ease;
-  border-radius: 4px;
+
+  &:hover {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Отделить текст от кнопки */
+  width: 100%; /* Чтобы элементы заняли всю ширину */
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #d5608e;
+  opacity: 0; /* Прячем кнопку */
+  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s;
+
+  &:hover {
+    transform: scale(1.2); /* Увеличение кнопки при наведении */
+    color: #ff0000; /* Подсветка */
+  }
+}
+
+.wrapperCompetency:hover .deleteButton {
+  opacity: 1; /* Показываем кнопку при наведении на wrapperCompetency */
 }

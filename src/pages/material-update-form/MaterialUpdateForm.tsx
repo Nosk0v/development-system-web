@@ -7,7 +7,7 @@ import { TextArea } from '../../widgets/textarea/textarea';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useEffect } from "react";
-import { UpdateModal } from '../../widgets/update-modal/UpdateModal'; // Импортируем UpdateModal
+import { UpdateModal } from '../../widgets/update-modal/UpdateModal';
 
 interface MaterialUpdateFormProps {
     title: string;
@@ -33,6 +33,7 @@ export const MaterialUpdateForm = ({
                                        handleDescriptionChange,
                                        handleContentChange,
                                        handleMaterialTypeChange,
+                                       handleCompetenciesSelect,
                                        onSave,
                                    }: MaterialUpdateFormProps) => {
 
@@ -40,20 +41,22 @@ export const MaterialUpdateForm = ({
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const toggleModalWindow = () => {
-        setIsModalOpen(!isModalOpen); // Переключаем состояние модального окна
+        setIsModalOpen(!isModalOpen);
     };
 
-    // Добавим useEffect, чтобы управлять прокруткой страницы
+    // Обработчик удаления компетенции
+    const handleRemoveCompetency = (index: number) => {
+        const updatedCompetencies = competencies.filter((_, i) => i !== index);
+        handleCompetenciesSelect(updatedCompetencies); // Передаем обновленный массив родительскому компоненту
+    };
+
     useEffect(() => {
         if (isModalOpen) {
-            // Отключаем прокрутку на теле документа, когда модальное окно открыто
             document.body.style.overflow = 'hidden';
         } else {
-            // Включаем прокрутку снова, когда модальное окно закрыто
             document.body.style.overflow = 'auto';
         }
 
-        // Очищаем эффект, когда компонент будет размонтирован
         return () => {
             document.body.style.overflow = 'auto';
         };
@@ -100,9 +103,20 @@ export const MaterialUpdateForm = ({
                     <div className={css.competenciesList}>
                         {competencies.length > 0 ? (
                             competencies.map((competency, index) => (
-                                <span key={index} className={css.competency}>
-                                    {competency}
-                                </span>
+                                <div key={index} className={css.wrapperCompetency}>
+                                    <div className={css.content}>
+                                        <span className={css.competency}>{competency}</span>
+                                        <button
+                                            className={css.deleteButton}
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Чтобы клик не активировал другие действия
+                                                handleRemoveCompetency(index); // Удалить компетенцию
+                                            }}
+                                        >
+                                            🗑️
+                                        </button>
+                                    </div>
+                                </div>
                             ))
                         ) : (
                             <span>Нет выбранных компетенций</span>
@@ -117,13 +131,8 @@ export const MaterialUpdateForm = ({
                 </Label>
             </div>
 
-            {/* Модальное окно для отображения компетенций */}
-            <UpdateModal
-                isOpen={isModalOpen}
-                onClose={toggleModalWindow} // Закрытие модального окна
-            />
-
-            <ToastContainer />
+            <UpdateModal isOpen={isModalOpen} onClose={toggleModalWindow}/>
+            <ToastContainer/>
         </div>
     );
 };
