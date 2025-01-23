@@ -23,8 +23,8 @@ export const MaterialListItem = ({
 
 	// Переход к просмотру материала
 	const onMaterialClick = () => {
-		console.log(`Navigating to /materials/${materialId}`);
-		navigate(`/materials/${materialId}`);
+		console.log(`Navigating to /view-materials/${materialId}`);
+		navigate(`/view-materials/${materialId}`);
 	};
 
 	// Обработчик горизонтальной прокрутки

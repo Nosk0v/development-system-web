@@ -51,7 +51,6 @@ export const MaterialView = () => {
 		<div className={css.wrapper}>
 			<div className={css.buttonContainer}>
 				<SecondaryButton text="Закрыть" onClick={onClose} />
-				{/* Кнопка редактирования прямо в компоненте */}
 				<button
 					className={css.editButton}
 					onClick={onEdit}

@@ -6,17 +6,18 @@ import { DropdownMenu } from '../../widgets/dropdown-menu/dropdown-menu';
 import { TextArea } from '../../widgets/textarea/textarea';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React from "react";
+import React, { useState } from "react";
+import { UpdateModal } from '../../widgets/update-modal/UpdateModal'; // Импортируем UpdateModal
 
 interface MaterialUpdateFormProps {
     title: string;
     description: string;
     content: string;
     materialType: string;
-    competencies: string[]; // Изменили на массив строк
+    competencies: string[]; // Массив строк
     isModalOpen: boolean;
     toggleModal: () => void;
-    handleCompetenciesSelect: (selectedCompetencies: string[]) => void; // Изменили на массив строк
+    handleCompetenciesSelect: (selectedCompetencies: string[]) => void; // Принимает массив строк
     handleTitleChange: (value: string) => void;
     handleDescriptionChange: (value: string) => void;
     handleContentChange: (value: string) => void;
@@ -30,13 +31,23 @@ export const MaterialUpdateForm = ({
                                        content,
                                        materialType,
                                        competencies,
-                                       toggleModal,
                                        handleTitleChange,
                                        handleDescriptionChange,
                                        handleContentChange,
                                        handleMaterialTypeChange,
                                        onSave,
+
                                    }: MaterialUpdateFormProps) => {
+
+    // Модальное окно для выбора компетенций
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const toggleModalWindow = () => {
+        setIsModalOpen(!isModalOpen); // Переключаем состояние модального окна
+    };
+
+
+
     return (
         <div className={css.wrapper}>
             <MaterialUpdateControl onSave={onSave} />
@@ -76,20 +87,31 @@ export const MaterialUpdateForm = ({
 
                 <Label label="Компетенции">
                     <div className={css.competenciesList}>
-                        {competencies.map((competency, index) => (
-                            <span key={index} className={css.competency}>
-                                {competency}
-                            </span>
-                        ))}
+                        {competencies.length > 0 ? (
+                            competencies.map((competency, index) => (
+                                <span key={index} className={css.competency}>
+                                    {competency}
+                                </span>
+                            ))
+                        ) : (
+                            <span>Нет выбранных компетенций</span>
+                        )}
                     </div>
                     <button
-                        onClick={toggleModal}
+                        onClick={toggleModalWindow}
                         className={css.addCompetencyButton}
                     >
                         Добавить компетенции
                     </button>
                 </Label>
             </div>
+
+            {/* Модальное окно для отображения компетенций */}
+            <UpdateModal
+                isOpen={isModalOpen}
+                onClose={toggleModalWindow} // Закрытие модального окна
+
+            />
 
             <ToastContainer />
         </div>

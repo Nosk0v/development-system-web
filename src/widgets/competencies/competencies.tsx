@@ -7,7 +7,7 @@ interface CompetenciesProps {
 	onUpdateCompetencies: (competencies: { id: number, name: string }[]) => void; // Функция для обновления компетенций в родительском компоненте
 }
 
-export const Competencies = ({ initialCompetencies}: CompetenciesProps) => {
+export const Competencies = ({ initialCompetencies, onUpdateCompetencies }: CompetenciesProps) => {
 	const [competencies, setCompetencies] = useState<{ id: number, name: string }[]>(initialCompetencies);
 
 	// Обновление списка компетенций при изменении initialCompetencies
@@ -15,17 +15,20 @@ export const Competencies = ({ initialCompetencies}: CompetenciesProps) => {
 		setCompetencies(initialCompetencies);
 	}, [initialCompetencies]);
 
-
-
+	const handleCompetencyDelete = (id: number) => {
+		const updatedCompetencies = competencies.filter(competency => competency.id !== id);
+		setCompetencies(updatedCompetencies);
+		onUpdateCompetencies(updatedCompetencies); // Передаем обновленный список компетенций в родительский компонент
+	};
 
 	return (
 		<div className={css.competencies}>
 			{/* Отображаем компетенции с их ID и именами */}
 			{competencies.map((competency) => (
-				<Competency
-					key={competency.id}
-					name={competency.name}
-				/>
+				<div key={competency.id} className={css.competencyItem}>
+					<Competency name={competency.name} />
+					<button onClick={() => handleCompetencyDelete(competency.id)}>Удалить</button>
+				</div>
 			))}
 		</div>
 	);
