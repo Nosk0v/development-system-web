@@ -56,6 +56,9 @@
   border-radius: 12px;
   object-fit: cover;
   border: 1px solid #e0e0e0;
+  user-drag: none; /* Для WebKit (Safari, Chrome) */
+  user-select: none; /* Запрет на выделение */
+  pointer-events: none;
 }
 
 .header {
@@ -66,6 +69,15 @@
   font-size: 24px;
   font-weight: bold;
   color: #333;
+  text-align: center; /* Центрируем текст */
+  line-height: 1.4; /* Межстрочный интервал для улучшения читаемости */
+  max-width: 100%; /* Ограничиваем ширину */
+  overflow: hidden; /* Обрезаем текст, если выходит за пределы */
+  text-overflow: ellipsis; /* Добавляем многоточие для длинного текста */
+  white-space: normal; /* Позволяем тексту занимать несколько строк */
+  overflow-wrap: break-word; /* Автоматический перенос по словам */
+  word-wrap: break-word; /* Старый синтаксис для поддержки переноса */
+  word-break: normal;
 }
 
 .rightColumn {

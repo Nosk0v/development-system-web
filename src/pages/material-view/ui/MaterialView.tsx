@@ -62,6 +62,7 @@ export const MaterialView = () => {
 			<div className={css.contentContainer}>
 				<div className={css.leftColumn}>
 					<img
+						draggable="false"
 						src={
 							material.imageUrl ||
 							'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'

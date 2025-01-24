@@ -8,4 +8,5 @@
   box-sizing: border-box; /* Учитываем padding в высоте */
  scroll-behavior: smooth;
   scrollbar-width: none;
+  overflow-x: hidden;
 }

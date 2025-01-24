@@ -78,6 +78,9 @@
     object-fit: cover;
     border-radius: 8px; /* Rounded image */
     border: 1px solid #e5e5e5; /* Light gray border */
+    user-drag: none; /* Для WebKit (Safari, Chrome) */
+    user-select: none; /* Запрет на выделение */
+    pointer-events: none;
   }
 }
 

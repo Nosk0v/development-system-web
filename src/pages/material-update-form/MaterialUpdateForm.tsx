@@ -21,7 +21,11 @@ interface MaterialUpdateFormProps {
     handleContentChange: (value: string) => void;
     handleMaterialTypeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     onSave: () => void;
+    isModalOpen: boolean; // Добавьте это
+    toggleModal: () => void; // Добавьте это
 }
+
+
 
 export const MaterialUpdateForm = ({
                                        title,
@@ -35,6 +39,7 @@ export const MaterialUpdateForm = ({
                                        handleMaterialTypeChange,
                                        handleCompetenciesSelect,
                                        onSave,
+
                                    }: MaterialUpdateFormProps) => {
 
     // Модальное окно для выбора компетенций

@@ -64,7 +64,10 @@ export const MaterialListItem = ({
 				)}
 			</div>
 			<div className={css.preview}>
-				<img src={imageUrl} alt={title} />
+				<img
+					draggable="false"
+					src={imageUrl} alt={title}
+				/>
 			</div>
 			<button
 				className={css.deleteButton}
