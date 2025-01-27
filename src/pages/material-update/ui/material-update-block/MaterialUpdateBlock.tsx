@@ -58,7 +58,7 @@ export const MaterialUpdateBlock = () => {
 				description={description}
 				content={content}
 				materialType={materialType}
-				competencies={competencies} // Передаем массив строк компетенций
+				competencies={competencies}
 				isModalOpen={isModalOpen}
 				toggleModal={toggleModal}
 				handleCompetenciesSelect={handleCompetenciesSelect}
