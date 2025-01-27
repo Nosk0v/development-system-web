@@ -5,35 +5,39 @@ import { useState, useEffect } from 'react';
 interface UpdateModalProps {
     isOpen: boolean;
     onClose: () => void;
+    selectedCompetencies: string[]; // Список выбранных компетенций
+    onSave: (updatedCompetencies: string[]) => void; // Обработчик сохранения
 }
 
 export const UpdateModal = ({
                                 isOpen,
-                                onClose
+                                onClose,
+                                selectedCompetencies,
+                                onSave
                             }: UpdateModalProps) => {
-    const { data, isLoading, error } = useFetchCompetenciesQuery(); // Получаем данные
-    const [selected, setSelected] = useState<number[]>([]); // Состояние для выбранных компетенций
+    const { data, isLoading, error } = useFetchCompetenciesQuery();
+    const [selected, setSelected] = useState<string[]>([]);
 
     useEffect(() => {
-        if (!isOpen) {
-            setSelected([]); // Сбрасываем выбор при закрытии
+        if (isOpen) {
+            setSelected(selectedCompetencies); // Устанавливаем переданный список выбранных компетенций
         }
-    }, [isOpen]);
+    }, [isOpen, selectedCompetencies]);
 
-    const handleCompetencyToggle = (competencyId: number) => {
+    const handleCompetencyToggle = (competencyName: string) => {
         setSelected((prev) =>
-            prev.includes(competencyId)
-                ? prev.filter((id) => id !== competencyId)
-                : [...prev, competencyId]
+            prev.includes(competencyName)
+                ? prev.filter((name) => name !== competencyName)
+                : [...prev, competencyName]
         );
     };
 
     const handleSave = () => {
-        console.log('Выбранные компетенции:', selected); // Логируем выбранные компетенции
-        onClose(); // Закрываем модальное окно
+        onSave(selected); // Передаем обновленный список в родительский компонент
+        onClose();
     };
 
-    if (!isOpen) return null; // Если окно закрыто, не рендерим ничего
+    if (!isOpen) return null;
 
     if (isLoading) {
         return (
@@ -62,8 +66,8 @@ export const UpdateModal = ({
                     {data?.data.map(({ competency_id, name }) => (
                         <li
                             key={competency_id}
-                            className={selected.includes(competency_id) ? css.selected : css.listItem}
-                            onClick={() => handleCompetencyToggle(competency_id)}
+                            className={selected.includes(name) ? css.selected : css.listItem}
+                            onClick={() => handleCompetencyToggle(name)}
                         >
                             {name}
                         </li>

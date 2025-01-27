@@ -136,7 +136,12 @@ export const MaterialUpdateForm = ({
                 </Label>
             </div>
 
-            <UpdateModal isOpen={isModalOpen} onClose={toggleModalWindow}/>
+            <UpdateModal
+                isOpen={isModalOpen}
+                onClose={toggleModalWindow}
+                selectedCompetencies={competencies} // Передаем текущий список компетенций
+                onSave={(updatedCompetencies) => handleCompetenciesSelect(updatedCompetencies)}
+            />
             <ToastContainer/>
         </div>
     );
