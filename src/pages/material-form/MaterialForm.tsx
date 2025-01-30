@@ -6,32 +6,32 @@ import { DropdownMenu } from '../../widgets/dropdown-menu/dropdown-menu';
 import { TextArea } from '../../widgets/textarea/textarea';
 import { Competencies } from '../../widgets/competencies/competencies';
 import { CompetenciesModal } from '../../widgets/competencies-modal/CompetenciesModal';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React, {useEffect} from "react";
+import  {useEffect} from "react";
+
 
 interface MaterialFormProps {
     title: string;
     description: string;
     content: string;
-    materialType: string;
-    competencies: number[]; // Список id компетенций
-    competencyNames: Map<number, string>; // Карта id -> название компетенции
+    competencies: number[];
+    competencyNames: Map<number, string>;
     isModalOpen: boolean;
     toggleModal: () => void;
     handleCompetenciesSelect: (selectedCompetencies: number[]) => void;
     handleTitleChange: (value: string) => void;
     handleDescriptionChange: (value: string) => void;
     handleContentChange: (value: string) => void;
-    handleMaterialTypeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    onSave: () => void; // Общая функция сохранения
+    onSave: () => void;
+    value: number | null;       // <--- Основной проп для значения
+    onChange: (typeId: number) => void; // <--- Основной обработчик
 }
 
 export const MaterialForm = ({
                                  title,
                                  description,
                                  content,
-                                 materialType,
                                  competencies,
                                  competencyNames,
                                  isModalOpen,
@@ -40,14 +40,20 @@ export const MaterialForm = ({
                                  handleTitleChange,
                                  handleDescriptionChange,
                                  handleContentChange,
-                                 handleMaterialTypeChange,
                                  onSave,
+                                 value,
+                                 onChange,
+
                              }: MaterialFormProps) => {
     // Преобразуем список id компетенций в массив объектов { id, name }
     const initialCompetencies = competencies.map((id) => ({
         id,
         name: competencyNames.get(id) || 'Неизвестная компетенция',
     }));
+
+
+
+
 
     useEffect(() => {
         if (isModalOpen) {
@@ -77,13 +83,8 @@ export const MaterialForm = ({
                 </Label>
                 <Label label="Тип материала">
                     <DropdownMenu
-                        options={[
-                            { value: '1', label: 'Статья' },
-                            { value: '2', label: 'Книга' },
-                            { value: '3', label: 'Видео' },
-                        ]}
-                        value={materialType}
-                        onChange={handleMaterialTypeChange}
+                        value={value}        // <--- Используем переданное значение
+                        onChange={onChange}  // <--- Используем переданный обработчик
                     />
                 </Label>
                 <Label label="Описание материала">

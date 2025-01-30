@@ -23,6 +23,7 @@ interface MaterialUpdateFormProps {
     onSave: () => void;
     isModalOpen: boolean; // Добавьте это
     toggleModal: () => void; // Добавьте это
+    materialTypes: { value: string; label: string }[];
 }
 
 
@@ -39,8 +40,10 @@ export const MaterialUpdateForm = ({
                                        handleMaterialTypeChange,
                                        handleCompetenciesSelect,
                                        onSave,
-
+                                       materialTypes,
                                    }: MaterialUpdateFormProps) => {
+    // Массив с вариантами типов материалов
+
 
     // Модальное окно для выбора компетенций
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,13 +83,9 @@ export const MaterialUpdateForm = ({
                 </Label>
                 <Label label="Тип материала">
                     <DropdownMenu
-                        options={[
-                            { value: '1', label: 'Статья' },
-                            { value: '2', label: 'Книга' },
-                            { value: '3', label: 'Видео' },
-                        ]}
-                        value={materialType}
-                        onChange={handleMaterialTypeChange}
+                        options={materialTypes}
+                        value={materialType} // Передаем текущий тип материала
+                        onChange={handleMaterialTypeChange} // Обработчик изменений
                     />
                 </Label>
                 <Label label="Описание материала">

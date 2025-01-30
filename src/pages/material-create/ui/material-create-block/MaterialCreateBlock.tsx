@@ -1,6 +1,5 @@
 import { useState, useEffect} from 'react';
 import { MaterialForm } from '../../../material-form/MaterialForm.tsx';
-
 import { useCreateMaterialMutation, useFetchCompetenciesQuery } from '../../../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 
@@ -12,11 +11,13 @@ export const MaterialCreateBlock = () => {
 	// Состояния для формы
 	const [competencies, setCompetencies] = useState<number[]>([]);
 	const [competencyNames, setCompetencyNames] = useState<Map<number, string>>(new Map());
-	const [materialType, setMaterialType] = useState<string>('');
+	const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
 	const [title, setTitle] = useState<string>('');
 	const [description, setDescription] = useState<string>('');
 	const [content, setContent] = useState<string>('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
+
+
 
 	// Используем useEffect для преобразования данных компетенций в Map
 	useEffect(() => {
@@ -44,7 +45,7 @@ export const MaterialCreateBlock = () => {
 			hasError = true;
 		}
 
-		if (!materialType) {
+		if (!selectedTypeId) { // Изменяем проверку
 			toast.error('Пожалуйста, выберите тип материала!');
 			hasError = true;
 		}
@@ -69,7 +70,7 @@ export const MaterialCreateBlock = () => {
 		try {
 			const newMaterial = {
 				title,
-				type_id: parseInt(materialType, 10),
+				type_id: selectedTypeId!,
 				description,
 				content,
 				competencies,
@@ -92,7 +93,6 @@ export const MaterialCreateBlock = () => {
 			title={title}
 			description={description}
 			content={content}
-			materialType={materialType}
 			competencies={competencies}
 			competencyNames={competencyNames}
 			isModalOpen={isModalOpen}
@@ -101,8 +101,9 @@ export const MaterialCreateBlock = () => {
 			handleTitleChange={setTitle}
 			handleDescriptionChange={setDescription}
 			handleContentChange={setContent}
-			handleMaterialTypeChange={(e) => setMaterialType(e.target.value)}
 			onSave={handleSave}
+			value={selectedTypeId}
+			onChange={(typeId) => setSelectedTypeId(typeId)}
 		/>
 	);
 };

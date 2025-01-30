@@ -2,6 +2,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useFetchMaterialsQuery } from '../../../api/materialApi.ts';
 import css from './MaterialView.module.scss';
 import { SecondaryButton } from '../../../widgets/cancel-button/secondary-button.tsx';
+import NoImageAvailable from '../../../assets/images/no_image_available.svg';
+
 
 export const MaterialView = () => {
 	const { id } = useParams<{ id: string }>();
@@ -63,10 +65,7 @@ export const MaterialView = () => {
 				<div className={css.leftColumn}>
 					<img
 						draggable="false"
-						src={
-							material.imageUrl ||
-							'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
-						}
+						src={NoImageAvailable} // Статическое изображение
 						alt={material.title}
 						className={css.image}
 					/>
@@ -76,7 +75,7 @@ export const MaterialView = () => {
 				</div>
 
 				<div className={css.rightColumn}>
-					<div>
+				<div>
 						<label>Описание:</label>
 						<div className={css.description}>
 							<p>{material.description}</p>

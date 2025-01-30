@@ -10,7 +10,6 @@ interface Competency {
 }
 
 interface Material {
-    imageUrl: string;
     material_id: number;
     title: string;
     description: string;
@@ -21,27 +20,35 @@ interface Material {
     create_date: string;
 }
 
+interface MaterialType {
+    type_id: number;
+    type: string;
+}
+
 // Интерфейс для запроса на создание материала
 interface CreateMaterialRequest {
     title: string;
     description: string;
-    type_id: number;  // ID типа материала
+    type_id: number;
     content: string;
     competencies: number[];  // Компетенции передаются как массив чисел (ID компетенций)
 }
 
-// Интерфейс для запроса на обновление материала
 interface UpdateMaterialRequest {
     title: string;
     description: string;
-    type_id: number;
+    type_id: number; // ID типа материала
     content: string;
-    competencies: number[];
+    competencies: number[]; // Массив ID компетенций
 }
 
 // Типы для ответов
 interface MaterialsApiResponse {
     data: Material[];
+}
+
+interface MaterialTypeApiResponse {
+    data: MaterialType[];
 }
 
 interface CompetenciesApiResponse {
@@ -78,6 +85,15 @@ export const materialsApi = createApi({
                 return { data: response };
             },
         }),
+        fetchMaterialTypeById: builder.query<MaterialType, number>({
+            query: (typeId) => `/materialsType/${typeId}`, // Запрос по ID типа материала
+        }),
+        FetchMaterialType: builder.query<MaterialTypeApiResponse, void>({
+            query: () => '/materialsType',
+            transformResponse: (response: MaterialType[]): MaterialTypeApiResponse => {
+                return { data: response };
+            },
+        }),
         createMaterial: builder.mutation<CreateMaterialResponse, CreateMaterialRequest>({
             query: (newMaterial) => ({
                 url: '/materials',
@@ -85,16 +101,6 @@ export const materialsApi = createApi({
                 body: newMaterial,
             }),
             transformResponse: (response: { material: Material, message: string }): CreateMaterialResponse => {
-                return response;
-            },
-        }),
-        updateMaterial: builder.mutation<UpdateMaterialResponse, { material_id: number; updatedData: UpdateMaterialRequest }>({
-            query: ({ material_id, updatedData }) => ({
-                url: `/materials/${material_id}`,
-                method: 'PUT',
-                body: updatedData,
-            }),
-            transformResponse: (response: { material: Material, message: string }): UpdateMaterialResponse => {
                 return response;
             },
         }),
@@ -111,6 +117,17 @@ export const materialsApi = createApi({
         fetchMaterialById: builder.query<Material, number>({
             query: (materialId) => `/materials/${materialId}`, // Запрос по id
         }),
+        // Новый endpoint для обновления материала
+        updateMaterial: builder.mutation<UpdateMaterialResponse, { materialId: number, data: UpdateMaterialRequest }>({
+            query: ({ materialId, data }) => ({
+                url: `/materials/${materialId}`, // Используем materialId для пути
+                method: 'PUT',
+                body: data, // Передаем данные материала в body
+            }),
+            transformResponse: (response: { material: Material, message: string }): UpdateMaterialResponse => {
+                return response;
+            },
+        }),
     }),
 });
 
@@ -118,7 +135,9 @@ export const {
     useFetchMaterialsQuery,
     useFetchCompetenciesQuery,
     useCreateMaterialMutation,
-    useUpdateMaterialMutation,
     useDeleteMaterialMutation,
     useFetchMaterialByIdQuery, // Новый хук для получения материала по ID
+    useUpdateMaterialMutation, // Хук для обновления материала
+    useFetchMaterialTypeByIdQuery,
+    useFetchMaterialTypeQuery,
 } = materialsApi;

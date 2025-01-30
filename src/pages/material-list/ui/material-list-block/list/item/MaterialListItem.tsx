@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useRef, useEffect } from 'react';
 import css from './MaterialListItem.module.scss';
+import NoImageAvailable from "../../../../../../assets/images/No_image_available.svg";
 
 interface MaterialListItemProps {
 	materialId: number;
 	title: string;
 	competencies: string[];
-	imageUrl: string;
 	onMaterialDeleted: (materialId: number) => void;
 	onDeleteRequest: (materialId: number) => void;
 }
@@ -15,7 +15,6 @@ export const MaterialListItem = ({
 									 materialId,
 									 title,
 									 competencies,
-									 imageUrl,
 									 onDeleteRequest,
 								 }: MaterialListItemProps) => {
 	const navigate = useNavigate();
@@ -66,7 +65,7 @@ export const MaterialListItem = ({
 			<div className={css.preview}>
 				<img
 					draggable="false"
-					src={imageUrl} alt={title}
+					src={NoImageAvailable} // Статическое изображение
 				/>
 			</div>
 			<button
