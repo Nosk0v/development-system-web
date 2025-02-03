@@ -19,7 +19,7 @@ export const MaterialCreateBlock = () => {
 
 
 
-	// Используем useEffect для преобразования данных компетенций в Map
+
 	useEffect(() => {
 		if (competenciesData) {
 			const names = competenciesData.data.reduce((acc, competency) => {

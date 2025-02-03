@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import {useFetchMaterialsQuery, useUpdateMaterialMutation} from '../../../../api/materialApi.ts';
@@ -16,6 +15,7 @@ export const MaterialUpdateBlock = () => {
 	const [competencies, setCompetencies] = useState<string[]>([]); // Теперь массив строк
 	const [materialType, setMaterialType] = useState<string>('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
 
 	// Наполняем список компетенций строками (заменяем id на строки)
 	useEffect(() => {
@@ -37,11 +37,7 @@ export const MaterialUpdateBlock = () => {
 	const handleCompetenciesSelect = (selectedCompetencies: string[]) => {
 		setCompetencies(selectedCompetencies); // Изменен тип на строковый массив
 	};
-	const materialTypes = [
-		{ value: '1', label: 'Статья' },
-		{ value: '2', label: 'Книга' },
-		{ value: '3', label: 'Видео' },
-	];
+
 
 	const handleTitleChange = (value: string) => setTitle(value);
 	const handleDescriptionChange = (value: string) => setDescription(value);
@@ -127,7 +123,8 @@ export const MaterialUpdateBlock = () => {
 				handleContentChange={handleContentChange}
 				handleMaterialTypeChange={handleMaterialTypeChange}
 				onSave={handleSave}
-				materialTypes={materialTypes} // Передаем опции типов
+				value={selectedTypeId}
+				onChange={(typeId) => setSelectedTypeId(typeId)}
 			/>
 		</div>
 	);

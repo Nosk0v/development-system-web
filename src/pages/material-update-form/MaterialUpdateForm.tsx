@@ -2,12 +2,14 @@ import css from './MaterialUpdateForm.module.scss';
 import { MaterialUpdateControl } from './material-update-control';
 import { Label } from '../../widgets/input-label/label';
 import { Input } from '../../widgets/input/input';
-import { DropdownMenu } from '../../widgets/dropdown-menu/dropdown-menu';
 import { TextArea } from '../../widgets/textarea/textarea';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useEffect } from "react";
 import { UpdateModal } from '../../widgets/update-modal/UpdateModal';
+import {DropdownUpdateMenu} from "../../widgets/dropdown-menu/dropdown-update-menu.tsx";
+
+
 
 interface MaterialUpdateFormProps {
     title: string;
@@ -23,6 +25,8 @@ interface MaterialUpdateFormProps {
     onSave: () => void;
     isModalOpen: boolean; // Добавьте это
     toggleModal: () => void; // Добавьте это
+    value: number | null;
+    onChange: (typeId: number) => void;
     materialTypes: { value: string; label: string }[];
 }
 
@@ -32,15 +36,15 @@ export const MaterialUpdateForm = ({
                                        title,
                                        description,
                                        content,
-                                       materialType,
                                        competencies,
                                        handleTitleChange,
                                        handleDescriptionChange,
                                        handleContentChange,
-                                       handleMaterialTypeChange,
                                        handleCompetenciesSelect,
                                        onSave,
-                                       materialTypes,
+                                       value,
+                                       onChange,
+
                                    }: MaterialUpdateFormProps) => {
     // Массив с вариантами типов материалов
 
@@ -82,10 +86,9 @@ export const MaterialUpdateForm = ({
                     />
                 </Label>
                 <Label label="Тип материала">
-                    <DropdownMenu
-                        options={materialTypes}
-                        value={materialType} // Передаем текущий тип материала
-                        onChange={handleMaterialTypeChange} // Обработчик изменений
+                    <DropdownUpdateMenu
+                        value={value}        // <--- Используем переданное значение
+                        onChange={onChange}  // <--- Используем переданный обработчик
                     />
                 </Label>
                 <Label label="Описание материала">

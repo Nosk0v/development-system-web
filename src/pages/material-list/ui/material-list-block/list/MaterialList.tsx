@@ -10,7 +10,6 @@ interface Material {
 	material_id: number;
 	title: string;
 	competencies: string[];
-	imageUrl: string;
 }
 
 export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
@@ -24,8 +23,8 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 		if (data?.data) {
 			setMaterials(
 				data.data.map((item) => ({
-					...item,
-					imageUrl: item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
+					...item
+
 				}))
 			);
 		}
@@ -81,7 +80,7 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 							materialId={material.material_id}
 							title={material.title}
 							competencies={material.competencies}
-							imageUrl={material.imageUrl}
+
 							onMaterialDeleted={handleMaterialDeleted}
 							onDeleteRequest={handleDeleteRequest} // Передаем функцию для запроса на удаление
 						/>
