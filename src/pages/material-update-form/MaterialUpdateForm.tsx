@@ -3,34 +3,28 @@ import { MaterialUpdateControl } from './material-update-control';
 import { Label } from '../../widgets/input-label/label';
 import { Input } from '../../widgets/input/input';
 import { TextArea } from '../../widgets/textarea/textarea';
-import { ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React, { useState, useEffect } from "react";
+import {  useEffect } from 'react';
 import { UpdateModal } from '../../widgets/update-modal/UpdateModal';
-import {DropdownUpdateMenu} from "../../widgets/dropdown-menu/dropdown-update-menu.tsx";
-
-
+import { DropdownUpdateMenu } from "../../widgets/dropdown-menu/dropdown-update-menu.tsx";
 
 interface MaterialUpdateFormProps {
     title: string;
     description: string;
     content: string;
-    materialType: string;
-    competencies: string[]; // Массив строк
-    handleCompetenciesSelect: (selectedCompetencies: string[]) => void; // Принимает массив строк
+    competencies: string[];
+    handleCompetenciesSelect: (selectedCompetencies: string[]) => void;
     handleTitleChange: (value: string) => void;
     handleDescriptionChange: (value: string) => void;
     handleContentChange: (value: string) => void;
-    handleMaterialTypeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    materialType: number | null;
+    materialTypeName: string;
+    handleMaterialTypeChange: (value: number) => void;
     onSave: () => void;
-    isModalOpen: boolean; // Добавьте это
-    toggleModal: () => void; // Добавьте это
-    value: number | null;
-    onChange: (typeId: number) => void;
-    materialTypes: { value: string; label: string }[];
+    isModalOpen: boolean;
+    toggleModal: () => void;
 }
-
-
 
 export const MaterialUpdateForm = ({
                                        title,
@@ -42,24 +36,16 @@ export const MaterialUpdateForm = ({
                                        handleContentChange,
                                        handleCompetenciesSelect,
                                        onSave,
-                                       value,
-                                       onChange,
-
+                                       materialType,
+                                       materialTypeName,
+                                       handleMaterialTypeChange,
+                                       isModalOpen,
+                                       toggleModal
                                    }: MaterialUpdateFormProps) => {
-    // Массив с вариантами типов материалов
 
-
-    // Модальное окно для выбора компетенций
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const toggleModalWindow = () => {
-        setIsModalOpen(!isModalOpen);
-    };
-
-    // Обработчик удаления компетенции
     const handleRemoveCompetency = (index: number) => {
         const updatedCompetencies = competencies.filter((_, i) => i !== index);
-        handleCompetenciesSelect(updatedCompetencies); // Передаем обновленный массив родительскому компоненту
+        handleCompetenciesSelect(updatedCompetencies);
     };
 
     useEffect(() => {
@@ -77,7 +63,6 @@ export const MaterialUpdateForm = ({
     return (
         <div className={css.wrapper}>
             <MaterialUpdateControl onSave={onSave} />
-
             <div className={css.form}>
                 <Label label="Название">
                     <Input
@@ -85,12 +70,15 @@ export const MaterialUpdateForm = ({
                         onChange={(e) => handleTitleChange(e.target.value)}
                     />
                 </Label>
+
                 <Label label="Тип материала">
                     <DropdownUpdateMenu
-                        value={value}        // <--- Используем переданное значение
-                        onChange={onChange}  // <--- Используем переданный обработчик
+                        value={materialType}
+                        selectedTypeName={materialTypeName}
+                        onChange={handleMaterialTypeChange}
                     />
                 </Label>
+
                 <Label label="Описание материала">
                     <TextArea
                         value={description}
@@ -98,6 +86,7 @@ export const MaterialUpdateForm = ({
                         onChange={(e) => handleDescriptionChange(e.target.value)}
                     />
                 </Label>
+
                 <Label label="Контент материала">
                     <TextArea
                         value={content}
@@ -116,8 +105,8 @@ export const MaterialUpdateForm = ({
                                         <button
                                             className={css.deleteButton}
                                             onClick={(e) => {
-                                                e.stopPropagation(); // Чтобы клик не активировал другие действия
-                                                handleRemoveCompetency(index); // Удалить компетенцию
+                                                e.stopPropagation();
+                                                handleRemoveCompetency(index);
                                             }}
                                         >
                                             🗑️
@@ -130,7 +119,7 @@ export const MaterialUpdateForm = ({
                         )}
                     </div>
                     <button
-                        onClick={toggleModalWindow}
+                        onClick={toggleModal}
                         className={css.addCompetencyButton}
                     >
                         Добавить компетенции
@@ -140,11 +129,11 @@ export const MaterialUpdateForm = ({
 
             <UpdateModal
                 isOpen={isModalOpen}
-                onClose={toggleModalWindow}
-                selectedCompetencies={competencies} // Передаем текущий список компетенций
+                onClose={toggleModal}
+                selectedCompetencies={competencies}
                 onSave={(updatedCompetencies) => handleCompetenciesSelect(updatedCompetencies)}
             />
-            <ToastContainer/>
+            <ToastContainer />
         </div>
     );
 };

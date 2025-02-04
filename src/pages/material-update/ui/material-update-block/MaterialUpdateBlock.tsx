@@ -1,59 +1,61 @@
 import { useParams } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-import {useFetchMaterialsQuery, useUpdateMaterialMutation} from '../../../../api/materialApi.ts';
+import { useState, useEffect } from 'react';
+import { useFetchMaterialsQuery, useUpdateMaterialMutation, useFetchMaterialTypeQuery } from '../../../../api/materialApi.ts';
 import { MaterialUpdateForm } from '../../../material-update-form/MaterialUpdateForm.tsx';
-import {toast} from "react-toastify";
+import { toast } from 'react-toastify';
 
 export const MaterialUpdateBlock = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const { data, isLoading, error } = useFetchMaterialsQuery();
+	const { data: materialTypesData } = useFetchMaterialTypeQuery();
 	const [updateMaterial] = useUpdateMaterialMutation();
+
+	const material = data?.data.find((item) => item.material_id === Number(id));
+
+	// Найти type_id по type_name
+	const getTypeIdByName = (typeName: string) => {
+		const foundType = materialTypesData?.data.find((type) => type.type === typeName);
+		return foundType ? foundType.type_id : 0;
+	};
+
+	const defaultMaterialType = material ? getTypeIdByName(material.type_name) : 0;
+
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [content, setContent] = useState('');
-	const [competencies, setCompetencies] = useState<string[]>([]); // Теперь массив строк
-	const [materialType, setMaterialType] = useState<string>('');
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
+	const [competencies, setCompetencies] = useState<string[]>([]);
+	const [materialType, setMaterialType] = useState<number>(defaultMaterialType);
+	const [materialTypeName, setMaterialTypeName] = useState<string>('');
 
-	// Наполняем список компетенций строками (заменяем id на строки)
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
 	useEffect(() => {
-		if (data) {
+		if (data && materialTypesData) {
 			const material = data.data.find((item) => item.material_id === Number(id));
 			if (material) {
-				const { title, description, content, competencies, type_id } = material;
+				const { title, description, content, competencies, type_name } = material;
 				setTitle(title);
 				setDescription(description);
 				setContent(content);
-				setCompetencies(competencies); // Просто передаем массив строк
-				setMaterialType(String(type_id)); // Преобразуем type_id в строку
+				setCompetencies(competencies);
+				setMaterialType(getTypeIdByName(type_name));
+				setMaterialTypeName(type_name);
 			}
 		}
-	}, [data, id]);
-
-	const toggleModal = () => setIsModalOpen(!isModalOpen);
-
-	const handleCompetenciesSelect = (selectedCompetencies: string[]) => {
-		setCompetencies(selectedCompetencies); // Изменен тип на строковый массив
-	};
-
-
-	const handleTitleChange = (value: string) => setTitle(value);
-	const handleDescriptionChange = (value: string) => setDescription(value);
-	const handleContentChange = (value: string) => setContent(value);
-	const handleMaterialTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => setMaterialType(e.target.value);
+	}, [data, materialTypesData, id]);
 
 	const handleSave = async () => {
-		// Проверка обязательных полей
 		if (!title) {
 			toast.error('Пожалуйста, укажите название материала!');
 			return;
 		}
+
 		if (!materialType) {
 			toast.error('Пожалуйста, выберите тип материала!');
 			return;
 		}
+
 		if (!description) {
 			toast.error('Пожалуйста, укажите описание материала!');
 			return;
@@ -68,15 +70,13 @@ export const MaterialUpdateBlock = () => {
 		}
 
 		try {
-			// Передаем данные с проверкой, что type_id всегда числовое значение
 			const updatedMaterialData = {
 				title,
-				type_id: materialType ? parseInt(materialType, 10) : 0, // Преобразуем в число, если есть
+				type_id: materialType,
 				description,
 				content,
 				competencies: competencies.map((competencyName) => {
-					switch (competencyName) {
-						case 'Go разработчик':
+					switch (competencyName) {case 'Go разработчик':
 							return 1;
 						case 'Python разработчик':
 							return 2;
@@ -88,9 +88,6 @@ export const MaterialUpdateBlock = () => {
 				}).filter((id) => id !== null),
 			};
 
-			console.log('Обновленные данные материала:', updatedMaterialData);
-
-			// Отправляем запрос на обновление материала
 			await updateMaterial({ materialId: Number(id), data: updatedMaterialData }).unwrap();
 			toast.success('Материал успешно обновлен!');
 		} catch (error) {
@@ -113,18 +110,17 @@ export const MaterialUpdateBlock = () => {
 				title={title}
 				description={description}
 				content={content}
-				materialType={materialType}
 				competencies={competencies}
 				isModalOpen={isModalOpen}
-				toggleModal={toggleModal}
-				handleCompetenciesSelect={handleCompetenciesSelect}
-				handleTitleChange={handleTitleChange}
-				handleDescriptionChange={handleDescriptionChange}
-				handleContentChange={handleContentChange}
-				handleMaterialTypeChange={handleMaterialTypeChange}
+				toggleModal={() => setIsModalOpen(!isModalOpen)}
+				handleCompetenciesSelect={setCompetencies}
+				handleTitleChange={setTitle}
+				handleDescriptionChange={setDescription}
+				handleContentChange={setContent}
+				handleMaterialTypeChange={setMaterialType}
+				materialType={materialType}
+				materialTypeName={materialTypeName}
 				onSave={handleSave}
-				value={selectedTypeId}
-				onChange={(typeId) => setSelectedTypeId(typeId)}
 			/>
 		</div>
 	);

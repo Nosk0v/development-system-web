@@ -1,26 +1,30 @@
 import css from './dropdown-menu.module.scss';
-import React from 'react';
 import classNames from 'classnames';
-import { useFetchMaterialTypeQuery } from '../../api/materialApi'; // Импортируем хук API
+import { useFetchMaterialTypeQuery } from '../../api/materialApi';
+import {useEffect} from "react";
 
 interface DropdownUpdateMenuProps {
 	width?: number;
 	height?: number;
 	id?: string;
-	value: number | null; // Принимаем числовой ID типа материала
-	onChange: (value: number) => void; // Возвращаем числовой ID
+	value: number | null;
+	selectedTypeName: string;
+	onChange: (value: number) => void;
 }
 
-export const DropdownUpdateMenu = (props: DropdownUpdateMenuProps) => {
-	const { width, height, id, value, onChange } = props;
-
-	// Получаем данные из API
+export const DropdownUpdateMenu = ({ value, selectedTypeName, onChange, width, height, id }: DropdownUpdateMenuProps) => {
 	const { data, isLoading, error } = useFetchMaterialTypeQuery();
+	useEffect(() => {
+		if (data && value === null && selectedTypeName) {
+			const selectedType = data?.data.find(
+				(option) => option.type === selectedTypeName
+			);
+			if (selectedType) {
+				onChange(selectedType.type_id); // Передаем значение из data в родителя
+			}
+		}
 
-	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		onChange(Number(e.target.value));
-	};
-
+	}, [data, value, selectedTypeName, onChange]);
 	if (isLoading) {
 		return (
 			<div className={css.wrapper} style={{ width, height }}>
@@ -41,25 +45,24 @@ export const DropdownUpdateMenu = (props: DropdownUpdateMenuProps) => {
 		);
 	}
 
-	// Преобразуем данные API в опции
 	const options = data?.data.map((type) => ({
-		value: type.type_id.toString(),
+		value: type.type_id,
 		label: type.type,
 	})) || [];
+
+	const selectedType = options.find(option => option.label === selectedTypeName);
+	const dropdownValue = value ?? selectedType?.value ?? '';
+
+	console.log("Итоговый dropdownValue:", dropdownValue);
 
 	return (
 		<div className={css.wrapper} style={{ width, height }}>
 			<select
-				className={classNames(css.select, {
-					[css.placeholder]: !value
-				})}
+				className={classNames(css.select)}
 				id={id}
-				value={value?.toString() || ''}
-				onChange={handleChange}
+				value={dropdownValue}
+				onChange={(e) => onChange(Number(e.target.value))}
 			>
-				<option value="" disabled>
-					Выберите тип
-				</option>
 				{options.map((option) => (
 					<option key={option.value} value={option.value}>
 						{option.label}
