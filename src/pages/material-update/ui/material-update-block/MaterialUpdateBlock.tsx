@@ -14,7 +14,7 @@ export const MaterialUpdateBlock = () => {
 
 	const material = data?.data.find((item) => item.material_id === Number(id));
 
-	// Найти type_id по type_name
+	// Find type_id by type_name
 	const getTypeIdByName = (typeName: string) => {
 		const foundType = materialTypesData?.data.find((type) => type.type === typeName);
 		return foundType ? foundType.type_id : 0;
@@ -31,6 +31,15 @@ export const MaterialUpdateBlock = () => {
 	const [materialTypeName, setMaterialTypeName] = useState<string>('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
+	// Store initial values to compare against later
+	const [initialValues, setInitialValues] = useState({
+		title: '',
+		description: '',
+		content: '',
+		competencies: [] as string[],
+		materialType: defaultMaterialType,
+	});
+
 	useEffect(() => {
 		if (data && materialTypesData) {
 			const material = data.data.find((item) => item.material_id === Number(id));
@@ -42,6 +51,15 @@ export const MaterialUpdateBlock = () => {
 				setCompetencies(competencies);
 				setMaterialType(getTypeIdByName(type_name));
 				setMaterialTypeName(type_name);
+
+				// Set initial values for comparison
+				setInitialValues({
+					title,
+					description,
+					content,
+					competencies,
+					materialType: getTypeIdByName(type_name),
+				});
 			}
 		}
 	}, [data, materialTypesData, id]);
@@ -61,6 +79,18 @@ export const MaterialUpdateBlock = () => {
 	}, [competencies, competenciesData]);
 
 	const handleSave = async () => {
+		// Check if there are no changes to the material
+		if (
+			title === initialValues.title &&
+			description === initialValues.description &&
+			content === initialValues.content &&
+			JSON.stringify(competencies) === JSON.stringify(initialValues.competencies) &&
+			materialType === initialValues.materialType
+		) {
+			toast.info('Пожалуйста, внесите хотя бы одно изменение в материал!');
+			return;
+		}
+
 		if (!title) {
 			toast.error('Пожалуйста, укажите название материала!');
 			return;

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 interface UpdateModalProps {
     isOpen: boolean;
     onClose: () => void;
-    selectedCompetencies: string[]; // Список выбранных компетенций
+    selectedCompetencies: string[]; // Список выбранных компетенций (имена)
     onSave: (updatedCompetencies: string[]) => void; // Обработчик сохранения
 }
 
@@ -16,24 +16,32 @@ export const UpdateModal = ({
                                 onSave
                             }: UpdateModalProps) => {
     const { data, isLoading, error } = useFetchCompetenciesQuery();
-    const [selected, setSelected] = useState<string[]>([]);
+    const [selected, setSelected] = useState<number[]>([]); // Состояние теперь хранит ID компетенций
 
     useEffect(() => {
         if (isOpen) {
-            setSelected(selectedCompetencies); // Устанавливаем переданный список выбранных компетенций
+            // Преобразуем список имен в список ID для начальной загрузки
+            const selectedIds = data?.data
+                .filter((competency) => selectedCompetencies.includes(competency.name))
+                .map((competency) => competency.competency_id) || [];
+            setSelected(selectedIds);
         }
-    }, [isOpen, selectedCompetencies]);
+    }, [isOpen, selectedCompetencies, data?.data]);
 
-    const handleCompetencyToggle = (competencyName: string) => {
+    const handleCompetencyToggle = (competencyId: number) => {
         setSelected((prev) =>
-            prev.includes(competencyName)
-                ? prev.filter((name) => name !== competencyName)
-                : [...prev, competencyName]
+            prev.includes(competencyId)
+                ? prev.filter((id) => id !== competencyId)
+                : [...prev, competencyId]
         );
     };
 
     const handleSave = () => {
-        onSave(selected); // Передаем обновленный список в родительский компонент
+        // Передаем имена компетенций, соответствующие выбранным ID, в родительский компонент
+        const updatedCompetencies = data?.data
+            .filter((competency) => selected.includes(competency.competency_id))
+            .map((competency) => competency.name) || [];
+        onSave(updatedCompetencies);
         onClose();
     };
 
@@ -66,8 +74,8 @@ export const UpdateModal = ({
                     {data?.data.map(({ competency_id, name }) => (
                         <li
                             key={competency_id}
-                            className={selected.includes(name) ? css.selected : css.listItem}
-                            onClick={() => handleCompetencyToggle(name)}
+                            className={selected.includes(competency_id) ? css.selected : css.listItem}
+                            onClick={() => handleCompetencyToggle(competency_id)} // Используем ID для выбора
                         >
                             {name}
                         </li>

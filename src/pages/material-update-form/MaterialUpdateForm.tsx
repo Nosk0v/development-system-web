@@ -5,7 +5,7 @@ import { Input } from '../../widgets/input/input';
 import { TextArea } from '../../widgets/textarea/textarea';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {  useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { UpdateModal } from '../../widgets/update-modal/UpdateModal';
 import { DropdownUpdateMenu } from "../../widgets/dropdown-menu/dropdown-update-menu.tsx";
 
@@ -43,18 +43,14 @@ export const MaterialUpdateForm = ({
                                        toggleModal
                                    }: MaterialUpdateFormProps) => {
 
-    const handleRemoveCompetency = (index: number) => {
+    const handleRemoveCompetency = useCallback((index: number) => {
         const updatedCompetencies = competencies.filter((_, i) => i !== index);
         handleCompetenciesSelect(updatedCompetencies);
-    };
+    }, [competencies, handleCompetenciesSelect]);
 
     useEffect(() => {
-        if (isModalOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
-
+        // Handling the overflow behavior for the modal
+        document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
         return () => {
             document.body.style.overflow = 'auto';
         };
@@ -131,7 +127,7 @@ export const MaterialUpdateForm = ({
                 isOpen={isModalOpen}
                 onClose={toggleModal}
                 selectedCompetencies={competencies}
-                onSave={(updatedCompetencies) => handleCompetenciesSelect(updatedCompetencies)}
+                onSave={handleCompetenciesSelect}
             />
             <ToastContainer />
         </div>
