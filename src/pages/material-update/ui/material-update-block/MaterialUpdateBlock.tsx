@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useFetchMaterialsQuery, useUpdateMaterialMutation, useFetchMaterialTypeQuery } from '../../../../api/materialApi.ts';
+import { useFetchMaterialsQuery, useUpdateMaterialMutation, useFetchMaterialTypeQuery, useFetchCompetenciesQuery } from '../../../../api/materialApi.ts';
 import { MaterialUpdateForm } from '../../../material-update-form/MaterialUpdateForm.tsx';
 import { toast } from 'react-toastify';
 
@@ -9,6 +9,7 @@ export const MaterialUpdateBlock = () => {
 
 	const { data, isLoading, error } = useFetchMaterialsQuery();
 	const { data: materialTypesData } = useFetchMaterialTypeQuery();
+	const { data: competenciesData } = useFetchCompetenciesQuery();
 	const [updateMaterial] = useUpdateMaterialMutation();
 
 	const material = data?.data.find((item) => item.material_id === Number(id));
@@ -25,9 +26,9 @@ export const MaterialUpdateBlock = () => {
 	const [description, setDescription] = useState('');
 	const [content, setContent] = useState('');
 	const [competencies, setCompetencies] = useState<string[]>([]);
+	const [competencyIds, setCompetencyIds] = useState<number[]>([]);
 	const [materialType, setMaterialType] = useState<number>(defaultMaterialType);
 	const [materialTypeName, setMaterialTypeName] = useState<string>('');
-
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	useEffect(() => {
@@ -44,6 +45,20 @@ export const MaterialUpdateBlock = () => {
 			}
 		}
 	}, [data, materialTypesData, id]);
+
+	useEffect(() => {
+		if (competenciesData) {
+			const competenciesMap = new Map(
+				competenciesData.data.map(comp => [comp.name.toLowerCase(), comp.competency_id])
+			);
+
+			const matchedIds = competencies
+				.map(name => competenciesMap.get(name.toLowerCase()))
+				.filter(id => id !== undefined) as number[];
+
+			setCompetencyIds(matchedIds);
+		}
+	}, [competencies, competenciesData]);
 
 	const handleSave = async () => {
 		if (!title) {
@@ -64,7 +79,7 @@ export const MaterialUpdateBlock = () => {
 			toast.error('Пожалуйста, добавьте контент материала!');
 			return;
 		}
-		if (competencies.length === 0) {
+		if (competencyIds.length === 0) {
 			toast.error('Пожалуйста, выберите хотя бы одну компетенцию!');
 			return;
 		}
@@ -75,17 +90,7 @@ export const MaterialUpdateBlock = () => {
 				type_id: materialType,
 				description,
 				content,
-				competencies: competencies.map((competencyName) => {
-					switch (competencyName) {case 'Go разработчик':
-							return 1;
-						case 'Python разработчик':
-							return 2;
-						case 'JavaScript разработчик':
-							return 3;
-						default:
-							return null;
-					}
-				}).filter((id) => id !== null),
+				competencies: competencyIds,
 			};
 
 			await updateMaterial({ materialId: Number(id), data: updatedMaterialData }).unwrap();
