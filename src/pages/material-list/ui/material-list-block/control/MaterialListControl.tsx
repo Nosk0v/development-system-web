@@ -4,19 +4,22 @@ import css from './MaterialListControl.module.scss';
 import { MainButton } from '../../../../../widgets/button/button';
 import { Label } from '../../../../../widgets/input-label/label';
 import { Input } from '../../../../../widgets/input/input';
-import { useId } from 'react';
+import {ChangeEvent, useId} from 'react';
 
 export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) => void }) => {
 	const navigate = useNavigate();
 	const searchId = useId();
 
-	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
 		onSearch(event.target.value); // Передаем значение в родительский компонент
 	};
 
 	const onCreateMaterialClick = () => {
 		navigate('/create-material');
 	};
+	const onCompListClick = () => {
+		navigate('/complete-material');
+	}
 
 	return (
 		<div className={css.wrapper}>
@@ -32,6 +35,11 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 				text="Создать"
 				onClick={onCreateMaterialClick}
 			/>
+			<MainButton
+				text = "Управление компетенциями"
+				className={css.compButton}
+				onClick={onCompListClick}
+				/>
 		</div>
 	);
 };

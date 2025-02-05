@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 // Типы для данных
 interface Competency {
@@ -34,6 +34,10 @@ interface CreateMaterialRequest {
     competencies: number[];  // Компетенции передаются как массив чисел (ID компетенций)
 }
 
+interface CreateMaterialTypeRequest {
+    type: string;
+}
+
 interface UpdateMaterialRequest {
     title: string;
     description: string;
@@ -60,6 +64,11 @@ interface CreateMaterialResponse {
     message: string;
 }
 
+interface CreateMaterialTypeResponse {
+    materialType: MaterialType
+    message: string;
+}
+
 interface UpdateMaterialResponse {
     material: Material;
     message: string;
@@ -67,6 +76,10 @@ interface UpdateMaterialResponse {
 
 interface DeleteMaterialResponse {
     message: string; // Сообщение об успешном удалении
+}
+
+interface DeleteMaterialTypeResponse {
+    message: string;
 }
 
 export const materialsApi = createApi({
@@ -104,12 +117,32 @@ export const materialsApi = createApi({
                 return response;
             },
         }),
+        createMaterialType: builder.mutation<CreateMaterialTypeResponse, CreateMaterialTypeRequest>({
+            query: (newMaterialType) => ({
+                url: '/materialsType',
+                method: 'POST',
+                body: newMaterialType,
+            }),
+            transformResponse: (response: {materialType: MaterialType, message: string}) : CreateMaterialTypeResponse => {
+                return response;
+            },
+        }),
         deleteMaterial: builder.mutation<DeleteMaterialResponse, number>({
             query: (materialId) => ({
                 url: `/materials/${materialId}`,
                 method: 'DELETE',
             }),
             transformResponse: (response: { message: string }): DeleteMaterialResponse => {
+                return response;
+            },
+        }),
+
+        deleteMaterialType: builder.mutation<DeleteMaterialTypeResponse, number>({
+            query: (materialTypeId) => ({
+                url: `/materialsType/${materialTypeId}`,
+                method: 'DELETE',
+            }),
+            transformResponse: (response: {message: string}): DeleteMaterialTypeResponse => {
                 return response;
             },
         }),
@@ -122,7 +155,7 @@ export const materialsApi = createApi({
             query: ({ materialId, data }) => ({
                 url: `/materials/${materialId}`, // Используем materialId для пути
                 method: 'PUT',
-                body: data, // Передаем данные материала в body
+                body: data,
             }),
             transformResponse: (response: { material: Material, message: string }): UpdateMaterialResponse => {
                 return response;
@@ -140,4 +173,6 @@ export const {
     useUpdateMaterialMutation, // Хук для обновления материала
     useFetchMaterialTypeByIdQuery,
     useFetchMaterialTypeQuery,
+    useCreateMaterialTypeMutation,
+    useDeleteMaterialTypeMutation
 } = materialsApi;
