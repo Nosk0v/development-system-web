@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFetchMaterialsQuery } from '../../../../../api/materialApi.ts';
 import { MaterialListItem } from './item';
-import {toast, ToastContainer} from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useDeleteMaterialMutation } from '../../../../../api/materialApi.ts';
 import 'react-toastify/dist/ReactToastify.css';
 import css from './MaterialList.module.scss';
@@ -15,7 +15,7 @@ interface Material {
 export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 	const { data, error, isLoading } = useFetchMaterialsQuery();
 	const [materials, setMaterials] = useState<Material[]>([]);
-	const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(null); // Для хранения выбранного материала
+	const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [deleteMaterial, { isLoading: isDeleting }] = useDeleteMaterialMutation();
 
@@ -24,11 +24,23 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 			setMaterials(
 				data.data.map((item) => ({
 					...item
-
 				}))
 			);
 		}
 	}, [data]);
+
+	// Отключение прокрутки при открытии модального окна
+	useEffect(() => {
+		if (isModalOpen) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
+
+		return () => {
+			document.body.style.overflow = '';
+		};
+	}, [isModalOpen]);
 
 	const handleMaterialDeleted = (deletedId: number) => {
 		setMaterials((prev) => prev.filter((material) => material.material_id !== deletedId));
@@ -36,26 +48,26 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 
 	const handleDeleteRequest = (materialId: number) => {
 		setSelectedMaterialId(materialId);
-		setIsModalOpen(true); // Открываем модальное окно
+		setIsModalOpen(true);
 	};
 
 	const handleDeleteConfirm = async () => {
 		if (selectedMaterialId !== null) {
 			try {
 				await deleteMaterial(selectedMaterialId).unwrap();
-				handleMaterialDeleted(selectedMaterialId); // Удаляем материал
+				handleMaterialDeleted(selectedMaterialId);
 				toast.success('Материал успешно удалён!');
 			} catch (error) {
 				console.error('Ошибка при удалении:', error);
 				toast.error('Ошибка при удалении материала');
 			} finally {
-				setIsModalOpen(false); // Закрываем модальное окно
+				setIsModalOpen(false);
 			}
 		}
 	};
 
 	const handleModalClose = () => {
-		setIsModalOpen(false); // Закрываем модальное окно
+		setIsModalOpen(false);
 	};
 
 	const filteredMaterials = materials.filter((material) =>
@@ -80,9 +92,8 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 							materialId={material.material_id}
 							title={material.title}
 							competencies={material.competencies}
-
 							onMaterialDeleted={handleMaterialDeleted}
-							onDeleteRequest={handleDeleteRequest} // Передаем функцию для запроса на удаление
+							onDeleteRequest={handleDeleteRequest}
 						/>
 					))
 				) : (
@@ -95,7 +106,7 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 
 			{isModalOpen && (
 				<div className={css.modal} onClick={handleModalClose}>
-					<div className={css.modalContent}>
+					<div className={css.modalContent} onClick={(e) => e.stopPropagation()}>
 						<p>Вы точно хотите удалить материал?</p>
 						<div className={css.modalActions}>
 							<button onClick={handleDeleteConfirm} disabled={isDeleting}>

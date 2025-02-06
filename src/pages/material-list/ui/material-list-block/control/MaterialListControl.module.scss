@@ -1,21 +1,8 @@
-/* Стили для элемента управления списком материалов */
 .wrapper {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  /* Основная кнопка */
-  .mainButton {
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #FFFFFF;
-    background-color: #F91F71; /* Красный основной цвет */
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-  }
+  height: 100%;
 }
 
 /* Поле поиска */
@@ -34,6 +21,19 @@
   box-shadow: 0 0 4px rgba(249, 31, 113, 0.3);
 }
 
+/* Основная кнопка */
+.mainButton {
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background-color: #F91F71; /* Красный основной цвет */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
 .mainButton:hover {
   background-color: #db3070;
   transform: scale(1.02);
@@ -48,11 +48,18 @@
   cursor: not-allowed;
 }
 
+/* Контейнер для кнопок внизу */
+.bottomButtons {
+  margin-top: auto; /* Отправляет кнопки вниз */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .compButton {
   color: #FFFFFF;
 }
 
-
-
-
-
+.typeButton {
+  color: #FFFFFF;
+}

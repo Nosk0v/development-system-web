@@ -3,6 +3,7 @@
   flex-direction: column;
   height: 100%;  // Занимает всю высоту родительского контейнера
   width: 100%;  // Занимает всю ширину
+  scrollbar-width: none;
 }
 
 .list {
