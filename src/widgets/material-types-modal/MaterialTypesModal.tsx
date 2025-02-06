@@ -1,7 +1,9 @@
+// MaterialTypesModal.tsx
 import { useEffect, useState } from 'react';
 import { useFetchMaterialTypeQuery, useDeleteMaterialTypeMutation, useFetchMaterialsQuery } from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './MaterialTypesModal.module.scss';
+import { CreateMaterialTypeModal } from '../create-material-type/CreateMaterialTypeModal';  // Импортируем новый компонент
 
 interface MaterialTypesModalProps {
     isOpen: boolean;
@@ -9,10 +11,11 @@ interface MaterialTypesModalProps {
 }
 
 export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps) => {
-    const { data: materialTypesData, isLoading: isMaterialTypesLoading, isError: isMaterialTypesError } = useFetchMaterialTypeQuery();
+    const { data: materialTypesData, isLoading: isMaterialTypesLoading, isError: isMaterialTypesError, refetch } = useFetchMaterialTypeQuery();
     const { data: materialsData, isLoading: isMaterialsLoading, isError: isMaterialsError } = useFetchMaterialsQuery();  // Fetch all materials
     const [materialTypes, setMaterialTypes] = useState<{ type_id: number; type: string }[]>([]);
     const [deleteMaterialType] = useDeleteMaterialTypeMutation();
+    const [isCreateModalOpen, setCreateModalOpen] = useState(false);
 
     useEffect(() => {
         if (materialTypesData && materialTypesData.data) {
@@ -21,13 +24,11 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
     }, [materialTypesData]);
 
     const handleDelete = (typeId: number, typeName: string) => {
-        // Проверяем, используется ли тип в материалах
         if (materialsData && materialsData.data.some((material) => material.type_name === typeName)) {
             toast.error("Невозможно удалить тип материала, так как он используется в одном или нескольких материалах.");
             return;
         }
 
-        // Если тип не используется в материалах, удаляем его
         deleteMaterialType(typeId)
             .unwrap()
             .then(() => {
@@ -40,7 +41,22 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
             });
     };
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
+    // Функция для перезагрузки списка типов после создания
+    const handleTypeCreated = () => {
+        refetch();  // Вызываем refetch для обновления данных
+    };
 
     return (
         <div className={styles.modal}>
@@ -50,7 +66,6 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
 
                 {isMaterialTypesLoading && <p>Загрузка типов материалов...</p>}
                 {isMaterialTypesError && <p>Ошибка загрузки типов материалов</p>}
-
                 {isMaterialsLoading && <p>Загрузка материалов...</p>}
                 {isMaterialsError && <p>Ошибка загрузки материалов</p>}
 
@@ -62,7 +77,7 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
                                 className={styles.deleteButton}
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleDelete(type.type_id, type.type);  // Передаем название типа
+                                    handleDelete(type.type_id, type.type);
                                 }}
                             >
                                 🗑️
@@ -70,10 +85,15 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
                         </li>
                     ))}
                 </ul>
+
                 <div className={styles.actions}>
                     <button onClick={onClose}>Закрыть</button>
+                    <button onClick={() => setCreateModalOpen(true)}>Создать</button>
                 </div>
             </div>
+
+            {/* Модалка для создания нового типа материала */}
+            <CreateMaterialTypeModal isOpen={isCreateModalOpen} onClose={() => setCreateModalOpen(false)} onTypeCreated={handleTypeCreated} />
         </div>
     );
 };

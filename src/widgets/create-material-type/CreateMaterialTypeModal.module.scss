@@ -1,0 +1,125 @@
+/* Модальное окно */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Затемненный фон */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Контент модального окна */
+.content {
+  position: relative;
+  min-width: 400px;
+  background-color: #ffffff; /* Белый фон */
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-out;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: #333333; /* Темно-серый цвет текста */
+    letter-spacing: 1px;
+  }
+}
+
+/* Поле ввода */
+.inputField {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #D8E1EF;
+  font-size: 14px;
+  color: #484848;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: #a0a0a0;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #F91F71;
+    box-shadow: 0 0 4px rgba(249, 31, 113, 0.3);
+    background-color: #fff;
+  }
+
+}
+/* Действия */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+
+  button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    background-color: #F91F71; /* Красный основной цвет */
+    color: #ffffff; /* Белый текст на кнопке */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      background-color: #db3070; /* Светлый красный при наведении */
+      transform: scale(1.02); /* Легкое увеличение кнопки */
+    }
+
+    &:active {
+      background-color: #b8155b; /* Темный красный при нажатии */
+      transform: translateY(1px); /* Легкое сжатие кнопки */
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
