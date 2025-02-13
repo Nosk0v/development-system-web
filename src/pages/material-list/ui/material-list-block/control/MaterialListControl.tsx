@@ -6,28 +6,31 @@ import { MainButton } from '../../../../../widgets/button/button';
 import { Label } from '../../../../../widgets/input-label/label';
 import { Input } from '../../../../../widgets/input/input';
 import { ChangeEvent, useId } from 'react';
-import { MaterialTypesModal } from '../../../../../widgets/material-types-modal/MaterialTypesModal'; // Импортируем модальное окно
+import { MaterialTypesModal } from '../../../../../widgets/material-types-modal/MaterialTypesModal';
+import { SkillsModal } from "../../../../../widgets/comp-modal/SkillsModal.tsx";
 
 export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) => void }) => {
 	const navigate = useNavigate();
 	const searchId = useId();
-	const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для открытия модального окна
+	const [isMaterialTypesModalOpen, setIsMaterialTypesModalOpen] = useState(false);
+	const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
 
 	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-		onSearch(event.target.value); // Передаем значение в родительский компонент
+		onSearch(event.target.value);
 	};
 
 	const onCreateMaterialClick = () => {
 		navigate('/create-material');
 	};
-
-	const onCompListClick = () => {
-		navigate('/complete-material');
-	};
-
 	const onMaterialTypesClick = () => {
-		setIsModalOpen(true); // Открываем модальное окно
+		setIsMaterialTypesModalOpen(true);
+	}
+
+	const onCompClick = () => {
+		setIsSkillModalOpen(true);
 	};
+
+
 
 	return (
 		<div className={css.wrapper}>
@@ -41,12 +44,16 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 
 			{/* Остальные кнопки внизу */}
 			<div className={css.bottomButtons}>
-				<MainButton text="Управление компетенциями" className={css.compButton} onClick={onCompListClick} />
+				<MainButton text="Компетенции" className={css.compButton} onClick={onCompClick} />
 				<MainButton text="Список типов материалов" className={css.typeButton} onClick={onMaterialTypesClick} />
 			</div>
 
+
+
 			{/* Модальное окно для типов материалов */}
-			{isModalOpen && <MaterialTypesModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+			{isMaterialTypesModalOpen && <MaterialTypesModal isOpen={isMaterialTypesModalOpen} onClose={() => setIsMaterialTypesModalOpen(false)} />}
+			{isSkillModalOpen && <SkillsModal isOpen={isSkillModalOpen} onClose={() => setIsSkillModalOpen(false)} />}
+
 		</div>
 	);
 };

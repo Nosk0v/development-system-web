@@ -86,13 +86,18 @@
 
 /* Кнопка "Да" */
 .modalActions button:first-of-type {
-  background: #d5608e;
-  color: white;
+  background-color: #F91F71; /* Красный цвет кнопки */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .modalActions button:first-of-type:hover {
-  background: #bf4d79;
+  background-color: #db3070;
 }
+
 
 /* Кнопка "Нет" */
 .modalActions button:last-of-type {

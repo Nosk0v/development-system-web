@@ -14,10 +14,8 @@ export const MaterialCreateControl = ({ onSave }: MaterialCreateControlProps) =>
 
 	const onClose = async () => {
 		try {
-			// Перезапрашиваем список материалов
 			await refetch();
 
-			// После обновления данных навигация на главную страницу
 			navigate('/');
 		} catch (error) {
 			console.error('Ошибка при перезагрузке списка:', error);
@@ -26,8 +24,8 @@ export const MaterialCreateControl = ({ onSave }: MaterialCreateControlProps) =>
 
 	return (
 		<div className={css.wrapper}>
+			<SecondaryButton  text="Закрыть" onClick={onClose} />
 			<MainButton text="Сохранить" onClick={() => onSave()} />
-			<SecondaryButton text="Закрыть" onClick={onClose} />
 		</div>
 	);
 };

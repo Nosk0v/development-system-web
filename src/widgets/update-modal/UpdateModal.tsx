@@ -82,12 +82,13 @@ export const UpdateModal = ({
                     ))}
                 </ul>
                 <div className={css.actions}>
-                    <button onClick={handleSave} className={css.saveButton}>
-                        Сохранить
-                    </button>
                     <button onClick={onClose} className={css.cancelButton}>
                         Отмена
                     </button>
+                    <button onClick={handleSave} className={css.saveButton}>
+                        Сохранить
+                    </button>
+
                 </div>
             </div>
         </div>

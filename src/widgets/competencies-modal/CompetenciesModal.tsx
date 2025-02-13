@@ -55,8 +55,8 @@ export const CompetenciesModal = ({
                     ))}
                 </ul>
                 <div className={css.actions}>
-                    <button onClick={handleSave}>Сохранить</button>
                     <button onClick={onClose}>Отмена</button>
+                    <button onClick={handleSave}>Сохранить</button>
                 </div>
             </div>
         </div>

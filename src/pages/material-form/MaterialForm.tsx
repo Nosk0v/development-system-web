@@ -64,7 +64,6 @@ export const MaterialForm = ({
             document.body.style.overflow = 'auto';
         }
 
-        // Очищаем эффект, когда компонент будет размонтирован
         return () => {
             document.body.style.overflow = 'auto';
         };

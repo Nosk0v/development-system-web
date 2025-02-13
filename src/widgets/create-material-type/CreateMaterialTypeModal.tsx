@@ -13,7 +13,7 @@ interface CreateMaterialTypeModalProps {
 export const CreateMaterialTypeModal = ({ isOpen, onClose, onTypeCreated }: CreateMaterialTypeModalProps) => {
     const [newTypeName, setNewTypeName] = useState('');
     const [createMaterialType] = useCreateMaterialTypeMutation();
-    const { data: materialTypesData, isLoading, isError } = useFetchMaterialTypeQuery();  // Загружаем все типы
+    const { data: materialTypesData, isLoading, isError } = useFetchMaterialTypeQuery();
 
     const handleCreateType = () => {
         // Проверяем, если тип уже существует
@@ -31,7 +31,7 @@ export const CreateMaterialTypeModal = ({ isOpen, onClose, onTypeCreated }: Crea
                     toast.success("Тип материала успешно создан.");
                     setNewTypeName('');
                     onTypeCreated();  // Вызываем функцию для рефетча
-                    onClose();  // Закрываем модалку
+                    onClose();
                 })
                 .catch((error) => {
                     console.error('Ошибка создания типа материала:', error);
@@ -56,12 +56,12 @@ export const CreateMaterialTypeModal = ({ isOpen, onClose, onTypeCreated }: Crea
                 <Input
                     placeholder="Введите название типа материала"
                     value={newTypeName}
-                    onChange={(e) => setNewTypeName(e.target.value)}  // Обновляем значение при вводе
-                    className={styles.inputField}  // Добавляем кастомный класс для стилей
+                    onChange={(e) => setNewTypeName(e.target.value)}
+                    className={styles.inputField}
                 />
                 <div className={styles.actions}>
-                    <button onClick={handleCreateType}>Создать</button>
                     <button onClick={onClose}>Закрыть</button>
+                    <button onClick={handleCreateType}>Создать</button>
                 </div>
             </div>
         </div>

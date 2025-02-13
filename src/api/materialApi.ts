@@ -82,6 +82,10 @@ interface DeleteMaterialTypeResponse {
     message: string;
 }
 
+interface DeleteCompetencyResponse {
+    message: string; // Сообщение об успешном удалении
+}
+
 export const materialsApi = createApi({
     reducerPath: 'materialsApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080' }),
@@ -136,7 +140,15 @@ export const materialsApi = createApi({
                 return response;
             },
         }),
-
+        deleteCompetency: builder.mutation<DeleteCompetencyResponse, number>({
+            query: (competencyId) => ({
+                url: `/competencies/${competencyId}`,
+                method: 'DELETE',
+            }),
+            transformResponse: (response: { message: string }): DeleteCompetencyResponse => {
+                return response;
+            },
+        }),
         deleteMaterialType: builder.mutation<DeleteMaterialTypeResponse, number>({
             query: (materialTypeId) => ({
                 url: `/materialsType/${materialTypeId}`,
@@ -174,5 +186,6 @@ export const {
     useFetchMaterialTypeByIdQuery,
     useFetchMaterialTypeQuery,
     useCreateMaterialTypeMutation,
-    useDeleteMaterialTypeMutation
+    useDeleteMaterialTypeMutation,
+    useDeleteCompetencyMutation
 } = materialsApi;

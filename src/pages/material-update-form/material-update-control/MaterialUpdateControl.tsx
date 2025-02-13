@@ -27,8 +27,8 @@ export const MaterialUpdateControl = ({ onSave }: MaterialUpdateControlProps) =>
 
 	return (
 		<div className={css.wrapper}>
-			<MainButton text="Сохранить" onClick={onSave} />
 			<SecondaryButton text="Закрыть" onClick={onClose} />
+			<MainButton text="Сохранить" onClick={onSave} />
 		</div>
 	);
 };
