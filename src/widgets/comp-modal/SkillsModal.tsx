@@ -6,6 +6,7 @@ import {
 } from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './SkillsModal.module.scss';
+import {CreateCompetencyModal} from "../create-competency-modal/CreateCompetencyModal.tsx";
 
 interface SkillsModalProps {
     isOpen: boolean;
@@ -13,10 +14,11 @@ interface SkillsModalProps {
 }
 
 export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
-    const { data: competenciesData, isLoading, isError } = useFetchCompetenciesQuery();
+    const { data: competenciesData, isLoading, isError, refetch } = useFetchCompetenciesQuery();
     const { data: materialsData } = useFetchMaterialsQuery();
     const [competencies, setCompetencies] = useState<{ competency_id: number; name: string }[]>([]);
     const [deleteCompetency] = useDeleteCompetencyMutation();
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     useEffect(() => {
         if (competenciesData && competenciesData.data) {
@@ -58,6 +60,10 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
         };
     }, [isOpen]);
 
+    const handleCreateCompetency = () => {
+        refetch();  // Вызываем refetch для обновления данных
+    };
+
     return (
         <div className={styles.modal}>
             <div className={styles.overlay} onClick={onClose}></div>
@@ -86,8 +92,18 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
 
                 <div className={styles.actions}>
                     <button onClick={onClose}>Закрыть</button>
+                    <button onClick={() => setIsCreateModalOpen(true)} className={styles.createButton}>
+                        Создать
+                    </button>
                 </div>
             </div>
+            {isCreateModalOpen && (
+                <CreateCompetencyModal
+                    isOpen={isCreateModalOpen}
+                    onClose={() => setIsCreateModalOpen(false)}
+                    onCompetencyCreated={handleCreateCompetency}
+                />
+                )}
         </div>
     );
 };

@@ -12,6 +12,7 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+/* Затемненный фон */
 .overlay {
   position: absolute;
   width: 100%;
@@ -19,6 +20,7 @@
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+/* Контент модального окна */
 .content {
   position: relative;
   min-width: 400px;
@@ -28,6 +30,10 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   animation: slideIn 0.3s ease-out;
+}
+
+.content:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 h2 {
@@ -64,7 +70,8 @@ h2 {
 }
 
 .list li:hover {
-  background: #d3d3d3;
+
+  background: #d3d3d3; /* Светлый эффект при наведении */
 }
 
 .deleteButton {
@@ -72,28 +79,31 @@ h2 {
   border: none;
   cursor: pointer;
   font-size: 16px;
-  color: #d5608e;
   position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
+  right: 12px;
   opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  top: 3px;
+  transition: opacity 0.2s ease, transform 0.2s;
 }
 
 .deleteButton:hover {
-  transform: scale(1.2) translateY(-50%);
+  transform: scale(1.2);
   color: #ff0000;
 }
+
+
+
 
 .list li:hover .deleteButton {
   opacity: 1;
 }
 
+/* Кнопки */
 .actions {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   margin-top: 15px;
+  gap: 10px;
 }
 
 .actions button {
@@ -105,20 +115,24 @@ h2 {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Эффект на кнопках */
 .actions button:hover {
   background-color: #db3070;
-  transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .actions button:active {
-  background-color: #c73663;
+  background-color: #c73663; /* Темный цвет при нажатии */
   transform: translateY(0);
   box-shadow: none;
 }
 
+/* Анимации */
 @keyframes fadeIn {
   0% {
     opacity: 0;

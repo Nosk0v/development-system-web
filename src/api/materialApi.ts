@@ -86,6 +86,18 @@ interface DeleteCompetencyResponse {
     message: string; // Сообщение об успешном удалении
 }
 
+interface CreateCompetencyRequest {
+    name: string;
+    description: string;
+    parent_id?: number;
+}
+
+interface CreateCompetencyResponse {
+    competency: Competency;
+    message: string;
+}
+
+
 export const materialsApi = createApi({
     reducerPath: 'materialsApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080' }),
@@ -118,6 +130,16 @@ export const materialsApi = createApi({
                 body: newMaterial,
             }),
             transformResponse: (response: { material: Material, message: string }): CreateMaterialResponse => {
+                return response;
+            },
+        }),
+        createCompetency: builder.mutation<CreateCompetencyResponse, CreateCompetencyRequest>({
+            query: (newCompetency) => ({
+                url: '/competencies',
+                method: 'POST',
+                body: newCompetency,
+            }),
+            transformResponse: (response: { competency: Competency; message: string }): CreateCompetencyResponse => {
                 return response;
             },
         }),
@@ -187,5 +209,6 @@ export const {
     useFetchMaterialTypeQuery,
     useCreateMaterialTypeMutation,
     useDeleteMaterialTypeMutation,
-    useDeleteCompetencyMutation
+    useDeleteCompetencyMutation,
+    useCreateCompetencyMutation,
 } = materialsApi;

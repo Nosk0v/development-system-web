@@ -10,66 +10,58 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Отступ между полями */
-  overflow-y: hidden; /* Вертикальная прокрутка */
+  gap: 20px;
+  overflow-y: hidden;
   overflow-x: hidden;
-  padding-right: 10px; /* Отступ для скролла */
+  padding-right: 10px;
 }
-
-label:first-of-type {
-  margin-top: 10px; /* Отступ сверху у первого поля */
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* Отступ между label и вложенным элементом */
-  margin-bottom: 10px;
-}
-
-.addCompetencyButton {
-  margin-top: 20px;
-  background-color: #F91F71;
-  color: #FFFFFF;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.addCompetencyButton:hover {
-  background-color: #db3070;
-}
-
-/* Новый контейнер для компетенций (оставляем только его изменения) */
-.competenciesList {
-  display: flex;
-  flex-direction: column; /* Компетенции идут друг под другом */
-  gap: 8px; /* Расстояние между компетенциями */
-  padding: 5px;
-  border-radius: 20px;
-}
-
-
-
 
 .wrapperCompetency {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Имя и кнопка на разных сторонах */
-  gap: 8px;
+  justify-content: space-between;
   background-color: var(--white-font-color);
+  padding: 10px;
   border: var(--default-border);
   border-radius: var(--competency-border-radius);
-  padding: 10px;
-  transition: box-shadow 0.2s ease;
+  margin-bottom: 8px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(216, 27, 96, 0.3);
+
+    .deleteButton {
+      opacity: 1;
+    }
   }
 }
 
+.wrapperCompetency:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.competency {
+  font-size: var(--font-size-m);
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  position: absolute;
+  right: 12px;
+  opacity: 0;
+  top: 0px;
+  transition: opacity 0.2s ease, transform 0.2s;
+
+  &:hover {
+    transform: scale(1.2);
+    color: #ff0000;
+  }
+}
 .content {
   display: flex;
   align-items: center;
@@ -94,4 +86,15 @@ label {
 
 .wrapperCompetency:hover .deleteButton {
   opacity: 1; /* Показываем кнопку при наведении на wrapperCompetency */
+}
+
+.addCompetencyButton {
+  margin-top: 20px;
+  background-color: #F91F71;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }

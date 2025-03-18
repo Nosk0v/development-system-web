@@ -93,7 +93,10 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
             </div>
 
             {/* Модалка для создания нового типа материала */}
-            <CreateMaterialTypeModal isOpen={isCreateModalOpen} onClose={() => setCreateModalOpen(false)} onTypeCreated={handleTypeCreated} />
+            <CreateMaterialTypeModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setCreateModalOpen(false)}
+                onTypeCreated={handleTypeCreated} />
         </div>
     );
 };

@@ -79,24 +79,20 @@ h2 {
   border: none;
   cursor: pointer;
   font-size: 16px;
-  color: #d5608e;
   position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
+  right: 12px;
   opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  top: 0px;
+  transition: opacity 0.2s ease, transform 0.2s;
 }
 
 .deleteButton:hover {
-  transform: scale(1.2) translateY(-50%);
+  transform: scale(1.2);
   color: #ff0000;
 }
 
-.deleteButton:hover {
-  transform: scale(1.2) translateY(-50%);
-  color: #ff0000;
-}
+
+
 
 .list li:hover .deleteButton {
   opacity: 1;
@@ -127,7 +123,6 @@ h2 {
 /* Эффект на кнопках */
 .actions button:hover {
   background-color: #db3070;
-  transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
