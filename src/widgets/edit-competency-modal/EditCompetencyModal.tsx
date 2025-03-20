@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUpdateCompetencyMutation } from "../../api/materialApi.ts";
 import { toast } from "react-toastify";
 import styles from "./EditCompetencyModal.module.scss";
@@ -36,8 +36,16 @@ export const EditCompetencyModal = ({
             toast.error("Название компетенции должно содержать минимум 2 символа.");
             return;
         }
+        if (name.length > 30) {
+            toast.error("Название компетенции не должно превышать 30 символов.");
+            return;
+        }
         if (description.length === 0) {
             toast.error("Пожалуйста, заполните описание компетенции!");
+            return;
+        }
+        if (description.length > 85) {
+            toast.error("Описание компетенции не должно превышать 85 символов.");
             return;
         }
 
@@ -51,6 +59,25 @@ export const EditCompetencyModal = ({
             toast.error("Ошибка при обновлении компетенции.");
         }
     };
+
+    useEffect(() => {
+        const handleGlobalKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                handleSave();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleGlobalKeyDown);
+        } else {
+            document.removeEventListener('keydown', handleGlobalKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleGlobalKeyDown);
+        };
+    }, [isOpen, name, description]);
 
     if (!isOpen) return null;
 
@@ -70,6 +97,7 @@ export const EditCompetencyModal = ({
                     placeholder="Введите описание компетенции"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    height={100}
                 />
                 <div className={styles.actions}>
                     <button onClick={onClose} className={styles.cancelButton}>Отмена</button>

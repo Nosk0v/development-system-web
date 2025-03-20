@@ -1,12 +1,12 @@
 import css from './UpdateModal.module.scss';
-import { useFetchCompetenciesQuery } from '../../api/materialApi.ts'; // Хук для получения компетенций
+import { useFetchCompetenciesQuery } from '../../api/materialApi.ts';
 import { useState, useEffect } from 'react';
 
 interface UpdateModalProps {
     isOpen: boolean;
     onClose: () => void;
-    selectedCompetencies: string[]; // Список выбранных компетенций (имена)
-    onSave: (updatedCompetencies: string[]) => void; // Обработчик сохранения
+    selectedCompetencies: string[];
+    onSave: (updatedCompetencies: string[]) => void;
 }
 
 export const UpdateModal = ({
@@ -20,7 +20,6 @@ export const UpdateModal = ({
 
     useEffect(() => {
         if (isOpen) {
-            // Преобразуем список имен в список ID для начальной загрузки
             const selectedIds = data?.data
                 .filter((competency) => selectedCompetencies.includes(competency.name))
                 .map((competency) => competency.competency_id) || [];
@@ -37,13 +36,31 @@ export const UpdateModal = ({
     };
 
     const handleSave = () => {
-        // Передаем имена компетенций, соответствующие выбранным ID, в родительский компонент
         const updatedCompetencies = data?.data
             .filter((competency) => selected.includes(competency.competency_id))
             .map((competency) => competency.name) || [];
         onSave(updatedCompetencies);
         onClose();
     };
+
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
+                handleSave();
+            } else if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen, selected, onSave, onClose]);
 
     if (!isOpen) return null;
 
@@ -88,7 +105,6 @@ export const UpdateModal = ({
                     <button onClick={handleSave} className={css.saveButton}>
                         Сохранить
                     </button>
-
                 </div>
             </div>
         </div>

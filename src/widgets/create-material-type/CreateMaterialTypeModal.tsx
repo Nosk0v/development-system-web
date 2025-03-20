@@ -1,5 +1,5 @@
-import { Input } from '../input/input.tsx';  // Подключите компонент Input
-import { useState } from 'react';
+import { Input } from '../input/input.tsx';
+import { useState, useEffect } from 'react';
 import { useCreateMaterialTypeMutation, useFetchMaterialTypeQuery } from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './CreateMaterialTypeModal.module.scss';
@@ -7,7 +7,7 @@ import styles from './CreateMaterialTypeModal.module.scss';
 interface CreateMaterialTypeModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onTypeCreated: () => void;  // Функция для рефетча данных
+    onTypeCreated: () => void;
 }
 
 export const CreateMaterialTypeModal = ({ isOpen, onClose, onTypeCreated }: CreateMaterialTypeModalProps) => {
@@ -15,34 +15,53 @@ export const CreateMaterialTypeModal = ({ isOpen, onClose, onTypeCreated }: Crea
     const [createMaterialType] = useCreateMaterialTypeMutation();
     const { data: materialTypesData, isLoading, isError } = useFetchMaterialTypeQuery();
 
-    const handleCreateType = () => {
-        // Проверяем, если тип уже существует
-        const typeExists = materialTypesData?.data.some((type: { type: string }) => type.type.toLowerCase() === newTypeName.toLowerCase());
+    const handleCreateType = async () => {
+        const typeExists = materialTypesData?.data.some(
+            (type: { type: string }) => type.type.toLowerCase() === newTypeName.toLowerCase()
+        );
 
         if (typeExists) {
             toast.error("Тип материала с таким названием уже существует.");
             return;
         }
-
-        if (newTypeName.length >= 2) {
-            createMaterialType({ type: newTypeName })
-                .unwrap()
-                .then(() => {
-                    toast.success("Тип материала успешно создан.");
-                    setNewTypeName('');
-                    onTypeCreated();  // Вызываем функцию для рефетча
-                    onClose();
-                })
-                .catch((error) => {
-                    console.error('Ошибка создания типа материала:', error);
-                    toast.error("Произошла ошибка при создании типа материала.");
-                });
-        } else {
+        if (newTypeName.length > 30) {
+            toast.error("Название типа материала должно не превышать 30 символов.");
+            return;
+        }
+        if (newTypeName.length < 2) {
             toast.error("Название типа материала должно содержать минимум 2 символа.");
+            return;
+        }
+        try {
+            await createMaterialType({type: newTypeName}).unwrap();
+            toast.success("Тип материала успешно создан.");
+            setNewTypeName('');
+            onTypeCreated();
+            onClose();
+        } catch (error) {
+            console.error('Ошибка создания типа материала:', error);
+            toast.error("Произошла ошибка при создании типа материала.");
         }
     };
 
-    // Ожидание загрузки типов перед рендером
+    useEffect(() => {
+        const handleGlobalKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                handleCreateType();
+            }
+        };
+        if (isOpen) {
+            document.addEventListener('keydown', handleGlobalKeyDown);
+        } else {
+            document.removeEventListener('keydown', handleGlobalKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleGlobalKeyDown);
+        };
+    }, [handleCreateType, isOpen, newTypeName]);
+
     if (isLoading) return <div>Загрузка...</div>;
     if (isError) return <div>Ошибка загрузки типов.</div>;
 
@@ -60,8 +79,8 @@ export const CreateMaterialTypeModal = ({ isOpen, onClose, onTypeCreated }: Crea
                     className={styles.inputField}
                 />
                 <div className={styles.actions}>
-                    <button onClick={onClose}>Закрыть</button>
-                    <button onClick={handleCreateType}>Создать</button>
+                    <button onClick={onClose} className={styles.cancelButton}>Закрыть</button>
+                    <button onClick={handleCreateType} className={styles.createButton}>Создать</button>
                 </div>
             </div>
         </div>

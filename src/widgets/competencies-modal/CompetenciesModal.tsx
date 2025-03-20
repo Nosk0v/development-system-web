@@ -18,7 +18,6 @@ export const CompetenciesModal = ({
                                   }: CompetenciesModalProps) => {
     const [selected, setSelected] = useState<number[]>(selectedCompetencies);
 
-    // Обновляем состояние выбранных компетенций, если они переданы извне
     useEffect(() => {
         setSelected(selectedCompetencies);
     }, [selectedCompetencies]);
@@ -32,9 +31,27 @@ export const CompetenciesModal = ({
     };
 
     const handleSave = () => {
-        onSelect(selected); // Передаем выбранные компетенции в родительский компонент
-        onClose(); // Закрываем модальное окно
+        onSelect(selected);
+        onClose();
     };
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
+                handleSave();
+            } else if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen, selected, onSelect, onClose]);
 
     if (!isOpen) return null;
 

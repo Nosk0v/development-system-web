@@ -1,10 +1,9 @@
-// MaterialTypesModal.tsx
 import { useEffect, useState } from 'react';
 import { useFetchMaterialTypeQuery, useDeleteMaterialTypeMutation, useFetchMaterialsQuery } from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './MaterialTypesModal.module.scss';
 import { CreateMaterialTypeModal } from '../create-material-type/CreateMaterialTypeModal';
-import TrashIcon from "../../assets/images/trash.svg";  // Импортируем новый компонент
+import TrashIcon from "../../assets/images/trash.svg";
 
 interface MaterialTypesModalProps {
     isOpen: boolean;
@@ -25,10 +24,13 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
     }, [materialTypesData]);
 
     const handleDelete = (typeId: number, typeName: string) => {
-        if (materialsData && materialsData.data.some((material) => material.type_name === typeName)) {
+        const isLinked = materialsData?.data?.some(material => material.type_name === typeName) ?? false;
+
+        if (isLinked) {
             toast.error("Невозможно удалить тип материала, так как он используется в одном или нескольких материалах.");
             return;
         }
+
 
         deleteMaterialType(typeId)
             .unwrap()
@@ -54,9 +56,8 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
         };
     }, [isOpen]);
 
-    // Функция для перезагрузки списка типов после создания
     const handleTypeCreated = () => {
-        refetch();  // Вызываем refetch для обновления данных
+        refetch();
     };
 
     return (
@@ -92,8 +93,6 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
                     <button onClick={() => setCreateModalOpen(true)}>Создать</button>
                 </div>
             </div>
-
-            {/* Модалка для создания нового типа материала */}
             <CreateMaterialTypeModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setCreateModalOpen(false)}

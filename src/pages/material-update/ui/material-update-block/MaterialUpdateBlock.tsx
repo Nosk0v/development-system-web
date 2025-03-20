@@ -14,7 +14,6 @@ export const MaterialUpdateBlock = () => {
 
 	const material = data?.data.find((item) => item.material_id === Number(id));
 
-	// Find type_id by type_name
 	const getTypeIdByName = (typeName: string) => {
 		const foundType = materialTypesData?.data.find((type) => type.type === typeName);
 		return foundType ? foundType.type_id : 0;
@@ -31,7 +30,6 @@ export const MaterialUpdateBlock = () => {
 	const [materialTypeName, setMaterialTypeName] = useState<string>('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
-	// Store initial values to compare against later
 	const [initialValues, setInitialValues] = useState({
 		title: '',
 		description: '',
@@ -51,8 +49,6 @@ export const MaterialUpdateBlock = () => {
 				setCompetencies(competencies);
 				setMaterialType(getTypeIdByName(type_name));
 				setMaterialTypeName(type_name);
-
-				// Set initial values for comparison
 				setInitialValues({
 					title,
 					description,
@@ -79,7 +75,6 @@ export const MaterialUpdateBlock = () => {
 	}, [competencies, competenciesData]);
 
 	const handleSave = async () => {
-		// Check if there are no changes to the material
 		if (
 			title === initialValues.title &&
 			description === initialValues.description &&
@@ -98,6 +93,11 @@ export const MaterialUpdateBlock = () => {
 
 		if (!materialType) {
 			toast.error('Пожалуйста, выберите тип материала!');
+			return;
+		}
+
+		if (title.length > 85 ) {
+			toast.error('Название материала должно не превышать 85 символов!');
 			return;
 		}
 

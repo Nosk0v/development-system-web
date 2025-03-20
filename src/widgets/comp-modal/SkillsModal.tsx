@@ -55,6 +55,9 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
             toast.error("Невозможно удалить компетенцию, так как она связана с одним или несколькими материалами.");
             return;
         }
+
+
+
         deleteCompetency(competencyId)
             .unwrap()
             .then(() => {
@@ -138,7 +141,7 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
                 <EditCompetencyModal
                     isOpen={!!editCompetency}
                     onClose={() => setEditCompetency(null)}
-                    competencyId={editCompetency.competency_id} // Передаём правильный ID
+                    competencyId={editCompetency.competency_id}
                     initialName={editCompetency.name}
                     initialDescription={editCompetency.description}
                     onCompetencyUpdated={refetch}

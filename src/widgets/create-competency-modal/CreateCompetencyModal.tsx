@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '../input/input.tsx';
 import { TextArea } from '../textarea/textarea.tsx';
 import { useCreateCompetencyMutation } from '../../api/materialApi.ts';
@@ -21,8 +21,16 @@ export const CreateCompetencyModal = ({ isOpen, onClose, onCompetencyCreated }: 
             toast.error("Название компетенции должно содержать минимум 2 символа.");
             return;
         }
+        if (name.length > 30) {
+            toast.error("Название компетенции не должно превышать 25 символов.");
+            return;
+        }
         if (description.length === 0) {
             toast.error("Пожалуйста, заполните описание компетенции!");
+            return;
+        }
+        if (description.length > 85) {
+            toast.error("Описание компетенции не должно превышать 85 символов.");
             return;
         }
 
@@ -41,6 +49,26 @@ export const CreateCompetencyModal = ({ isOpen, onClose, onCompetencyCreated }: 
             });
     };
 
+
+    useEffect(() => {
+        const handleGlobalKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                handleCreateCompetency();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleGlobalKeyDown);
+        } else {
+            document.removeEventListener('keydown', handleGlobalKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleGlobalKeyDown);
+        };
+    }, [isOpen, name, description]);
+
     if (!isOpen) return null;
 
     return (
@@ -58,6 +86,7 @@ export const CreateCompetencyModal = ({ isOpen, onClose, onCompetencyCreated }: 
 
                 <TextArea
                     placeholder="Введите описание компетенции"
+                    height={100}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />

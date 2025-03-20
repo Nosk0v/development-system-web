@@ -45,22 +45,17 @@ export const MaterialForm = ({
                                  onChange,
 
                              }: MaterialFormProps) => {
-    // Преобразуем список id компетенций в массив объектов { id, name }
+
     const initialCompetencies = competencies.map((id) => ({
         id,
         name: competencyNames.get(id) || 'Неизвестная компетенция',
     }));
 
 
-
-
-
     useEffect(() => {
         if (isModalOpen) {
-            // Отключаем прокрутку на теле документа, когда модальное окно открыто
             document.body.style.overflow = 'hidden';
         } else {
-            // Включаем прокрутку снова, когда модальное окно закрыто
             document.body.style.overflow = 'auto';
         }
 

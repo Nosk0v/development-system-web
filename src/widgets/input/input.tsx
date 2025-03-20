@@ -1,4 +1,5 @@
 import css from './input.module.scss';
+import React, { KeyboardEvent } from "react";
 
 interface InputProps {
 	placeholder?: string;
@@ -6,8 +7,9 @@ interface InputProps {
 	height?: number;
 	id?: string;
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	className?: string;  // Добавляем className для гибкости
-	value?: string;  // Добавляем value для контролируемого компонента
+	className?: string;
+	onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+	value?: string;
 }
 
 export const Input = (props: InputProps) => {
@@ -19,6 +21,7 @@ export const Input = (props: InputProps) => {
 		onChange,
 		className,
 		value,  // Получаем value для передачи в input
+		onKeyDown
 	} = props;
 
 	return (
@@ -27,10 +30,11 @@ export const Input = (props: InputProps) => {
 				<input
 					id={id}
 					className={css.inputField}
-					placeholder={placeholder || 'Введите текст...'}  // Значение по умолчанию для placeholder
+					placeholder={placeholder || 'Введите текст...'}
 					style={{ height }}
-					onChange={onChange} // Обработчик onChange
-					value={value}  // Привязываем value для контролируемого компонента
+					onChange={onChange}
+					value={value}
+					onKeyDown={onKeyDown}
 				/>
 			</div>
 		</div>

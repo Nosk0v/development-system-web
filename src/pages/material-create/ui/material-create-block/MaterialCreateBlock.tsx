@@ -34,9 +34,6 @@ export const MaterialCreateBlock = () => {
 		}
 	}, [competenciesData]);
 
-	// Обработчики для изменения значений в форме
-
-	// Обработчик сохранения материала
 	const handleSave = async () => {
 		let hasError = false;
 
@@ -52,6 +49,11 @@ export const MaterialCreateBlock = () => {
 
 		if (!description) {
 			toast.error('Пожалуйста, укажите описание материала!');
+			hasError = true;
+		}
+
+		if (title.length > 85 ) {
+			toast.error('Название материала должно не превышать 85 символов!');
 			hasError = true;
 		}
 
@@ -84,7 +86,6 @@ export const MaterialCreateBlock = () => {
 		}
 	};
 
-	// Обработка состояний загрузки и ошибки
 	if (isLoading) return <div>Загрузка...</div>;
 	if (error) return <div>Ошибка загрузки компетенций</div>;
 
