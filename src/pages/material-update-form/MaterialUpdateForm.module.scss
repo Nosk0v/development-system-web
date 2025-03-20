@@ -69,22 +69,28 @@
   width: 100%; /* Чтобы элементы заняли всю ширину */
 }
 
-.deleteButton {
+.trashButton {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
-  color: #d5608e;
-  opacity: 0; /* Прячем кнопку */
-  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s;
-
-  &:hover {
-    transform: scale(1.2); /* Увеличение кнопки при наведении */
-    color: #ff0000; /* Подсветка */
-  }
+  font-size: 14px;
+  position: absolute;
+  right: 12px;
+  opacity: 0;
+  top: 0;
+  transition: opacity 0.2s ease, transform 0.2s;
 }
 
-.wrapperCompetency:hover .deleteButton {
+.trashButton img {
+  width: 24px; /* Подстраиваем под размер корзины */
+  height: 24px;
+}
+
+.trashButton:hover {
+  transform: scale(1.2);
+}
+
+.wrapperCompetency:hover .trashButton {
   opacity: 1; /* Показываем кнопку при наведении на wrapperCompetency */
 }
 

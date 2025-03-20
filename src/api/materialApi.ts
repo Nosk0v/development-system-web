@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 // Типы для данных
 interface Competency {
@@ -45,10 +45,19 @@ interface UpdateMaterialRequest {
     content: string;
     competencies: number[]; // Массив ID компетенций
 }
+interface UpdateCompetencyRequest {
+    name: string;
+    description: string;
+}
 
 // Типы для ответов
 interface MaterialsApiResponse {
     data: Material[];
+}
+
+interface UpdateCompetencyResponse {
+    competency: Competency;
+    message: string;
 }
 
 interface MaterialTypeApiResponse {
@@ -195,6 +204,17 @@ export const materialsApi = createApi({
                 return response;
             },
         }),
+        updateCompetency: builder.mutation<UpdateCompetencyResponse, {competencyId: number, data: UpdateCompetencyRequest}>({
+            query: ({competencyId, data}) => ({
+                url: `/competencies/${competencyId}`,
+                method: 'PUT',
+                body: data,
+            }),
+            transformResponse: (response: {competency: Competency, message: string }): UpdateCompetencyResponse => {
+                return response;
+            },
+
+        }),
     }),
 });
 
@@ -211,4 +231,5 @@ export const {
     useDeleteMaterialTypeMutation,
     useDeleteCompetencyMutation,
     useCreateCompetencyMutation,
+    useUpdateCompetencyMutation,
 } = materialsApi;

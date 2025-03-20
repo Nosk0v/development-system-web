@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import { useFetchMaterialTypeQuery, useDeleteMaterialTypeMutation, useFetchMaterialsQuery } from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './MaterialTypesModal.module.scss';
-import { CreateMaterialTypeModal } from '../create-material-type/CreateMaterialTypeModal';  // Импортируем новый компонент
+import { CreateMaterialTypeModal } from '../create-material-type/CreateMaterialTypeModal';
+import TrashIcon from "../../assets/images/trash.svg";  // Импортируем новый компонент
 
 interface MaterialTypesModalProps {
     isOpen: boolean;
@@ -74,13 +75,13 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
                         <li key={type.type_id} className={styles.wrapper}>
                             <span className={styles.competency}>{type.type}</span>
                             <button
-                                className={styles.deleteButton}
+                                className={styles.trashButton}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleDelete(type.type_id, type.type);
                                 }}
                             >
-                                🗑️
+                                <img src={TrashIcon} alt={"Удалить"}/>
                             </button>
                         </li>
                     ))}

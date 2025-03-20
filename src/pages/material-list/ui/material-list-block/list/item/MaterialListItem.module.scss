@@ -99,3 +99,26 @@
     color: #ff0000;
   }
 }
+
+.trashButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  transition: transform 0.2s;
+  position: absolute;
+  top: 0;
+  right: 8px;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.trashButton img {
+  width: 20px; /* Подстраиваем под размер корзины */
+  height: 20px;
+}
+
+
+

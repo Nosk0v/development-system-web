@@ -74,27 +74,28 @@ h2 {
   background: #d3d3d3; /* Светлый эффект при наведении */
 }
 
-.deleteButton {
+.trashButton {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   position: absolute;
   right: 12px;
   opacity: 0;
-  top: 0px;
+  top: 1px;
   transition: opacity 0.2s ease, transform 0.2s;
 }
 
-.deleteButton:hover {
-  transform: scale(1.2);
-  color: #ff0000;
+.trashButton img {
+  width: 24px; /* Подстраиваем под размер корзины */
+  height: 24px;
 }
 
+.trashButton:hover {
+  transform: scale(1.2);
+}
 
-
-
-.list li:hover .deleteButton {
+.list li:hover .trashButton {
   opacity: 1;
 }
 

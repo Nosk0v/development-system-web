@@ -1,4 +1,5 @@
 import css from './competency.module.scss';
+import TrashIcon from '../../../assets/images/trash.svg';
 
 interface CompetencyProps {
 	id: number; // ID компетенции для удаления
@@ -12,13 +13,13 @@ export const Competency = ({ id, name, onDelete }: CompetencyProps) => {
 			<div className={css.content}>
 				<div className={css.name}>{name}</div>
 				<button
-					className={css.deleteButton}
+					className={css.trashButton}
 					onClick={(e) => {
 						e.stopPropagation(); // Чтобы клик не активировал другие действия
 						onDelete(id); // Удалить компетенцию
 					}}
 				>
-					🗑️
+					<img src={TrashIcon} alt={"Удалить"}/>
 				</button>
 			</div>
 		</div>

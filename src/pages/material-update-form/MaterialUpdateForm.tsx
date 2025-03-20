@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useCallback } from 'react';
 import { UpdateModal } from '../../widgets/update-modal/UpdateModal';
 import { DropdownUpdateMenu } from "../../widgets/dropdown-menu/dropdown-update-menu.tsx";
+import TrashIcon from '../../assets/images/trash.svg';
 
 interface MaterialUpdateFormProps {
     title: string;
@@ -99,13 +100,13 @@ export const MaterialUpdateForm = ({
                                     <div className={css.content}>
                                         <span className={css.competency}>{competency}</span>
                                         <button
-                                            className={css.deleteButton}
+                                            className={css.trashButton}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleRemoveCompetency(index);
                                             }}
                                         >
-                                            🗑️
+                                            <img src={TrashIcon} alt={"Удалить"}/>
                                         </button>
                                     </div>
                                 </div>

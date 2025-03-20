@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRef, useEffect } from 'react';
 import css from './MaterialListItem.module.scss';
 import NoImageAvailable from "../../../../../../assets/images/No_image_available.svg";
+import TrashIcon from "../../../../../../assets/images/trash.svg";
 
 interface MaterialListItemProps {
 	materialId: number;
@@ -22,7 +23,6 @@ export const MaterialListItem = ({
 
 	// Переход к просмотру материала
 	const onMaterialClick = () => {
-		console.log(`Navigating to /view-materials/${materialId}`);
 		navigate(`/view-materials/${materialId}`);
 	};
 
@@ -69,13 +69,13 @@ export const MaterialListItem = ({
 				/>
 			</div>
 			<button
-				className={css.deleteButton}
+				className={css.trashButton}
 				onClick={(e) => {
 					e.stopPropagation();
 					onDeleteRequest(materialId);
 				}}
 			>
-				🗑️
+				<img src={TrashIcon} alt={"Удалить"}/>
 			</button>
 		</div>
 	);

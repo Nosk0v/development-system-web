@@ -14,7 +14,7 @@
     transform: translateY(-4px);
     box-shadow: 0 6px 12px rgba(216, 27, 96, 0.3);
 
-    .deleteButton {
+    .trashButton {
       opacity: 1; /* Показывать кнопку только при наведении */
     }
   }
@@ -28,19 +28,25 @@
   font-size: var(--font-size-m);
 }
 
-.deleteButton {
+
+.trashButton {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   position: absolute;
   right: 12px;
   opacity: 0;
-  top: 0px;
+  top: 0;
   transition: opacity 0.2s ease, transform 0.2s;
-
-  &:hover {
-    transform: scale(1.2);
-    color: #ff0000;
-  }
 }
+
+.trashButton img {
+  width: 24px; /* Подстраиваем под размер корзины */
+  height: 24px;
+}
+
+.trashButton:hover {
+  transform: scale(1.2);
+}
+

@@ -6,7 +6,10 @@ import {
 } from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './SkillsModal.module.scss';
-import {CreateCompetencyModal} from "../create-competency-modal/CreateCompetencyModal.tsx";
+import { CreateCompetencyModal } from "../create-competency-modal/CreateCompetencyModal.tsx";
+import EditIcon from '../../assets/images/edit.svg';
+import TrashIcon from '../../assets/images/trash.svg';
+import {EditCompetencyModal} from "../edit-competency-modal/EditCompetencyModal.tsx";
 
 interface SkillsModalProps {
     isOpen: boolean;
@@ -19,6 +22,7 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
     const [competencies, setCompetencies] = useState<{ competency_id: number; name: string }[]>([]);
     const [deleteCompetency] = useDeleteCompetencyMutation();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [editCompetency, setEditCompetency] = useState<{ competency_id: number; name: string; description: string } | null>(null);
 
     useEffect(() => {
         if (competenciesData && competenciesData.data) {
@@ -26,8 +30,14 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
         }
     }, [competenciesData]);
 
+    const handleEditClick = (competency: { competency_id: number; name: string; description?: string }) => {
+        setEditCompetency({
+            competency_id: competency.competency_id, // Сохраняем ID!
+            name: competency.name,
+            description: competency.description || "",
+        });
+    };
     const handleDelete = (competencyId: number, competencyName: string) => {
-        // Проверяем, связана ли компетенция с материалом
         const isLinked = materialsData?.data.some(material =>
             material.competencies.includes(competencyName)
         );
@@ -61,7 +71,7 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
     }, [isOpen]);
 
     const handleCreateCompetency = () => {
-        refetch();  // Вызываем refetch для обновления данных
+        refetch();
     };
 
     return (
@@ -77,15 +87,23 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
                     {competencies.map((competency) => (
                         <li key={competency.competency_id} className={styles.wrapper}>
                             <span className={styles.competency}>{competency.name}</span>
-                            <button
-                                className={styles.deleteButton}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDelete(competency.competency_id, competency.name);
-                                }}
-                            >
-                                🗑️
-                            </button>
+                            <div className={styles.actionsContainer}>
+                                <button
+                                    className={styles.editButton}
+                                    onClick={() => handleEditClick(competency)}
+                                >
+                                    <img src={EditIcon} alt="Редактировать"/>
+                                </button>
+                                <button
+                                    className={styles.trashButton}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(competency.competency_id, competency.name);
+                                    }}
+                                >
+                                    <img src={TrashIcon} alt={"Удалить"}/>
+                                </button>
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -103,7 +121,17 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
                     onClose={() => setIsCreateModalOpen(false)}
                     onCompetencyCreated={handleCreateCompetency}
                 />
-                )}
+            )}
+            {editCompetency && (
+                <EditCompetencyModal
+                    isOpen={!!editCompetency}
+                    onClose={() => setEditCompetency(null)}
+                    competencyId={editCompetency.competency_id} // Передаём правильный ID
+                    initialName={editCompetency.name}
+                    initialDescription={editCompetency.description}
+                    onCompetencyUpdated={refetch}
+                />
+            )}
         </div>
     );
 };
