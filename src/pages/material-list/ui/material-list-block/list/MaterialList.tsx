@@ -13,7 +13,7 @@ interface Material {
 }
 
 export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
-	const { data, error, isLoading } = useFetchMaterialsQuery();
+	const { data, error, isLoading, refetch } = useFetchMaterialsQuery(); // Добавляем refetch
 	const [materials, setMaterials] = useState<Material[]>([]);
 	const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,6 +56,9 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 			try {
 				await deleteMaterial(selectedMaterialId).unwrap();
 				handleMaterialDeleted(selectedMaterialId);
+
+				// Запрос на обновление данных после удаления
+				refetch();
 				toast.success('Материал успешно удалён!');
 			} catch (error) {
 				console.error('Ошибка при удалении:', error);

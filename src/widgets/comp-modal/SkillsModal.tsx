@@ -9,7 +9,7 @@ import styles from './SkillsModal.module.scss';
 import { CreateCompetencyModal } from "../create-competency-modal/CreateCompetencyModal.tsx";
 import EditIcon from '../../assets/images/edit.svg';
 import TrashIcon from '../../assets/images/trash.svg';
-import {EditCompetencyModal} from "../edit-competency-modal/EditCompetencyModal.tsx";
+import { EditCompetencyModal } from "../edit-competency-modal/EditCompetencyModal.tsx";
 
 interface SkillsModalProps {
     isOpen: boolean;
@@ -19,10 +19,17 @@ interface SkillsModalProps {
 export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
     const { data: competenciesData, isLoading, isError, refetch } = useFetchCompetenciesQuery();
     const { data: materialsData } = useFetchMaterialsQuery();
-    const [competencies, setCompetencies] = useState<{ competency_id: number; name: string }[]>([]);
+    const [competencies, setCompetencies] = useState<{ competency_id: number; name: string; description: string }[]>([]);
     const [deleteCompetency] = useDeleteCompetencyMutation();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [editCompetency, setEditCompetency] = useState<{ competency_id: number; name: string; description: string } | null>(null);
+
+
+    useEffect(() => {
+        if (isOpen) {
+            refetch();
+        }
+    }, [isOpen, refetch]);
 
     useEffect(() => {
         if (competenciesData && competenciesData.data) {
@@ -32,24 +39,26 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
 
     const handleEditClick = (competency: { competency_id: number; name: string; description?: string }) => {
         setEditCompetency({
-            competency_id: competency.competency_id, // Сохраняем ID!
+            competency_id: competency.competency_id,
             name: competency.name,
             description: competency.description || "",
         });
     };
-    const handleDelete = (competencyId: number, competencyName: string) => {
-        const isLinked = materialsData?.data.some(material =>
-            material.competencies.includes(competencyName)
-        );
 
+    const handleDelete = (competencyId: number, competencyName: string) => {
+        const isLinked = materialsData?.data && materialsData.data.length > 0
+            ? materialsData.data.some(material =>
+                material.competencies.includes(competencyName)
+            )
+            : false;
         if (isLinked) {
             toast.error("Невозможно удалить компетенцию, так как она связана с одним или несколькими материалами.");
             return;
         }
-
         deleteCompetency(competencyId)
             .unwrap()
             .then(() => {
+                refetch();
                 setCompetencies((prev) => prev.filter((c) => c.competency_id !== competencyId));
                 toast.success("Компетенция успешно удалена.");
             })
@@ -86,7 +95,6 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
                 <ul className={styles.list}>
                     {competencies.map((competency) => (
                         <li key={competency.competency_id} className={styles.wrapper}>
-                            <span className={styles.competency}>{competency.name}</span>
                             <div className={styles.actionsContainer}>
                                 <button
                                     className={styles.editButton}
@@ -101,8 +109,12 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
                                         handleDelete(competency.competency_id, competency.name);
                                     }}
                                 >
-                                    <img src={TrashIcon} alt={"Удалить"}/>
+                                    <img src={TrashIcon} alt="Удалить"/>
                                 </button>
+                            </div>
+                            <div className={styles.textContainer}>
+                                <span className={styles.competencyName}>{competency.name}</span>
+                                <span className={styles.competencyDescription}>{competency.description}</span>
                             </div>
                         </li>
                     ))}

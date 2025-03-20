@@ -12,7 +12,6 @@
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Затемненный фон */
 .overlay {
   position: absolute;
   width: 100%;
@@ -20,20 +19,17 @@
   background-color: rgba(0, 0, 0, 0.6);
 }
 
-/* Контент модального окна */
 .content {
   position: relative;
-  min-width: 400px;
+  width: 90vw;
+  height: 85vh;
   background-color: #ffffff;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  animation: slideIn 0.3s ease-out;
-}
-
-.content:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
 }
 
 h2 {
@@ -48,87 +44,127 @@ h2 {
 .list {
   list-style: none;
   padding: 0;
-  max-height: 300px;
+  max-height: 74%; /* Уменьшено, чтобы кнопки всегда были видны */
   overflow-y: auto;
+  margin-bottom: 10px;
   scrollbar-width: none;
-  margin-bottom: 20px;
-  border-radius: 8px;
 }
 
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+
 .list li {
-  padding: 15px;
-  margin: 5px 0;
-  background: #e0e0e0;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.3s ease, color 0.3s ease;
   display: flex;
   align-items: center;
-  color: #555;
-  position: relative;
-  animation: fadeIn 0.3s ease-out;
+  margin: 10px 0; /* Увеличиваем отступы между элементами */
+  background: #e0e0e0;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  height: 60px
 }
 
 .list li:hover {
-
-  background: #d3d3d3; /* Светлый эффект при наведении */
+  background: #d3d3d3;
 }
 
-.deleteButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  position: absolute;
-  right: 12px;
-  opacity: 0;
-  top: 3px;
-  transition: opacity 0.2s ease, transform 0.2s;
-}
-
-.deleteButton:hover {
-  transform: scale(1.2);
-  color: #ff0000;
-}
-
-
-
-
-.list li:hover .deleteButton {
-  opacity: 1;
-}
-
-/* Кнопки */
-.actions {
+.actionsContainer {
   display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
-  gap: 10px;
+  align-items: center;
+  margin-left: auto; /* Это гарантирует, что контейнер с кнопками будет выравниваться справа */
+  position: absolute;
+  right: 10px; /* Перемещаем кнопки вправо */
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
-.trashButton {
+.list li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin: 5px 0;
+  background: #e0e0e0;
+  border-radius: 8px;
+  position: relative; /* Не забываем добавить позиционирование для списка */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.list li:hover {
+  background: #d3d3d3;
+}
+
+.editButton, .trashButton {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 14px;
-  position: absolute;
-  right: 12px;
-  opacity: 0;
-  top: 1px;
-  transition: opacity 0.2s ease, transform 0.2s;
+  margin-left: 5px;
+  transition: transform 0.2s ease;
 }
 
-.trashButton img {
-  width: 24px; /* Подстраиваем под размер корзины */
+.editButton img, .trashButton img {
+  width: 24px;
   height: 24px;
 }
 
-.trashButton:hover {
+.list li:hover .actionsContainer {
+  opacity: 1;
+}
+
+.trashButton img {
+  width: 24px;
+  height: 24px;
+}
+
+.editButton img {
+  width: 20px;
+  height: 20px;
+}
+
+.editButton:hover, .trashButton:hover {
   transform: scale(1.2);
 }
 
-.list li:hover .trashButton {
-  opacity: 1;
+.textContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  padding-right: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.competencyName {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.competencyDescription {
+  font-size: 1rem;
+  color: #666;
+  flex: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto; /* Кнопки всегда внизу */
+  gap: 10px;
+  padding-top: 5px;
+  background: white;
+  position: sticky;
+  margin-bottom: 0;
+  bottom: 0;
 }
 
 
@@ -141,66 +177,19 @@ h2 {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* Эффект на кнопках */
+
 .actions button:hover {
   background-color: #db3070;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.actions button:active {
-  background-color: #c73663; /* Темный цвет при нажатии */
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-.editButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  position: absolute;
-  right: 40px; /* Отступ такой же, как у корзины */
-  opacity: 0;
-  top: 4px;
-  transition: opacity 0.2s ease, transform 0.2s;
-}
-
-.editButton img {
-  width: 18px; /* Подстраиваем под размер корзины */
-  height: 18px;
-}
-
-.editButton:hover {
-  transform: scale(1.2);
-}
-
-.list li:hover .editButton {
-  opacity: 1;
-}
-
-
-/* Анимации */
 @keyframes fadeIn {
   0% {
     opacity: 0;
   }
   100% {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  0% {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
     opacity: 1;
   }
 }
