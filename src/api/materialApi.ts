@@ -1,4 +1,5 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {createApi} from '@reduxjs/toolkit/query/react';
+import {baseQueryWithReauth} from "./authBaseQuery.ts";
 
 // Типы для данных
 interface Competency {
@@ -13,7 +14,7 @@ interface Material {
     material_id: number;
     title: string;
     description: string;
-    type_name: string;  // Это поле для получения данных, его не нужно менять
+    type_name: string;
     content: string;
     competencies: string[];
     type_id: number;
@@ -25,13 +26,12 @@ interface MaterialType {
     type: string;
 }
 
-// Интерфейс для запроса на создание материала
 interface CreateMaterialRequest {
     title: string;
     description: string;
     type_id: number;
     content: string;
-    competencies: number[];  // Компетенции передаются как массив чисел (ID компетенций)
+    competencies: number[];
 }
 
 interface CreateMaterialTypeRequest {
@@ -109,24 +109,25 @@ interface CreateCompetencyResponse {
 
 export const materialsApi = createApi({
     reducerPath: 'materialsApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080',
-        prepareHeaders: (headers) => {
-            const token = localStorage.getItem('access_token');
-            if (token) {
-                headers.set('Authorization', `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
-        signIn: builder.mutation<{ access_token: string }, { email: string; password: string }>({
+        // Endpoint для входа пользователя, возвращает access_token и refresh_token
+        signIn: builder.mutation<{ access_token: string; refresh_token: string  }, { email: string; password: string }>({
             query: (credentials) => ({
                 url: '/auth/sign-in',
                 method: 'POST',
                 body: credentials,
             }),
         }),
+        // Endpoint для обновления access_token по refresh_token. Возвращает только access_token.
+refreshToken: builder.mutation<{ access_token: string }, void>({
+    query: () => ({
+        url: '/auth/refresh',
+        method: 'POST',
+        body: { refresh_token: localStorage.getItem('refresh_token') },
+    }),
+}),
+
         fetchMaterials: builder.query<MaterialsApiResponse, void>({
             query: () => '/materials',
             transformResponse: (response: Material[]): MaterialsApiResponse => {
@@ -237,6 +238,7 @@ export const materialsApi = createApi({
 
 export const {
     useSignInMutation,
+    useRefreshTokenMutation,
     useFetchMaterialsQuery,
     useFetchCompetenciesQuery,
     useCreateMaterialMutation,

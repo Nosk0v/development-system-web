@@ -5,9 +5,7 @@ import {Input} from "../../../../widgets/input/input.tsx";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import { useSignInMutation } from '../../../../api/materialApi.ts';
-import {useState} from "react";
-
-
+import {useState, useEffect} from "react";
 
 export const SignInBlock = () => {
     const [signIn] = useSignInMutation();
@@ -20,7 +18,12 @@ export const SignInBlock = () => {
         try {
             const res = await signIn({ email, password }).unwrap();
             toast.success('Успешный вход!');
-            localStorage.setItem('access_token', res.access_token);
+            if (res.access_token) {
+                localStorage.setItem('access_token', res.access_token);
+            }
+            if (res.refresh_token) {
+                localStorage.setItem('refresh_token', res.refresh_token);
+            }
 
             navigate('/material-list');
         } catch (error) {
@@ -28,6 +31,21 @@ export const SignInBlock = () => {
             console.error('Ошибка авторизации:', error);
         }
     };
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                onSignIn();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [email, password]);
 
     return (
         <div className={css.wrapper}>
@@ -37,14 +55,14 @@ export const SignInBlock = () => {
                     <Input
                         placeholder="Введите почту"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)} // Обновление email
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </Label>
                 <Label label="Пароль">
                     <Input
                         placeholder="Введите пароль"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)} // Обновление password
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                 </Label>
                 <MainButton text="Войти" onClick={onSignIn} />

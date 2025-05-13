@@ -29,7 +29,10 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 	const onCompClick = () => {
 		setIsSkillModalOpen(true);
 	};
-
+	const onLogoutClick = () => {
+		localStorage.removeItem('access_token');
+		window.location.replace('/');
+	};
 
 
 	return (
@@ -46,9 +49,12 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 			<div className={css.bottomButtons}>
 				<MainButton text="Компетенции" className={css.compButton} onClick={onCompClick} />
 				<MainButton text="Список типов материалов" className={css.typeButton} onClick={onMaterialTypesClick} />
+				<MainButton
+					text="Выйти"
+					className={css.typeButton}
+					onClick={onLogoutClick}
+				/>
 			</div>
-
-
 
 			{/* Модальное окно для типов материалов */}
 			{isMaterialTypesModalOpen && <MaterialTypesModal isOpen={isMaterialTypesModalOpen} onClose={() => setIsMaterialTypesModalOpen(false)} />}
@@ -56,4 +62,5 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 
 		</div>
 	);
+
 };
