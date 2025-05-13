@@ -16,7 +16,7 @@ export const MaterialCreateControl = ({ onSave }: MaterialCreateControlProps) =>
 		try {
 			await refetch();
 
-			navigate('/');
+			navigate('/material-list');
 		} catch (error) {
 			console.error('Ошибка при перезагрузке списка:', error);
 		}

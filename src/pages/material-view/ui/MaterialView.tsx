@@ -17,7 +17,7 @@ export const MaterialView = () => {
 			await refetch();
 
 			// После обновления данных навигация на главную страницу
-			navigate('/');
+			navigate('/material-list');
 		} catch (error) {
 			console.error('Ошибка при перезагрузке списка:', error);
 		}

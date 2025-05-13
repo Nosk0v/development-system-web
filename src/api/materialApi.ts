@@ -109,8 +109,24 @@ interface CreateCompetencyResponse {
 
 export const materialsApi = createApi({
     reducerPath: 'materialsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080' }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: 'http://localhost:8080',
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+            return headers;
+        },
+    }),
     endpoints: (builder) => ({
+        signIn: builder.mutation<{ access_token: string }, { email: string; password: string }>({
+            query: (credentials) => ({
+                url: '/auth/sign-in',
+                method: 'POST',
+                body: credentials,
+            }),
+        }),
         fetchMaterials: builder.query<MaterialsApiResponse, void>({
             query: () => '/materials',
             transformResponse: (response: Material[]): MaterialsApiResponse => {
@@ -204,6 +220,7 @@ export const materialsApi = createApi({
                 return response;
             },
         }),
+
         updateCompetency: builder.mutation<UpdateCompetencyResponse, {competencyId: number, data: UpdateCompetencyRequest}>({
             query: ({competencyId, data}) => ({
                 url: `/competencies/${competencyId}`,
@@ -219,6 +236,7 @@ export const materialsApi = createApi({
 });
 
 export const {
+    useSignInMutation,
     useFetchMaterialsQuery,
     useFetchCompetenciesQuery,
     useCreateMaterialMutation,
