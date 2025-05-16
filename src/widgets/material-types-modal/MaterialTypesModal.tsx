@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useFetchMaterialTypeQuery, useDeleteMaterialTypeMutation, useFetchMaterialsQuery } from '../../api/materialApi.ts';
+import {
+    useFetchMaterialTypeQuery,
+    useDeleteMaterialTypeMutation,
+    useFetchMaterialsQuery
+} from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './MaterialTypesModal.module.scss';
 import { CreateMaterialTypeModal } from '../create-material-type/CreateMaterialTypeModal';
@@ -12,31 +16,23 @@ interface MaterialTypesModalProps {
 
 export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps) => {
     const { data: materialTypesData, isLoading: isMaterialTypesLoading, isError: isMaterialTypesError, refetch } = useFetchMaterialTypeQuery();
-    const { data: materialsData, isLoading: isMaterialsLoading, isError: isMaterialsError } = useFetchMaterialsQuery();  // Fetch all materials
-    const [materialTypes, setMaterialTypes] = useState<{ type_id: number; type: string }[]>([]);
+    const { data: materialsData, isLoading: isMaterialsLoading, isError: isMaterialsError } = useFetchMaterialsQuery();
     const [deleteMaterialType] = useDeleteMaterialTypeMutation();
     const [isCreateModalOpen, setCreateModalOpen] = useState(false);
 
-    useEffect(() => {
-        if (materialTypesData && materialTypesData.data) {
-            setMaterialTypes(materialTypesData.data);
-        }
-    }, [materialTypesData]);
-
     const handleDelete = (typeId: number, typeName: string) => {
-        const isLinked = materialsData?.data?.some(material => material.type_name === typeName) ?? false;
+        const isLinked = materialsData?.data.some(material => material.type_name === typeName) ?? false;
 
         if (isLinked) {
             toast.error("Невозможно удалить тип материала, так как он используется в одном или нескольких материалах.");
             return;
         }
 
-
         deleteMaterialType(typeId)
             .unwrap()
             .then(() => {
-                setMaterialTypes((prevTypes) => prevTypes.filter((type) => type.type_id !== typeId));
                 toast.success("Тип материала успешно удалён.");
+                refetch(); // Явно обновляем данные после удаления
             })
             .catch((error) => {
                 console.error('Ошибка удаления типа материала:', error);
@@ -56,10 +52,6 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
         };
     }, [isOpen]);
 
-    const handleTypeCreated = () => {
-        refetch();
-    };
-
     return (
         <div className={styles.modal}>
             <div className={styles.overlay} onClick={onClose}></div>
@@ -72,7 +64,7 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
                 {isMaterialsError && <p>Ошибка загрузки материалов</p>}
 
                 <ul className={styles.list}>
-                    {materialTypes.map((type) => (
+                    {materialTypesData?.data.map((type) => (
                         <li key={type.type_id} className={styles.wrapper}>
                             <span className={styles.competency}>{type.type}</span>
                             <button
@@ -82,7 +74,7 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
                                     handleDelete(type.type_id, type.type);
                                 }}
                             >
-                                <img src={TrashIcon} alt={"Удалить"}/>
+                                <img src={TrashIcon} alt={"Удалить"} />
                             </button>
                         </li>
                     ))}
@@ -93,10 +85,12 @@ export const MaterialTypesModal = ({ isOpen, onClose }: MaterialTypesModalProps)
                     <button onClick={() => setCreateModalOpen(true)}>Создать</button>
                 </div>
             </div>
+
             <CreateMaterialTypeModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setCreateModalOpen(false)}
-                onTypeCreated={handleTypeCreated} />
+                onTypeCreated={refetch}
+            />
         </div>
     );
 };

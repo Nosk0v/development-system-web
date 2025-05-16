@@ -6,7 +6,8 @@ import {SessionLockGuard} from "./shared/SessionLockGuard.tsx";
 const App = () => (
     <>
         <SessionLockGuard>
-            <Router />
+            <Router
+            />
         </SessionLockGuard>
         <ToastContainer position="top-right" autoClose={3000} />
     </>
