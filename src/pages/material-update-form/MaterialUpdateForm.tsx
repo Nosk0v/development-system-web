@@ -5,7 +5,7 @@ import { Input } from '../../widgets/input/input';
 import { TextArea } from '../../widgets/textarea/textarea';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { UpdateModal } from '../../widgets/update-modal/UpdateModal';
 import { DropdownUpdateMenu } from "../../widgets/dropdown-menu/dropdown-update-menu.tsx";
 import TrashIcon from '../../assets/images/trash.svg';
@@ -48,6 +48,11 @@ export const MaterialUpdateForm = ({
         const updatedCompetencies = competencies.filter((_, i) => i !== index);
         handleCompetenciesSelect(updatedCompetencies);
     }, [competencies, handleCompetenciesSelect]);
+    const onAddCompetenciesClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.currentTarget.blur()
+        toggleModal();
+    }
+
 
     useEffect(() => {
         // Handling the overflow behavior for the modal
@@ -116,7 +121,7 @@ export const MaterialUpdateForm = ({
                         )}
                     </div>
                     <button
-                        onClick={toggleModal}
+                        onClick={onAddCompetenciesClick}
                         className={css.addCompetencyButton}
                     >
                         Добавить компетенции

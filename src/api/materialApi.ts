@@ -1,6 +1,51 @@
 import {createApi} from '@reduxjs/toolkit/query/react';
 import {baseQueryWithReauth} from "./authBaseQuery.ts";
 
+// Типы для курсов
+interface Course {
+    course_id: number;
+    title: string;
+    description: string;
+    created_by: string;
+    materials: string[];
+    competencies: string[];
+    create_date: string;
+}
+
+interface CreateCourseRequest {
+    title: string;
+    description: string;
+    created_by: string;
+    materials: number[];
+    competencies: number[];
+}
+
+interface UpdateCourseRequest {
+    title: string;
+    description: string;
+    created_by: string;
+    materials: number[];
+    competencies: number[];
+}
+
+interface CourseApiResponse {
+    data: Course[];
+}
+
+interface CreateCourseResponse {
+    course: Course;
+    message: string;
+}
+
+interface UpdateCourseResponse {
+    course: Course;
+    message: string;
+}
+
+interface DeleteCourseResponse {
+    message: string;
+}
+
 // Типы для данных
 interface Competency {
     competency_id: number;
@@ -233,6 +278,38 @@ refreshToken: builder.mutation<{ access_token: string }, void>({
             },
 
         }),
+        fetchCourses: builder.query<CourseApiResponse, void>({
+            query: () => '/courses',
+            transformResponse: (response: Course[]): CourseApiResponse => {
+                return { data: response };
+            },
+        }),
+        fetchCourseById: builder.query<Course, number>({
+            query: (courseId) => `/courses/${courseId}`,
+        }),
+        createCourse: builder.mutation<CreateCourseResponse, CreateCourseRequest>({
+            query: (newCourse) => ({
+                url: '/courses',
+                method: 'POST',
+                body: newCourse,
+            }),
+            transformResponse: (response: { course: Course; message: string }): CreateCourseResponse => response,
+        }),
+        updateCourse: builder.mutation<UpdateCourseResponse, { courseId: number; data: UpdateCourseRequest }>({
+            query: ({ courseId, data }) => ({
+                url: `/courses/${courseId}`,
+                method: 'PUT',
+                body: data,
+            }),
+            transformResponse: (response: { course: Course; message: string }): UpdateCourseResponse => response,
+        }),
+        deleteCourse: builder.mutation<DeleteCourseResponse, number>({
+            query: (courseId) => ({
+                url: `/courses/${courseId}`,
+                method: 'DELETE',
+            }),
+            transformResponse: (response: { message: string }): DeleteCourseResponse => response,
+        }),
     }),
 });
 
@@ -252,4 +329,9 @@ export const {
     useDeleteCompetencyMutation,
     useCreateCompetencyMutation,
     useUpdateCompetencyMutation,
+    useFetchCoursesQuery,
+    useFetchCourseByIdQuery,
+    useCreateCourseMutation,
+    useUpdateCourseMutation,
+    useDeleteCourseMutation,
 } = materialsApi;

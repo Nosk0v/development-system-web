@@ -10,7 +10,9 @@ interface InputProps {
 	className?: string;
 	onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
 	value?: string;
+	type?: React.HTMLInputTypeAttribute;
 }
+
 
 export const Input = (props: InputProps) => {
 	const {
@@ -20,8 +22,9 @@ export const Input = (props: InputProps) => {
 		id,
 		onChange,
 		className,
-		value,  // Получаем value для передачи в input
-		onKeyDown
+		value,
+		onKeyDown,
+		type = 'text' // <- УСТАНОВИМ значение по умолчанию
 	} = props;
 
 	return (
@@ -35,6 +38,7 @@ export const Input = (props: InputProps) => {
 					onChange={onChange}
 					value={value}
 					onKeyDown={onKeyDown}
+					type={type} // <- ДОБАВЛЕНО
 				/>
 			</div>
 		</div>

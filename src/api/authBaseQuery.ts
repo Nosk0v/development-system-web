@@ -5,9 +5,10 @@ import {
     FetchBaseQueryError
 } from "@reduxjs/toolkit/query/react";
 
-
+export const BASE_API_URL_DEV = 'http://localhost:25502/api';
+export const BASE_API_URL = 'https://a.service-to.ru/';
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:8080',
+    baseUrl: BASE_API_URL,
     prepareHeaders: (headers) => {
         const token = localStorage.getItem('access_token');
         if (token) {

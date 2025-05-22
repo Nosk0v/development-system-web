@@ -8,7 +8,7 @@ import { Competencies } from '../../widgets/competencies/competencies';
 import { CompetenciesModal } from '../../widgets/competencies-modal/CompetenciesModal';
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import  {useEffect} from "react";
+import React, {useEffect} from "react";
 
 
 interface MaterialFormProps {
@@ -50,6 +50,11 @@ export const MaterialForm = ({
         id,
         name: competencyNames.get(id) || 'Неизвестная компетенция',
     }));
+
+    const onAddCompetenciesClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.currentTarget.blur()
+        toggleModal();
+    }
 
 
     useEffect(() => {
@@ -103,7 +108,7 @@ export const MaterialForm = ({
                         }
                     />
                     <button
-                        onClick={toggleModal}
+                        onClick={onAddCompetenciesClick}
                         className={css.addCompetencyButton}
                     >
                         Добавить компетенции

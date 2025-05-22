@@ -60,6 +60,7 @@ export const SignInBlock = () => {
                 </Label>
                 <Label label="Пароль">
                     <Input
+                        type="password"
                         placeholder="Введите пароль"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
