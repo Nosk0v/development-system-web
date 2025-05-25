@@ -6,6 +6,7 @@ import { MaterialView } from '../../pages/material-view';
 import { MaterialUpdatePage } from '../../pages/material-update';
 import { SignInPage } from '../../pages/sing-in';
 import { PrivateRoute } from './PrivateRoute';
+import {CourseListPage} from "../../pages/course-list";
 
 const Router = () => (
 	<div className={css.router}>
@@ -26,11 +27,17 @@ const Router = () => (
 					<MaterialView />
 				</PrivateRoute>
 			} />
+			<Route path="/courses" element={         // ← ДОБАВЛЕННЫЙ маршрут
+				<PrivateRoute>
+					<CourseListPage />
+				</PrivateRoute>
+			} />
 			<Route path="/update-material/:id" element={
 				<PrivateRoute>
 					<MaterialUpdatePage />
 				</PrivateRoute>
 			} />
+
 		</Routes>
 	</div>
 );

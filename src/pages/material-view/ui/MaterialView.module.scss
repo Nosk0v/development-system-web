@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
   background-color: #ffffff;
   padding: 24px;
@@ -12,6 +12,7 @@
   box-sizing: border-box;
   scroll-behavior: smooth;
 }
+
 
 .buttonContainer {
   display: flex;
@@ -40,6 +41,7 @@
   gap: 24px;
   flex: 1;
   width: 100%;
+
 }
 
 .leftColumn {
@@ -47,22 +49,14 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+
   max-width: 300px;
 }
 
-.image {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  object-fit: cover;
-  border: 1px solid #e0e0e0;
-  user-drag: none; /* Для WebKit (Safari, Chrome) */
-  user-select: none; /* Запрет на выделение */
-  pointer-events: none;
-}
 
 .header {
   text-align: center;
+  justify-content: center;
 }
 
 .title {
@@ -77,6 +71,7 @@
   white-space: normal; /* Позволяем тексту занимать несколько строк */
   overflow-wrap: break-word; /* Автоматический перенос по словам */
   word-wrap: break-word; /* Старый синтаксис для поддержки переноса */
+  justify-content: center;
   word-break: normal;
 }
 
@@ -85,11 +80,13 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  justify-content: center;
 }
 
 label {
   font-size: 16px;
   font-weight: bold;
+  justify-content: center;
   color: #000; /* Черный цвет для заголовков */
   margin-bottom: 8px;
 }
@@ -102,6 +99,7 @@ label {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   background-color: #fafafa;
+  justify-content: center;
   overflow-y: auto; /* Прокрутка */
   height: 100px; /* Фиксированная высота */
   user-select: none;
@@ -116,6 +114,7 @@ label {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   background-color: #fafafa;
+  justify-content: center;
   overflow-y: auto; /* Прокрутка */
   height: 240px;
   user-select: text;
@@ -126,24 +125,28 @@ label {
   font-size: 16px;
   font-weight: bold;
   color: #000; /* Черный цвет для заголовка "Тип материала" */
+  justify-content: center;
   margin-bottom: 4px;
 }
 
 .typeValue {
   font-size: 16px;
   font-weight: normal;
+  justify-content: center;
   color: #555; /* Обычный текст для значения типа материала */
 }
 
 .competencies {
   font-size: 16px;
   color: #333;
+  justify-content: center;
 }
 
 .competenciesList {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+
 }
 
 .competency {

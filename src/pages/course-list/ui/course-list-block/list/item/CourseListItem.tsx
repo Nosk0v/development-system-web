@@ -1,31 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 import { useRef, useEffect } from 'react';
-import css from './MaterialListItem.module.scss';
+import css from './CourseListItem.module.scss';
 import TrashIcon from "../../../../../../assets/images/trash.svg";
 
-interface MaterialListItemProps {
-	materialId: number;
+interface CourseListItemProps {
+	courseId: number;
 	title: string;
 	competencies: string[];
-	onMaterialDeleted: (materialId: number) => void;
-	onDeleteRequest: (materialId: number) => void;
+	onCourseDeleted: (courseId: number) => void;
+	onDeleteRequest: (courseId: number) => void;
 }
 
-export const MaterialListItem = ({
-									 materialId,
-									 title,
-									 competencies,
-									 onDeleteRequest,
-								 }: MaterialListItemProps) => {
+export const CourseListItem = ({
+								   courseId,
+								   title,
+								   competencies,
+								   onDeleteRequest,
+							   }: CourseListItemProps) => {
 	const navigate = useNavigate();
 	const competenciesRef = useRef<HTMLDivElement | null>(null);
 
-	// Переход к просмотру материала
-	const onMaterialClick = () => {
-		navigate(`/view-materials/${materialId}`);
+	const onCourseClick = () => {
+		navigate(`/view-courses/${courseId}`);
 	};
 
-	// Обработчик горизонтальной прокрутки
 	useEffect(() => {
 		const ref = competenciesRef.current;
 		if (!ref) return;
@@ -33,19 +31,16 @@ export const MaterialListItem = ({
 		const handleWheel = (e: WheelEvent) => {
 			if (e.deltaY !== 0) {
 				e.preventDefault();
-				ref.scrollLeft += e.deltaY * 0.5; // Коэффициент 0.5 делает прокрутку плавной
+				ref.scrollLeft += e.deltaY * 0.5;
 			}
 		};
 
 		ref.addEventListener('wheel', handleWheel);
-
-		return () => {
-			ref.removeEventListener('wheel', handleWheel);
-		};
+		return () => ref.removeEventListener('wheel', handleWheel);
 	}, []);
 
 	return (
-		<div className={css.wrapper} onClick={onMaterialClick}>
+		<div className={css.wrapper} onClick={onCourseClick}>
 			<div className={css.content}>
 				<div className={css.title}>{title}</div>
 				{competencies.length > 0 && (
@@ -62,7 +57,7 @@ export const MaterialListItem = ({
 				className={css.trashButton}
 				onClick={(e) => {
 					e.stopPropagation();
-					onDeleteRequest(materialId);
+					onDeleteRequest(courseId);
 				}}
 			>
 				<img src={TrashIcon} alt="Удалить" />

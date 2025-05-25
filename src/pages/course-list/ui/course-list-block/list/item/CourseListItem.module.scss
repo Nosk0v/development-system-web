@@ -1,0 +1,124 @@
+.wrapper {
+  display: grid;
+  gap: 16px;
+  align-items: center;
+  background: #ffffff; /* Белый фон */
+  border-radius: 12px; /* Закругленные края */
+  padding: 16px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Более заметная тень */
+
+  width: 350px;
+  height: 135px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px); /* Увеличенный эффект подъема при наведении */
+    box-shadow: 0 6px 12px rgba(216, 27, 96, 0.3); /* Усиленная тень */
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-height: 100%;
+  overflow: hidden; /* Скрыть лишний контент */
+}
+
+.title {
+  font-size: 16px; /* Увеличенный размер шрифта */
+  font-weight: 700; /* Жирный текст */
+  color: #d5608e; /* Глубокий розовый для выделения */
+  margin-bottom: 8px; /* Отступ снизу для создания пространства */
+  text-align: left; /* Выровнять текст по левому краю */
+
+  /* Свойства для обрезки текста с троеточием */
+  overflow: hidden; /* Скрыть текст, выходящий за границы */
+  text-overflow: ellipsis; /* Добавить троеточие */
+  white-space: nowrap; /* Оставить текст в одну строку */
+  width: 100%; /* Убедиться, что ширина задана */
+}
+
+.competencies {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  background: #e5e5e5; /* Light gray background */
+  border: 1px solid #e5e5e5;
+  padding: 8px;
+  border-radius: 8px;
+
+  overflow-x: auto; /* Горизонтальная прокрутка */
+  white-space: nowrap; /* Оставить элементы в одну строку */
+
+  scrollbar-width: none;
+
+  .competency {
+    background: var(--material-list-item-bg-color);
+    font-size: 10px;
+    border-radius: 8px;
+    padding: 5px 8px;
+    text-align: center;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.preview {
+  grid-column: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  img {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 8px; /* Rounded image */
+    border: 1px solid #e5e5e5; /* Light gray border */
+    user-drag: none; /* Для WebKit (Safari, Chrome) */
+    user-select: none; /* Запрет на выделение */
+    pointer-events: none;
+  }
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  transition: transform 0.2s;
+  position: absolute;
+  top: 1px;
+  right: 8px;
+
+  &:hover {
+    transform: scale(1.2);
+    color: #ff0000;
+  }
+}
+
+.trashButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  transition: transform 0.2s;
+  position: absolute;
+  top: 0;
+  right: 8px;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.trashButton img {
+  width: 20px; /* Подстраиваем под размер корзины */
+  height: 20px;
+}
+
+
+

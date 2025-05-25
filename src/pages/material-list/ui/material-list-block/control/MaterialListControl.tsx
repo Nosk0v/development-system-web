@@ -7,7 +7,7 @@ import { Label } from '../../../../../widgets/input-label/label';
 import { Input } from '../../../../../widgets/input/input';
 import { ChangeEvent, useId } from 'react';
 import { MaterialTypesModal } from '../../../../../widgets/material-types-modal/MaterialTypesModal';
-import { SkillsModal } from "../../../../../widgets/comp-modal/SkillsModal.tsx";
+import { SkillsModal } from '../../../../../widgets/comp-modal/SkillsModal.tsx';
 
 export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) => void }) => {
 	const navigate = useNavigate();
@@ -22,18 +22,23 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 	const onCreateMaterialClick = () => {
 		navigate('/create-material');
 	};
+
 	const onMaterialTypesClick = () => {
 		setIsMaterialTypesModalOpen(true);
-	}
+	};
 
 	const onCompClick = () => {
 		setIsSkillModalOpen(true);
 	};
+
+	const onCoursesClick = () => {
+		navigate('/courses');
+	};
+
 	const onLogoutClick = () => {
 		localStorage.removeItem('access_token');
 		window.location.replace('/');
 	};
-
 
 	return (
 		<div className={css.wrapper}>
@@ -49,18 +54,17 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 			<div className={css.bottomButtons}>
 				<MainButton text="Компетенции" className={css.compButton} onClick={onCompClick} />
 				<MainButton text="Список типов материалов" className={css.typeButton} onClick={onMaterialTypesClick} />
-				<MainButton
-					text="Выйти"
-					className={css.typeButton}
-					onClick={onLogoutClick}
-				/>
+				<MainButton text="Курсы" className={css.compButton} onClick={onCoursesClick} />
+				<MainButton text="Выйти" className={css.typeButton} onClick={onLogoutClick} />
 			</div>
 
-			{/* Модальное окно для типов материалов */}
-			{isMaterialTypesModalOpen && <MaterialTypesModal isOpen={isMaterialTypesModalOpen} onClose={() => setIsMaterialTypesModalOpen(false)} />}
-			{isSkillModalOpen && <SkillsModal isOpen={isSkillModalOpen} onClose={() => setIsSkillModalOpen(false)} />}
-
+			{/* Модальные окна */}
+			{isMaterialTypesModalOpen && (
+				<MaterialTypesModal isOpen={isMaterialTypesModalOpen} onClose={() => setIsMaterialTypesModalOpen(false)} />
+			)}
+			{isSkillModalOpen && (
+				<SkillsModal isOpen={isSkillModalOpen} onClose={() => setIsSkillModalOpen(false)} />
+			)}
 		</div>
 	);
-
 };

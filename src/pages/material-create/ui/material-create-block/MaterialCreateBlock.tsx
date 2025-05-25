@@ -42,7 +42,7 @@ export const MaterialCreateBlock = () => {
 			hasError = true;
 		}
 
-		if (!selectedTypeId) { // Изменяем проверку
+		if (!selectedTypeId) {
 			toast.error('Пожалуйста, выберите тип материала!');
 			hasError = true;
 		}
@@ -52,8 +52,8 @@ export const MaterialCreateBlock = () => {
 			hasError = true;
 		}
 
-		if (title.length > 85 ) {
-			toast.error('Название материала должно не превышать 85 символов!');
+		if (title.length > 1000 ) {
+			toast.error('Название материала должно не превышать 1000 символов!');
 			hasError = true;
 		}
 

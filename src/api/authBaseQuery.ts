@@ -6,9 +6,9 @@ import {
 } from "@reduxjs/toolkit/query/react";
 
 export const BASE_API_URL_DEV = 'http://localhost:25502/api';
-export const BASE_API_URL = 'https://a.service-to.ru/';
+export const BASE_API_URL = 'https://b.service-to.ru/api';
 const baseQuery = fetchBaseQuery({
-    baseUrl: BASE_API_URL,
+    baseUrl: BASE_API_URL_DEV,
     prepareHeaders: (headers) => {
         const token = localStorage.getItem('access_token');
         if (token) {

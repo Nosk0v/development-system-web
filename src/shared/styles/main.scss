@@ -93,6 +93,7 @@ body {
   margin: 0;
   user-select: none;
   min-height: 100vh;
+  min-width: 700px;
   background-color: var(--default-ph-bg-color);
 
   &::-webkit-scrollbar {
@@ -123,6 +124,8 @@ body {
   flex-direction: column;
   flex-grow: 1;
   min-height: 100vh;
+  min-width: 700px;
+
 }
 
 button {

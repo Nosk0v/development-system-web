@@ -25,7 +25,7 @@ export const SignInBlock = () => {
                 localStorage.setItem('refresh_token', res.refresh_token);
             }
 
-            navigate('/material-list');
+            navigate('/courses');
         } catch (error) {
             toast.error('Ошибка авторизации! Пожалуйста, проверьте введенные данные.');
             console.error('Ошибка авторизации:', error);

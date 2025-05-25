@@ -21,16 +21,16 @@ export const CreateCompetencyModal = ({ isOpen, onClose, onCompetencyCreated }: 
             toast.error("Название компетенции должно содержать минимум 2 символа.");
             return;
         }
-        if (name.length > 30) {
-            toast.error("Название компетенции не должно превышать 25 символов.");
+        if (name.length > 400) {
+            toast.error("Название компетенции не должно превышать 400 символов.");
             return;
         }
         if (description.length === 0) {
             toast.error("Пожалуйста, заполните описание компетенции!");
             return;
         }
-        if (description.length > 85) {
-            toast.error("Описание компетенции не должно превышать 85 символов.");
+        if (description.length > 400) {
+            toast.error("Описание компетенции не должно превышать 400 символов.");
             return;
         }
 
