@@ -1,6 +1,20 @@
 import {createApi} from '@reduxjs/toolkit/query/react';
 import {baseQueryWithReauth} from "./authBaseQuery.ts";
 
+
+export interface ISignUpRequest {
+    email: string;
+    password: string;
+    name?: string | null;
+    organization_id: number;
+}
+
+export interface IAccountResponse {
+    email: string;
+    name: string | null;
+    organization_id: number;
+    message: string;
+}
 // Типы для курсов
 interface Course {
     course_id: number;
@@ -156,6 +170,14 @@ export const materialsApi = createApi({
     reducerPath: 'materialsApi',
     baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
+        signUp: builder.mutation<{ message: string }, ISignUpRequest>({
+            query: (newAccount) => ({
+                url: '/auth/sign-up',
+                method: 'POST',
+                body: newAccount,
+            }),
+            transformResponse: (response: { message: string }) => response,
+        }),
         // Endpoint для входа пользователя, возвращает access_token и refresh_token
         signIn: builder.mutation<{ access_token: string; refresh_token: string  }, { email: string; password: string }>({
             query: (credentials) => ({
@@ -334,4 +356,5 @@ export const {
     useCreateCourseMutation,
     useUpdateCourseMutation,
     useDeleteCourseMutation,
+    useSignUpMutation,
 } = materialsApi;

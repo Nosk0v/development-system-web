@@ -1,11 +1,11 @@
-import css from './SignInBlock.module.scss'
-import {MainButton} from "../../../../widgets/button/button.tsx";
+import css from './SignInBlock.module.scss';
+import { MainButton } from '../../../../widgets/button/button.tsx';
 import { Label } from '../../../../widgets/input-label/label.tsx';
-import {Input} from "../../../../widgets/input/input.tsx";
-import {useNavigate} from "react-router-dom";
-import {toast} from "react-toastify";
+import { Input } from '../../../../widgets/input/input.tsx';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useSignInMutation } from '../../../../api/materialApi.ts';
-import {useState, useEffect} from "react";
+import { useState, useEffect } from 'react';
 
 export const SignInBlock = () => {
     const [signIn] = useSignInMutation();
@@ -24,7 +24,6 @@ export const SignInBlock = () => {
             if (res.refresh_token) {
                 localStorage.setItem('refresh_token', res.refresh_token);
             }
-
             navigate('/courses');
         } catch (error) {
             toast.error('Ошибка авторизации! Пожалуйста, проверьте введенные данные.');
@@ -39,18 +38,20 @@ export const SignInBlock = () => {
                 onSignIn();
             }
         };
-
         document.addEventListener('keydown', handleKeyDown);
-
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [email, password]);
 
+    const handleNavigateToSignUp = () => {
+        navigate('/sign-up');
+    };
+
     return (
         <div className={css.wrapper}>
             <div className={css.formContainer}>
-                <div className={css.title}>Авторизизация</div>
+                <div className={css.title}>Авторизация</div>
                 <Label label="Почта">
                     <Input
                         placeholder="Введите почту"
@@ -67,6 +68,13 @@ export const SignInBlock = () => {
                     />
                 </Label>
                 <MainButton text="Войти" onClick={onSignIn} />
+
+                <div className={css.signUpHint}>
+                    <span>Нет аккаунта?</span>
+                    <button onClick={handleNavigateToSignUp} className={css.signUpLink}>
+                        Зарегистрируйтесь сейчас
+                    </button>
+                </div>
             </div>
         </div>
     );

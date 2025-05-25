@@ -7,11 +7,13 @@ import { MaterialUpdatePage } from '../../pages/material-update';
 import { SignInPage } from '../../pages/sing-in';
 import { PrivateRoute } from './PrivateRoute';
 import {CourseListPage} from "../../pages/course-list";
+import {RegistrationPage} from "../../pages/sign-up";
 
 const Router = () => (
 	<div className={css.router}>
 		<Routes>
 			<Route path="/" element={<SignInPage />} />
+			<Route path="/sign-up" element={<RegistrationPage />} />
 			<Route path="/material-list" element={
 				<PrivateRoute>
 					<MaterialListPage />

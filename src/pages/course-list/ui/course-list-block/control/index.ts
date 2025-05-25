@@ -1,1 +1,1 @@
-export { MaterialListControl } from './CourseListControl.tsx';
+export { CourseListControl } from './CourseListControl.tsx';

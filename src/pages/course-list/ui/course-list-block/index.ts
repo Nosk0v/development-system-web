@@ -1,1 +1,1 @@
-export { MaterialListBlock } from './CourseListBlock.tsx';
+export { CourseListBlock } from './CourseListBlock.tsx';
