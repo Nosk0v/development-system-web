@@ -82,8 +82,8 @@ export const CourseList = ({ searchQuery }: { searchQuery: string }) => {
 						/>
 					))
 				) : (
-					<div className={css.noCourses}>
-						<div className={css.emoji}>📭</div>
+					<div className={css.noMaterials}>
+						<div className={css.emoji}>😞</div>
 						Курсы отсутствуют
 					</div>
 				)}

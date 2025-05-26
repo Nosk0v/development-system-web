@@ -47,8 +47,13 @@ export const RegistrationPage = () => {
 
 			navigate('/courses');
 		} catch (error) {
-			console.error(error);
-			toast.error('Ошибка при регистрации или входе. Попробуйте позже.');
+			const err = error as { status?: number };
+			if (err?.status === 433) {
+				toast.error('Пользователь с таким email уже зарегистрирован');
+			} else {
+				console.error(err);
+				toast.error('Ошибка при регистрации или входе. Попробуйте позже.');
+			}
 		}
 	};
 

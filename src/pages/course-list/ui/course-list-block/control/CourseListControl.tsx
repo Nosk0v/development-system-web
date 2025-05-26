@@ -18,6 +18,10 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 		navigate('/material-list');
 	};
 
+	const onCreateCourseClick = () => {
+		navigate('/create-course');
+	};
+
 	const onLogoutClick = () => {
 		localStorage.removeItem('access_token');
 		window.location.replace('/');
@@ -31,6 +35,7 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 			</Label>
 
 			{/* Кнопки */}
+			<MainButton text="Создать" className={css.mainButton} onClick={onCreateCourseClick} />
 			<div className={css.bottomButtons}>
 				<MainButton text="Материалы" className={css.compButton} onClick={onMaterialsClick} />
 				<MainButton text="Выйти" className={css.typeButton} onClick={onLogoutClick} />

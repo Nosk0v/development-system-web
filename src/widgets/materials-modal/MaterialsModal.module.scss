@@ -1,0 +1,225 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.modalContent {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+
+.header {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  position: sticky;
+  top: 0;
+  background: white;
+  padding-bottom: 8px;
+  z-index: 1;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.toggleAll {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f91f71;
+  cursor: pointer;
+  padding: 0;
+
+  &.unselect {
+    color: #999;
+  }
+}
+
+.searchInput {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  width: 300px;
+  outline: none;
+
+  &:focus {
+    border-color: #f91f71;
+  }
+}
+
+.selectAll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #f91f71;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  margin-top: 4px; // ⬅️ Это выровняет по верхнему краю поля поиска
+
+  input[type='checkbox'] {
+    accent-color: #f91f71;
+  }
+}
+
+.search {
+  flex: 1;
+  max-width: 300px;
+
+  input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+  }
+}
+
+.materialList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 50vh;
+  overflow-y: scroll;
+  padding-right: 4px;
+
+  /* Скрыть скролл в WebKit-браузерах */
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* Скрыть скролл в Firefox */
+  scrollbar-width: none;
+
+  /* Скрыть скролл в Edge/IE */
+  -ms-overflow-style: none;
+}
+
+.materialItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 0;
+
+  .textBlock {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+    color: #333;
+
+    .title {
+      font-weight: 600;
+      color: #111;
+      line-height: 1.4;
+    }
+
+    .description {
+      font-size: 13px;
+      color: #666;
+    }
+  }
+
+  .checkboxWrapper {
+    align-self: center;
+
+    input[type='checkbox'] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+
+      &:checked {
+        border-color: #f91f71;
+        background-color: #f91f71;
+      }
+
+      &:checked::after {
+        content: '✓';
+        position: absolute;
+        color: white;
+        font-size: 14px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+}
+
+.actions {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding-top: 12px;
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  border-top: 1px solid #eee;
+
+  button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .save {
+    background-color: #f91f71;
+    color: #fff;
+
+    &:hover {
+      background-color: #db3070;
+    }
+  }
+
+  .cancel {
+    background-color: #eee;
+    color: #333;
+
+    &:hover {
+      background-color: #ddd;
+    }
+  }
+}

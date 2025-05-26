@@ -1,1 +1,1 @@
-export * from './ui';
+export * from '../material-create/ui';

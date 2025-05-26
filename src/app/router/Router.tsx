@@ -8,6 +8,9 @@ import { SignInPage } from '../../pages/sing-in';
 import { PrivateRoute } from './PrivateRoute';
 import {CourseListPage} from "../../pages/course-list";
 import {RegistrationPage} from "../../pages/sign-up";
+import {CourseCreatePage} from "../../pages/course-create";
+
+
 
 const Router = () => (
 	<div className={css.router}>
@@ -29,9 +32,14 @@ const Router = () => (
 					<MaterialView />
 				</PrivateRoute>
 			} />
-			<Route path="/courses" element={         // ← ДОБАВЛЕННЫЙ маршрут
+			<Route path="/courses" element={
 				<PrivateRoute>
 					<CourseListPage />
+				</PrivateRoute>
+			} />
+			<Route path="/create-course" element={
+				<PrivateRoute>
+					<CourseCreatePage />
 				</PrivateRoute>
 			} />
 			<Route path="/update-material/:id" element={
