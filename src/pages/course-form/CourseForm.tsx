@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
+
 import css from './CourseForm.module.scss';
-import {Label} from "../../widgets/input-label/label.tsx";
-import {Input} from "../../widgets/input/input.tsx";
-import {TextArea} from "../../widgets/textarea/textarea.tsx";
-import {Competencies} from "../../widgets/competencies/competencies.tsx";
-import {CompetenciesModal} from "../../widgets/competencies-modal/CompetenciesModal.tsx";
-import {MaterialsModal} from "../../widgets/materials-modal/MaterialsModal.tsx";
-import {CourseCreateControl} from "./index.ts";
+import { Label } from "../../widgets/input-label/label.tsx";
+import { Input } from "../../widgets/input/input.tsx";
+import { TextArea } from "../../widgets/textarea/textarea.tsx";
+import { Competencies } from "../../widgets/competencies/competencies.tsx";
+import { CompetenciesModal } from "../../widgets/competencies-modal/CompetenciesModal.tsx";
+import { MaterialsModal } from "../../widgets/materials-modal/MaterialsModal.tsx";
+import { CourseCreateControl } from "./index.ts";
 
 interface CourseFormProps {
     title: string;
@@ -16,7 +17,7 @@ interface CourseFormProps {
     competencies: number[];
     materials: number[];
     competencyNames: Map<number, string>;
-    materialNames: Map<number, string>; // <--- Добавлено
+    materialNames: Map<number, string>;
     isCompetencyModalOpen: boolean;
     isMaterialModalOpen: boolean;
     toggleCompetencyModal: () => void;
@@ -26,6 +27,8 @@ interface CourseFormProps {
     handleTitleChange: (value: string) => void;
     handleDescriptionChange: (value: string) => void;
     onSave: () => void;
+    mode: 'create' | 'update';
+    courseId?: number;
 }
 
 export const CourseForm = ({
@@ -34,7 +37,7 @@ export const CourseForm = ({
                                competencies,
                                materials,
                                competencyNames,
-                               materialNames, // <--- Добавлено
+                               materialNames,
                                isCompetencyModalOpen,
                                isMaterialModalOpen,
                                toggleCompetencyModal,
@@ -44,25 +47,34 @@ export const CourseForm = ({
                                handleTitleChange,
                                handleDescriptionChange,
                                onSave,
+                               mode,
+                               courseId,
                            }: CourseFormProps) => {
+
+
     const initialCompetencies = competencies.map((id) => ({
         id,
         name: competencyNames.get(id) || 'Неизвестная компетенция',
     }));
+
     const initialMaterials = materials.map((id) => ({
         id,
-        name: materialNames.get(id) || `Материал #${id}` // <--- Обновлено
+        name: materialNames.get(id) || `Материал #${id}`
     }));
-
 
     useEffect(() => {
         document.body.style.overflow = (isCompetencyModalOpen || isMaterialModalOpen) ? 'hidden' : 'auto';
         return () => { document.body.style.overflow = 'auto'; };
     }, [isCompetencyModalOpen, isMaterialModalOpen]);
 
+
     return (
         <div className={css.wrapper}>
-            <CourseCreateControl onSave={onSave} />
+            <CourseCreateControl
+                onSave={onSave}
+                mode={mode}
+                courseId={courseId}
+            />
 
             <div className={css.form}>
                 <Label label="Название курса">
@@ -98,12 +110,16 @@ export const CourseForm = ({
                         onUpdateCompetencies={(updated) => handleCompetenciesSelect(updated.map((c) => c.id))}
                     />
                     <button
-                        onClick={(e) => { e.currentTarget.blur(); toggleCompetencyModal(); }}
+                        onClick={(e) => {
+                            e.currentTarget.blur();
+                            toggleCompetencyModal();
+                        }}
                         className={css.addCompetencyButton}
                     >
                         Добавить компетенции
                     </button>
                 </Label>
+
             </div>
 
             <MaterialsModal

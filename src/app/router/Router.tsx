@@ -10,6 +10,7 @@ import {CourseListPage} from "../../pages/course-list";
 import {RegistrationPage} from "../../pages/sign-up";
 import {CourseCreatePage} from "../../pages/course-create";
 import {CourseViewPage} from "../../pages/course-view/CourseViewPage.tsx";
+import {CourseUpdatePage} from "../../pages/course-update";
 
 
 
@@ -25,6 +26,7 @@ const Router = () => (
 					<CourseListPage />
 				</PrivateRoute>
 			} />
+
 			<Route path="/view-course/:id" element={
 				<PrivateRoute>
 					<CourseViewPage />
@@ -45,7 +47,11 @@ const Router = () => (
 					<MaterialView />
 				</PrivateRoute>
 			} />
-
+			<Route path="/update-course/:id" element={
+				<PrivateRoute>
+					<CourseUpdatePage />
+				</PrivateRoute>
+			} />
 			<Route path="/create-course" element={
 				<PrivateRoute>
 					<CourseCreatePage />

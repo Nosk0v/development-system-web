@@ -10,8 +10,11 @@ import {
   useCompleteCourseMutation
 } from '../../../api/materialApi.ts';
 
+interface CourseViewBlockProps {
+  forceRefetch?: boolean;
+}
 
-export const CourseViewBlock = () => {
+export const CourseViewBlock = ({ forceRefetch }: CourseViewBlockProps) => {
   const { id } = useParams<{ id: string }>();
   const courseId = Number(id);
 
@@ -19,16 +22,24 @@ export const CourseViewBlock = () => {
   const [markMaterialAsCompleted] = useMarkMaterialAsCompletedMutation();
   const [completeCourse] = useCompleteCourseMutation();
 
-  const { data: course, isLoading: courseLoading } = useFetchCourseByIdQuery(courseId);
+  const { data: course, isLoading: courseLoading, refetch: refetchCourse } = useFetchCourseByIdQuery(courseId);
   const { data: progress, refetch: refetchProgress } = useFetchCourseProgressQuery(courseId);
   const { data: completedStatus, refetch: refetchCompletedStatus } = useIsCourseCompletedQuery(courseId);
   const { data: allMaterials } = useFetchMaterialsQuery();
 
-  // при обновлении данных — ставим "просмотренные"
+  useEffect(() => {
+    if (forceRefetch) {
+      refetchCourse();
+      refetchProgress();
+      refetchCompletedStatus();
+    }
+  }, [forceRefetch, refetchCourse, refetchProgress, refetchCompletedStatus]);
+
   useEffect(() => {
     if (!course || !progress) return;
     setVisited(progress.completed_materials || []);
   }, [course, progress]);
+
   const navigate = useNavigate();
   const isCourseAlreadyCompleted = useMemo(() => {
     return !!completedStatus?.completed;
@@ -99,38 +110,37 @@ export const CourseViewBlock = () => {
         <div className={css.materials}>
           <h2>Материалы</h2>
           <ul className={css.materialList}>
-            {materialsInCourse
-                .map(material => {
-                  const isViewed = visited.includes(material.material_id);
-                  return (
-                    <li key={material.material_id} className={css.materialItem}>
-                      <div
+            {materialsInCourse.map(material => {
+              const isViewed = visited.includes(material.material_id);
+              return (
+                  <li key={material.material_id} className={css.materialItem}>
+                    <div
                         className={css.textBlock}
                         onClick={() => handleMaterialClick(material.material_id)}
                         title={`Открыть "${material.title}"`}
-                      >
-                        <div className={css.title}>
-                          {material.title} {isViewed && <span className={css.check}>✓</span>}
-                        </div>
-                        <div className={css.description}>{material.description}</div>
+                    >
+                      <div className={css.title}>
+                        {material.title} {isViewed && <span className={css.check}>✓</span>}
                       </div>
-                    </li>
-                  );
-                })}
+                      <div className={css.description}>{material.description}</div>
+                    </div>
+                  </li>
+              );
+            })}
           </ul>
 
           {!isCourseAlreadyCompleted && (
-            <div>
-              {isCourseReadyForCompletion ? (
-                <button className={css.completeButton} onClick={handleCompleteCourse}>
-                  Завершить курс
-                </button>
-              ) : (
-                <p style={{ color: '#888', fontSize: '14px', marginTop: '12px', textAlign: 'center' }}>
-                  Чтобы завершить курс, изучите все материалы.
-                </p>
-              )}
-            </div>
+              <div>
+                {isCourseReadyForCompletion ? (
+                    <button className={css.completeButton} onClick={handleCompleteCourse}>
+                      Завершить курс
+                    </button>
+                ) : (
+                    <p style={{ color: '#888', fontSize: '14px', marginTop: '12px', textAlign: 'center' }}>
+                      Чтобы завершить курс, изучите все материалы.
+                    </p>
+                )}
+              </div>
           )}
         </div>
       </div>

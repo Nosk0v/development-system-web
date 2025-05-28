@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react';
-
-
 import { toast } from 'react-toastify';
 import {
 	useCreateCourseMutation,
 	useFetchCompetenciesQuery,
 	useFetchMaterialsQuery
 } from "../../../../api/materialApi.ts";
-import {CourseForm} from "../../../course-form/CourseForm.tsx";
-import {getUserClaimsFromAccessToken} from "../../../../api/jwt.ts";
-
+import { CourseForm } from "../../../course-form/CourseForm.tsx";
+import { getUserClaimsFromAccessToken } from "../../../../api/jwt.ts";
 
 export const CourseCreateBlock = () => {
 	const { data: competenciesData, isLoading: competenciesLoading, error: competenciesError } = useFetchCompetenciesQuery();
@@ -107,6 +104,7 @@ export const CourseCreateBlock = () => {
 			handleTitleChange={setTitle}
 			handleDescriptionChange={setDescription}
 			onSave={handleSave}
+			mode="create"
 		/>
 	);
 };

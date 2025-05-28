@@ -21,3 +21,14 @@
   flex-direction: column;
 
 }
+
+.editButton {
+  background-color: #F91F71; /* Розовый цвет кнопки */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
