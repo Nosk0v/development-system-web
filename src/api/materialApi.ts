@@ -343,6 +343,13 @@ export const materialsApi = createApi({
             }),
             transformResponse: (response: { message: string }) => response,
         }),
+        // Получить завершённые курсы
+        fetchCompletedCourses: builder.query<CourseApiResponse, void>({
+            query: () => `/courses/completed`,
+            transformResponse: (response: Course[]): CourseApiResponse => {
+                return { data: response };
+            },
+        }),
         // Получение прогресса по курсу
         fetchCourseProgress: builder.query<{ completed_materials: number[] }, number>({
             query: (courseId) => `/courses/${courseId}/progress`,
@@ -388,4 +395,5 @@ export const {
     useFetchCourseProgressQuery,
     useIsCourseCompletedQuery,
     useMarkMaterialAsCompletedMutation,
+    useFetchCompletedCoursesQuery,
 } = materialsApi;
