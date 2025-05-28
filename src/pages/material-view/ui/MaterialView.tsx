@@ -1,5 +1,6 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useFetchMaterialsQuery } from '../../../api/materialApi.ts';
+import { getUserClaimsFromAccessToken } from '../../../api/jwt.ts';
 import css from './MaterialView.module.scss';
 import { SecondaryButton } from '../../../widgets/cancel-button/secondary-button.tsx';
 
@@ -8,16 +9,20 @@ import { SecondaryButton } from '../../../widgets/cancel-button/secondary-button
 export const MaterialView = () => {
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
+	const location = useLocation();
+	const claims = getUserClaimsFromAccessToken();
+	const isAdmin = claims?.role === 0 || claims?.role === 2;
 
 	const { refetch } = useFetchMaterialsQuery();
 
 	const onClose = async () => {
 		try {
-			// Перезапрашиваем список материалов
 			await refetch();
-
-			// После обновления данных навигация на главную страницу
-			navigate('/material-list');
+			if (location.state?.from === 'course' && location.state.courseId) {
+				navigate(`/view-course/${location.state.courseId}`);
+			} else {
+				navigate('/material-list');
+			}
 		} catch (error) {
 			console.error('Ошибка при перезагрузке списка:', error);
 		}
@@ -53,12 +58,11 @@ export const MaterialView = () => {
 		<div className={css.wrapper}>
 			<div className={css.buttonContainer}>
 				<SecondaryButton text="Закрыть" onClick={onClose}/>
-				<button
-					className={css.editButton}
-					onClick={onEdit}
-				>
-					Редактировать
-				</button>
+				{isAdmin && ( // ← проверка роли перед отображением
+					<button className={css.editButton} onClick={onEdit}>
+						Редактировать
+					</button>
+					)}
 			</div>
 
 			<div className={css.contentContainer}>

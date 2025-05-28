@@ -18,10 +18,23 @@ export const CourseListItem = ({
 								   onDeleteRequest,
 							   }: CourseListItemProps) => {
 	const navigate = useNavigate();
+
+	const accessToken = localStorage.getItem('access_token');
+	let isAdminOrSuper = false;
+	if (accessToken) {
+		try {
+			const decoded = JSON.parse(atob(accessToken.split('.')[1]));
+			const role = decoded?.role;
+			isAdminOrSuper = role === 0 || role === 2;
+		} catch (e) {
+			console.error('Failed to decode access token:', e);
+		}
+	}
+
 	const competenciesRef = useRef<HTMLDivElement | null>(null);
 
 	const onCourseClick = () => {
-		navigate(`/view-courses/${courseId}`);
+		navigate(`/view-course/${courseId}`);
 	};
 
 	useEffect(() => {
@@ -53,15 +66,17 @@ export const CourseListItem = ({
 					</div>
 				)}
 			</div>
-			<button
-				className={css.trashButton}
-				onClick={(e) => {
-					e.stopPropagation();
-					onDeleteRequest(courseId);
-				}}
-			>
-				<img src={TrashIcon} alt="Удалить" />
-			</button>
+			{isAdminOrSuper && (
+				<button
+					className={css.trashButton}
+					onClick={(e) => {
+						e.stopPropagation();
+						onDeleteRequest(courseId);
+					}}
+				>
+					<img src={TrashIcon} alt="Удалить" />
+				</button>
+			)}
 		</div>
 	);
 };

@@ -24,6 +24,7 @@ interface Course {
     materials: string[];
     competencies: string[];
     create_date: string;
+    material_ids: number[];
 }
 
 interface CreateCourseRequest {
@@ -32,6 +33,7 @@ interface CreateCourseRequest {
     created_by: string;
     materials: number[];
     competencies: number[];
+    material_ids?: number[];
 }
 
 interface UpdateCourseRequest {
@@ -40,6 +42,7 @@ interface UpdateCourseRequest {
     created_by: string;
     materials: number[];
     competencies: number[];
+    material_ids?: number[];
 }
 
 interface CourseApiResponse {
@@ -187,13 +190,13 @@ export const materialsApi = createApi({
             }),
         }),
         // Endpoint для обновления access_token по refresh_token. Возвращает только access_token.
-refreshToken: builder.mutation<{ access_token: string }, void>({
-    query: () => ({
-        url: '/auth/refresh',
-        method: 'POST',
-        body: { refresh_token: localStorage.getItem('refresh_token') },
-    }),
-}),
+            refreshToken: builder.mutation<{ access_token: string }, void>({
+            query: () => ({
+                url: '/auth/refresh',
+                method: 'POST',
+                body: { refresh_token: localStorage.getItem('refresh_token') },
+            }),
+        }),
 
         fetchMaterials: builder.query<MaterialsApiResponse, void>({
             query: () => '/materials',
@@ -332,6 +335,30 @@ refreshToken: builder.mutation<{ access_token: string }, void>({
             }),
             transformResponse: (response: { message: string }): DeleteCourseResponse => response,
         }),
+        // Завершение курса
+        completeCourse: builder.mutation<{ message: string }, number>({
+            query: (courseId) => ({
+                url: `/courses/${courseId}/complete`,
+                method: 'POST',
+            }),
+            transformResponse: (response: { message: string }) => response,
+        }),
+        // Получение прогресса по курсу
+        fetchCourseProgress: builder.query<{ completed_materials: number[] }, number>({
+            query: (courseId) => `/courses/${courseId}/progress`,
+        }),
+        // Проверка завершения курса
+        isCourseCompleted: builder.query<{ completed: boolean }, number>({
+            query: (courseId) => `/courses/${courseId}/completed`,
+        }),
+        // Отметить материал как завершённый
+        markMaterialAsCompleted: builder.mutation<{ message: string }, { courseId: number, materialId: number }>({
+            query: ({ courseId, materialId }) => ({
+                url: `/courses/${courseId}/materials/${materialId}/complete`,
+                method: 'POST',
+            }),
+            transformResponse: (response: { message: string }) => response,
+        }),
     }),
 });
 
@@ -357,4 +384,8 @@ export const {
     useUpdateCourseMutation,
     useDeleteCourseMutation,
     useSignUpMutation,
+    useCompleteCourseMutation,
+    useFetchCourseProgressQuery,
+    useIsCourseCompletedQuery,
+    useMarkMaterialAsCompletedMutation,
 } = materialsApi;

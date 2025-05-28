@@ -5,6 +5,7 @@ import css from './CourseListControl.module.scss';
 import { MainButton } from '../../../../../widgets/button/button';
 import { Label } from '../../../../../widgets/input-label/label';
 import { Input } from '../../../../../widgets/input/input';
+import { getUserClaimsFromAccessToken } from '../../../../../api/jwt';
 
 export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => void }) => {
 	const navigate = useNavigate();
@@ -27,6 +28,9 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 		window.location.replace('/');
 	};
 
+	const claims = getUserClaimsFromAccessToken();
+	const isAdmin = claims?.role === 0 || claims?.role === 2;
+
 	return (
 		<div className={css.wrapper}>
 			{/* Поле поиска */}
@@ -35,9 +39,13 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 			</Label>
 
 			{/* Кнопки */}
-			<MainButton text="Создать" className={css.mainButton} onClick={onCreateCourseClick} />
+			{isAdmin && (
+				<MainButton text="Создать" className={css.mainButton} onClick={onCreateCourseClick} />
+			)}
 			<div className={css.bottomButtons}>
-				<MainButton text="Материалы" className={css.compButton} onClick={onMaterialsClick} />
+				{isAdmin && (
+					<MainButton text="Материалы" className={css.compButton} onClick={onMaterialsClick} />
+				)}
 				<MainButton text="Выйти" className={css.typeButton} onClick={onLogoutClick} />
 			</div>
 		</div>

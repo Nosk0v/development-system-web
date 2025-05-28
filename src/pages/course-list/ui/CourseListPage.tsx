@@ -3,7 +3,7 @@ import css from './CourseListPage.module.scss';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import {CourseListBlock} from "./course-list-block/CourseListBlock.tsx";
+import {CourseListBlock} from "./course-list-block";
 
 export const CourseListPage = () => {
 	const location = useLocation();

@@ -1,0 +1,23 @@
+.wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px;
+  width: 100%;
+}
+
+.inner {
+  min-width: 960px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+}

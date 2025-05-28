@@ -9,6 +9,9 @@ import { PrivateRoute } from './PrivateRoute';
 import {CourseListPage} from "../../pages/course-list";
 import {RegistrationPage} from "../../pages/sign-up";
 import {CourseCreatePage} from "../../pages/course-create";
+import {CourseViewPage} from "../../pages/course-view/CourseViewPage.tsx";
+
+
 
 
 
@@ -17,6 +20,16 @@ const Router = () => (
 		<Routes>
 			<Route path="/" element={<SignInPage />} />
 			<Route path="/sign-up" element={<RegistrationPage />} />
+			<Route path="/courses" element={
+				<PrivateRoute>
+					<CourseListPage />
+				</PrivateRoute>
+			} />
+			<Route path="/view-course/:id" element={
+				<PrivateRoute>
+					<CourseViewPage />
+				</PrivateRoute>
+			} />
 			<Route path="/material-list" element={
 				<PrivateRoute>
 					<MaterialListPage />
@@ -32,11 +45,7 @@ const Router = () => (
 					<MaterialView />
 				</PrivateRoute>
 			} />
-			<Route path="/courses" element={
-				<PrivateRoute>
-					<CourseListPage />
-				</PrivateRoute>
-			} />
+
 			<Route path="/create-course" element={
 				<PrivateRoute>
 					<CourseCreatePage />

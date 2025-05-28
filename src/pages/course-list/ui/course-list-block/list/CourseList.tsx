@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useFetchCoursesQuery, useDeleteCourseMutation } from '../../../../../api/materialApi';
+import { jwtDecode } from 'jwt-decode';
+import { getUserClaimsFromAccessToken } from '../../../../../api/jwt';
+import { useFetchCoursesQuery, useDeleteCourseMutation, useRefreshTokenMutation } from '../../../../../api/materialApi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import css from './CourseList.module.scss';
-import {CourseListItem} from "./item/CourseListItem.tsx";
+import { CourseListItem } from './item/CourseListItem.tsx';
 
 interface Course {
 	course_id: number;
@@ -14,9 +16,13 @@ interface Course {
 export const CourseList = ({ searchQuery }: { searchQuery: string }) => {
 	const { data, error, isLoading, refetch } = useFetchCoursesQuery();
 	const [deleteCourse, { isLoading: isDeleting }] = useDeleteCourseMutation();
+	const [refreshToken] = useRefreshTokenMutation();
 	const [courses, setCourses] = useState<Course[]>([]);
 	const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const claims = getUserClaimsFromAccessToken();
+	const isAdmin = claims?.role === 0 || claims?.role === 2;
 
 	useEffect(() => {
 		if (data?.data) {
@@ -56,6 +62,33 @@ export const CourseList = ({ searchQuery }: { searchQuery: string }) => {
 		}
 	};
 
+	useEffect(() => {
+		const token = localStorage.getItem('access_token');
+		if (token) {
+			try {
+				const decoded: { exp: number } = jwtDecode(token);
+				const isExpired = decoded.exp * 1000 < Date.now();
+				if (!isExpired) {
+					refetch();
+				} else {
+					refreshToken()
+						.unwrap()
+						.then(({ access_token }) => {
+							localStorage.setItem('access_token', access_token);
+							refetch();
+						})
+						.catch(() => {
+							localStorage.removeItem('access_token');
+							localStorage.removeItem('refresh_token');
+							window.location.href = '/';
+						});
+				}
+			} catch (e) {
+				console.error('Ошибка декодирования токена:', e);
+			}
+		}
+	}, [refetch, refreshToken]);
+
 	const handleModalClose = () => {
 		setIsModalOpen(false);
 	};
@@ -94,9 +127,11 @@ export const CourseList = ({ searchQuery }: { searchQuery: string }) => {
 					<div className={css.modalContent} onClick={(e) => e.stopPropagation()}>
 						<p>Вы точно хотите удалить курс?</p>
 						<div className={css.modalActions}>
-							<button onClick={handleDeleteConfirm} disabled={isDeleting}>
-								{isDeleting ? 'Удаление...' : 'Да'}
-							</button>
+							{isAdmin && (
+								<button onClick={handleDeleteConfirm} disabled={isDeleting}>
+									{isDeleting ? 'Удаление...' : 'Да'}
+								</button>
+							)}
 							<button onClick={handleModalClose}>Нет</button>
 						</div>
 					</div>

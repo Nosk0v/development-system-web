@@ -2,8 +2,8 @@ import { useState } from 'react';
 import css from './CourseListBlock.module.scss';
 
 
-import {CourseList} from "./list/CourseList.tsx";
-import {CourseListControl} from "./control/CourseListControl.tsx";
+import {CourseList} from "./list";
+import {CourseListControl} from "./control";
 
 export const CourseListBlock = () => {
 	const [searchQuery, setSearchQuery] = useState(''); // Поисковый запрос
