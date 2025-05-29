@@ -17,12 +17,24 @@ export const RegistrationPage = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [name, setName] = useState('');
-
+	const [inviteCode, setInviteCode] = useState('');
 	const emailRegex = /^[\w.-]+@[\d.A-Za-z-]+\.[A-Za-z]{2,6}$/;
 
 	const handleSignUp = async () => {
-		if (!email || !password || !name) {
-			toast.error('Заполните все поля');
+		if (!email) {
+			toast.error('Введите email');
+			return;
+		}
+		if (!password) {
+			toast.error('Введите пароль');
+			return;
+		}
+		if (!name) {
+			toast.error('Введите имя');
+			return;
+		}
+		if (!inviteCode) {
+			toast.error('Введите код приглашения');
 			return;
 		}
 		if (!emailRegex.test(email)) {
@@ -36,6 +48,7 @@ export const RegistrationPage = () => {
 				password,
 				name,
 				organization_id: 1,
+				code: inviteCode,
 			};
 
 			await signUp(registrationData).unwrap();
@@ -50,7 +63,15 @@ export const RegistrationPage = () => {
 			const err = error as { status?: number };
 			if (err?.status === 433) {
 				toast.error('Пользователь с таким email уже зарегистрирован');
-			} else {
+
+			}
+			if (err?.status === 434) {
+				toast.error('Код приглашения уже использован');
+			}
+			if (err?.status === 435) {
+				toast.error('Код приглашения невалиден');
+			}
+			else {
 				console.error(err);
 				toast.error('Ошибка при регистрации или входе. Попробуйте позже.');
 			}
@@ -96,6 +117,22 @@ export const RegistrationPage = () => {
 						placeholder="Введите пароль"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
+					/>
+				</Label>
+				<Label label="Код приглашения в организацию">
+					<Input
+						placeholder="Введите код приглашения"
+						value={inviteCode}
+						onChange={(e) => {
+							const raw = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 30);
+							const parts = raw.match(/.{1,5}/g);
+							const formatted = parts ? parts.join('-') : '';
+							setInviteCode(formatted);
+						}}
+						onBlur={() => {
+
+
+						}}
 					/>
 				</Label>
 				<MainButton text="Зарегистрироваться" onClick={handleSignUp} />

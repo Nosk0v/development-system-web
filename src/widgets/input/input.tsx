@@ -1,5 +1,5 @@
 import css from './input.module.scss';
-import React, { KeyboardEvent } from "react";
+import React, {KeyboardEvent} from "react";
 
 interface InputProps {
 	placeholder?: string;
@@ -9,38 +9,41 @@ interface InputProps {
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	className?: string;
 	onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+	onBlur?: () => void;
 	value?: string;
 	type?: React.HTMLInputTypeAttribute;
 }
 
 
 export const Input = (props: InputProps) => {
-	const {
-		placeholder,
-		width,
-		height,
-		id,
-		onChange,
-		className,
-		value,
-		onKeyDown,
-		type = 'text' // <- УСТАНОВИМ значение по умолчанию
-	} = props;
+    const {
+        placeholder,
+        width,
+        height,
+        id,
+        onChange,
+        className,
+        value,
+        onKeyDown,
+        onBlur,
+        type = 'text' // <- УСТАНОВИМ значение по умолчанию
+    } = props;
 
-	return (
-		<div className={`${css.wrapper} ${className}`} style={{ width, height }}>
-			<div className={css.inputContainer}>
-				<input
-					id={id}
-					className={css.inputField}
-					placeholder={placeholder || 'Введите текст...'}
-					style={{ height }}
-					onChange={onChange}
-					value={value}
-					onKeyDown={onKeyDown}
-					type={type} // <- ДОБАВЛЕНО
-				/>
-			</div>
-		</div>
-	);
+    return (
+        <div className={`${css.wrapper} ${className}`} style={{width, height}}>
+            <div className={css.inputContainer}>
+                <input
+                    id={id}
+                    className={css.inputField}
+                    placeholder={placeholder || 'Введите текст...'}
+                    style={{height}}
+                    onChange={onChange}
+                    value={value}
+                    onKeyDown={onKeyDown}
+                    onBlur={onBlur}
+                    type={type} // <- ДОБАВЛЕНО
+                />
+            </div>
+        </div>
+    );
 };

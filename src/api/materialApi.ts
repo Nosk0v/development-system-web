@@ -15,6 +15,21 @@ export interface IAccountResponse {
     organization_id: number;
     message: string;
 }
+
+interface Organization {
+    organization_id: number;
+    name: string;
+}
+
+interface RegistrationCodeResponse {
+    code: string;
+    message: string;
+}
+
+interface DeleteCodeResponse {
+    message: string;
+}
+
 // Типы для курсов
 interface Course {
     course_id: number;
@@ -358,6 +373,27 @@ export const materialsApi = createApi({
         isCourseCompleted: builder.query<{ completed: boolean }, number>({
             query: (courseId) => `/courses/${courseId}/completed`,
         }),
+        fetchOrganizations: builder.query<{ data: Organization[] }, void>({
+            query: () => '/registration/organizations',
+            transformResponse: (response: Organization[]) => ({ data: response }),
+        }),
+
+        createRegistrationCode: builder.mutation<RegistrationCodeResponse, { organization_id: number; is_admin: boolean }>({
+            query: (data) => ({
+                url: '/registration/code',
+                method: 'POST',
+                body: data,
+            }),
+            transformResponse: (response: { code: string }) => ({ code: response.code, message: 'Код успешно создан' }),
+        }),
+
+        deleteRegistrationCode: builder.mutation<DeleteCodeResponse, string>({
+            query: (code) => ({
+                url: `/registration/code/${code}`,
+                method: 'DELETE',
+            }),
+            transformResponse: (response: { message: string }): DeleteCodeResponse => response,
+        }),
         // Отметить материал как завершённый
         markMaterialAsCompleted: builder.mutation<{ message: string }, { courseId: number, materialId: number }>({
             query: ({ courseId, materialId }) => ({
@@ -396,4 +432,7 @@ export const {
     useIsCourseCompletedQuery,
     useMarkMaterialAsCompletedMutation,
     useFetchCompletedCoursesQuery,
+    useFetchOrganizationsQuery,
+    useCreateRegistrationCodeMutation,
+    useDeleteRegistrationCodeMutation,
 } = materialsApi;
