@@ -50,7 +50,6 @@ export const MaterialView = () => {
 	}
 
 	const onEdit = () => {
-		// Навигация на страницу редактирования, передаем id материала
 		navigate(`/update-material/${id}`);
 	};
 
@@ -58,7 +57,7 @@ export const MaterialView = () => {
 		<div className={css.wrapper}>
 			<div className={css.buttonContainer}>
 				<SecondaryButton text="Закрыть" onClick={onClose}/>
-				{isAdmin && ( // ← проверка роли перед отображением
+				{isAdmin && (
 					<button className={css.editButton} onClick={onEdit}>
 						Редактировать
 					</button>

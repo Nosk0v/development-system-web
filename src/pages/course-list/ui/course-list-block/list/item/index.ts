@@ -1,1 +1,1 @@
-export { MaterialListItem } from './CourseListItem.tsx';
+export { CourseListItem } from './CourseListItem.tsx';
