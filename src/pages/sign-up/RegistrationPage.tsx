@@ -8,6 +8,8 @@ import { Input } from '../../widgets/input/input.tsx';
 import { Label } from '../../widgets/input-label/label.tsx';
 
 import css from './RegistrationPage.module.scss';
+import EyeIcon from '../../assets/images/view.png';
+import EyeOffIcon from '../../assets/images/hide.png';
 
 export const RegistrationPage = () => {
 	const [signUp] = useSignUpMutation();
@@ -16,6 +18,7 @@ export const RegistrationPage = () => {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
 	const [name, setName] = useState('');
 	const [inviteCode, setInviteCode] = useState('');
 	const emailRegex = /^[\w.-]+@[\d.A-Za-z-]+\.[A-Za-z]{2,6}$/;
@@ -63,15 +66,13 @@ export const RegistrationPage = () => {
 			const err = error as { status?: number };
 			if (err?.status === 433) {
 				toast.error('Пользователь с таким email уже зарегистрирован');
-
 			}
 			if (err?.status === 434) {
 				toast.error('Код приглашения уже использован');
 			}
 			if (err?.status === 435) {
 				toast.error('Код приглашения невалиден');
-			}
-			else {
+			} else {
 				console.error(err);
 				toast.error('Ошибка при регистрации или входе. Попробуйте позже.');
 			}
@@ -112,12 +113,21 @@ export const RegistrationPage = () => {
 					/>
 				</Label>
 				<Label label="Пароль">
-					<Input
-						type="password"
-						placeholder="Введите пароль"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
+					<div className={css.passwordField}>
+						<Input
+							type={showPassword ? 'text' : 'password'}
+							placeholder="Введите пароль"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+						/>
+						<button
+							type="button"
+							onClick={() => setShowPassword(!showPassword)}
+							className={css.eyeButton}
+						>
+							<img src={showPassword ? EyeIcon : EyeOffIcon} alt="Показать пароль" />
+						</button>
+					</div>
 				</Label>
 				<Label label="Код приглашения в организацию">
 					<Input
@@ -129,14 +139,9 @@ export const RegistrationPage = () => {
 							const formatted = parts ? parts.join('-') : '';
 							setInviteCode(formatted);
 						}}
-						onBlur={() => {
-
-
-						}}
 					/>
 				</Label>
 				<MainButton text="Зарегистрироваться" onClick={handleSignUp} />
-
 
 				<div className={css.signUpHint}>
 					<span>Уже есть аккаунт?</span>

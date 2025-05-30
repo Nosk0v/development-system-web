@@ -27,7 +27,7 @@ export const CourseListItem = ({
 			const role = decoded?.role;
 			isAdminOrSuper = role === 0 || role === 2;
 		} catch (e) {
-			console.error('Failed to decode access token:', e);
+			console.error('Failed to decode access token:', e)
 		}
 	}
 

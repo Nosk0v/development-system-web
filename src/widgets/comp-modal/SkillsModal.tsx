@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import {
     useFetchCompetenciesQuery,
     useDeleteCompetencyMutation,
-    useFetchMaterialsQuery
+    useFetchMaterialsQuery,
+    useFetchCoursesQuery
 } from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './SkillsModal.module.scss';
@@ -19,11 +20,11 @@ interface SkillsModalProps {
 export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
     const { data: competenciesData, isLoading, isError, refetch } = useFetchCompetenciesQuery();
     const { data: materialsData } = useFetchMaterialsQuery();
+    const { data: coursesData } = useFetchCoursesQuery();
     const [competencies, setCompetencies] = useState<{ competency_id: number; name: string; description: string }[]>([]);
     const [deleteCompetency] = useDeleteCompetencyMutation();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [editCompetency, setEditCompetency] = useState<{ competency_id: number; name: string; description: string } | null>(null);
-
 
     useEffect(() => {
         if (isOpen) {
@@ -46,17 +47,18 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
     };
 
     const handleDelete = (competencyId: number, competencyName: string) => {
-        const isLinked = materialsData?.data && materialsData.data.length > 0
-            ? materialsData.data.some(material =>
-                material.competencies.includes(competencyName)
-            )
-            : false;
-        if (isLinked) {
-            toast.error("Невозможно удалить компетенцию, так как она связана с одним или несколькими материалами.");
+        const isLinkedToMaterial = materialsData?.data?.some(material =>
+            material.competencies.includes(competencyName)
+        );
+
+        const isLinkedToCourse = coursesData?.data?.some(course =>
+            course.competencies.includes(competencyName)
+        );
+
+        if (isLinkedToMaterial || isLinkedToCourse) {
+            toast.error("Невозможно удалить компетенцию, так как она связана с материалами или курсами.");
             return;
         }
-
-
 
         deleteCompetency(competencyId)
             .unwrap()

@@ -52,8 +52,7 @@ export const DropdownUpdateMenu = ({ value, selectedTypeName, onChange, width, h
 
 	const selectedType = options.find(option => option.label === selectedTypeName);
 	const dropdownValue = value ?? selectedType?.value ?? '';
-
-	console.log("Итоговый dropdownValue:", dropdownValue);
+	
 
 	return (
 		<div className={css.wrapper} style={{ width, height }}>

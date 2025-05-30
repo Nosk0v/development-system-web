@@ -7,6 +7,7 @@ import {
 
 export const BASE_API_URL_DEV = 'http://localhost:25502/api';
 export const BASE_API_URL = 'https://b.service-to.ru/api';
+
 const baseQuery = fetchBaseQuery({
     baseUrl: BASE_API_URL,
     prepareHeaders: (headers) => {
@@ -23,16 +24,14 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
     api,
     extraOptions
 ) => {
-    console.log('refresh_token from storage:', localStorage.getItem('refresh_token'));
-
     let result = await baseQuery(args, api, extraOptions);
-
-    console.log('result after baseQuery:', result);
 
     if (result.error?.status === 401) {
         const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
-            console.log('Using refresh token:', refreshToken);
+        const alreadyTriedRefresh = localStorage.getItem('refresh_attempted');
+
+        if (refreshToken && !alreadyTriedRefresh) {
+            localStorage.setItem('refresh_attempted', 'true');
 
             const refreshResult = await baseQuery(
                 {
@@ -44,11 +43,10 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
                 extraOptions
             );
 
-            console.log('refresh token response:', refreshResult);
-
             if (refreshResult.data) {
                 const { access_token } = refreshResult.data as { access_token: string };
                 localStorage.setItem('access_token', access_token);
+                localStorage.removeItem('refresh_attempted');
 
                 if (typeof args === 'string') {
                     args = {
@@ -70,7 +68,7 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
             } else {
                 if (!localStorage.getItem('isSessionExpiredShown')) {
                     localStorage.setItem('isSessionExpiredShown', 'true');
-                    localStorage.setItem('isSessionLocked', 'true'); // блокировка интерфейса
+                    localStorage.setItem('isSessionLocked', 'true');
                 }
 
                 localStorage.removeItem('access_token');
@@ -78,7 +76,8 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
 
                 setTimeout(() => {
                     localStorage.removeItem('isSessionExpiredShown');
-                    localStorage.removeItem('isSessionLocked'); // снять блокировку интерфейса
+                    localStorage.removeItem('isSessionLocked');
+                    localStorage.removeItem('refresh_attempted');
                     window.location.href = '/';
                 }, 6000);
             }

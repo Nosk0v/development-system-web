@@ -73,7 +73,7 @@ export const CompletedCoursesModal = ({ isOpen, onClose }: CompletedCoursesModal
                             </ul>
                         ) : (
                             <div className={styles.emptyState}>
-                                <p>Вы ещё не завершили ни один курс. Пройдите материалы — и они появятся здесь ✨</p>
+                                <p>Вы ещё не завершили ни один курс. Пройдите курсы — и они появятся здесь ✨</p>
                             </div>
                         )
                     )
