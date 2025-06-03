@@ -9,6 +9,8 @@ import { Input } from '../../../../../widgets/input/input';
 import { getUserClaimsFromAccessToken } from '../../../../../api/jwt';
 import { CompletedCoursesModal } from '../../../../../widgets/comp-course/CompleteCourseModal.tsx';
 import { InviteCodeModal } from '../../../../../widgets/invite-code-modal/InviteCodeModal.tsx';
+import {OrganizationModal} from "../../../../../widgets/org-modal/OrganizationModal.tsx";
+
 
 export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => void }) => {
 	const navigate = useNavigate();
@@ -16,6 +18,7 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 
 	const [isCompletedModalOpen, setIsCompletedModalOpen] = useState(false);
 	const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+	const [isOrganizationModalOpen, setIsOrganizationModalOpen] = useState(false);
 
 	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
 		onSearch(event.target.value);
@@ -36,6 +39,7 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 
 	const claims = getUserClaimsFromAccessToken();
 	const isAdmin = claims?.role === 0 || claims?.role === 2;
+	const isSuperAdmin = claims?.role === 2;
 
 	return (
 		<div className={css.wrapper}>
@@ -49,7 +53,15 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 			<div className={css.bottomButtons}>
 				{isAdmin && (
 					<>
+						{isSuperAdmin && (
+							<MainButton
+								text="Организации"
+								className={css.inviteButton}
+								onClick={() => setIsOrganizationModalOpen(true)}
+							/>
+						)}
 						<MainButton text="Материалы" className={css.compButton} onClick={onMaterialsClick} />
+
 						<MainButton
 							text="Коды приглашений"
 							className={css.inviteButton}
@@ -76,6 +88,12 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 				<InviteCodeModal
 					isOpen={isInviteModalOpen}
 					onClose={() => setIsInviteModalOpen(false)}
+				/>
+			)}
+			{isOrganizationModalOpen && (
+				<OrganizationModal
+					isOpen={isOrganizationModalOpen}
+					onClose={() => setIsOrganizationModalOpen(false)}
 				/>
 			)}
 		</div>

@@ -1,3 +1,4 @@
+
 import {createApi} from '@reduxjs/toolkit/query/react';
 import {baseQueryWithReauth} from "./authBaseQuery.ts";
 
@@ -6,6 +7,16 @@ export interface ISignUpRequest {
     email: string;
     password: string;
     name?: string | null;
+    organization_id: number;
+}
+
+interface CreateOrganizationRequest {
+    name: string;
+    prefix: string;
+}
+
+interface CreateOrganizationResponse {
+    message: string;
     organization_id: number;
 }
 
@@ -402,6 +413,21 @@ export const materialsApi = createApi({
             }),
             transformResponse: (response: { message: string }) => response,
         }),
+        createOrganization: builder.mutation<CreateOrganizationResponse, CreateOrganizationRequest>({
+            query: (data) => ({
+                url: '/registration/organization',
+                method: 'POST',
+                body: data,
+            }),
+            transformResponse: (response: { message: string; organization_id: number }): CreateOrganizationResponse => response,
+        }),
+        deleteOrganization: builder.mutation<{ message: string }, number>({
+            query: (organizationId) => ({
+                url: `/registration/organization/${organizationId}`,
+                method: 'DELETE',
+            }),
+            transformResponse: (response: { message: string }): { message: string } => response,
+        }),
     }),
 });
 
@@ -435,4 +461,6 @@ export const {
     useFetchOrganizationsQuery,
     useCreateRegistrationCodeMutation,
     useDeleteRegistrationCodeMutation,
+    useCreateOrganizationMutation,
+    useDeleteOrganizationMutation,
 } = materialsApi;
