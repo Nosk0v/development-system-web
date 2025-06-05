@@ -25,6 +25,7 @@ export const CompetencyDropdown: React.FC<CompetencyDropdownProps> = ({
     };
 
     return (
+
         <div className={css.dropdownWrapper}>
             <button className={css.dropdownToggle} onClick={handleToggle}>
                 Компетенции {selected.length > 0 ? `(${selected.length})` : ''}
@@ -36,8 +37,15 @@ export const CompetencyDropdown: React.FC<CompetencyDropdownProps> = ({
                         {competencies.map((comp) => (
                             <div
                                 key={comp}
-                                className={`${css.checkboxItem} ${selected.includes(comp) ? css.selected : ''}`}
+                                role="button"
+                                tabIndex={0}
                                 onClick={() => handleSelect(comp)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        handleSelect(comp);
+                                    }
+                                }}
+                                className={`${css.checkboxItem} ${selected.includes(comp) ? css.selected : ''}`}
                             >
                                 {comp}
                             </div>

@@ -1,6 +1,5 @@
+import { useState, ChangeEvent, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useId, ChangeEvent, useState } from 'react';
-
 import css from './CourseListControl.module.scss';
 
 import { MainButton } from '../../../../../widgets/button/button';
@@ -9,19 +8,34 @@ import { Input } from '../../../../../widgets/input/input';
 import { getUserClaimsFromAccessToken } from '../../../../../api/jwt';
 import { CompletedCoursesModal } from '../../../../../widgets/comp-course/CompleteCourseModal.tsx';
 import { InviteCodeModal } from '../../../../../widgets/invite-code-modal/InviteCodeModal.tsx';
-import {OrganizationModal} from "../../../../../widgets/org-modal/OrganizationModal.tsx";
+import { OrganizationModal } from '../../../../../widgets/org-modal/OrganizationModal.tsx';
+import { useFetchCompetenciesQuery } from '../../../../../api/materialApi.ts';
+import {CompetencyDropdown} from "../../../../material-list/ui/material-list-block/control/CompetencyDropdown.tsx";
 
 
-export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => void }) => {
+interface CourseListControlProps {
+	onSearch: (query: string) => void;
+	onCompetencyFilterChange: (competencies: string[]) => void;
+}
+
+export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: CourseListControlProps) => {
 	const navigate = useNavigate();
 	const searchId = useId();
 
 	const [isCompletedModalOpen, setIsCompletedModalOpen] = useState(false);
 	const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 	const [isOrganizationModalOpen, setIsOrganizationModalOpen] = useState(false);
+	const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>([]);
+
+	const { data: competenciesData } = useFetchCompetenciesQuery();
 
 	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
 		onSearch(event.target.value);
+	};
+
+	const handleCompetencyChange = (updated: string[]) => {
+		setSelectedCompetencies(updated);
+		onCompetencyFilterChange(updated);
 	};
 
 	const onMaterialsClick = () => {
@@ -46,6 +60,14 @@ export const CourseListControl = ({ onSearch }: { onSearch: (query: string) => v
 			<Label label="Поиск" color="black" id={searchId}>
 				<Input className={css.input} id={searchId} onChange={handleSearchChange} />
 			</Label>
+
+			{competenciesData?.data && (
+				<CompetencyDropdown
+					competencies={competenciesData.data.map((c) => c.name)}
+					selected={selectedCompetencies}
+					onChange={handleCompetencyChange}
+				/>
+			)}
 
 			{isAdmin && (
 				<MainButton text="Создать" className={css.mainButton} onClick={onCreateCourseClick} />

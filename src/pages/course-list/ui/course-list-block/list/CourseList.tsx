@@ -13,7 +13,13 @@ interface Course {
 	competencies: string[];
 }
 
-export const CourseList = ({ searchQuery }: { searchQuery: string }) => {
+export const CourseList = ({
+							   searchQuery,
+							   selectedCompetencies = [],
+						   }: {
+	searchQuery: string;
+	selectedCompetencies?: string[];
+}) => {
 	const { data, error, isLoading, refetch } = useFetchCoursesQuery();
 	const [deleteCourse, { isLoading: isDeleting }] = useDeleteCourseMutation();
 	const [refreshToken] = useRefreshTokenMutation();
@@ -94,7 +100,9 @@ export const CourseList = ({ searchQuery }: { searchQuery: string }) => {
 	};
 
 	const filteredCourses = courses.filter((course) =>
-		course.title.toLowerCase().includes(searchQuery.toLowerCase())
+		course.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+		(selectedCompetencies.length === 0 ||
+			selectedCompetencies.every((c) => course.competencies.includes(c)))
 	);
 
 	if (isLoading) return <div>Загрузка...</div>;
