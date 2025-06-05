@@ -46,7 +46,6 @@ interface Course {
     course_id: number;
     title: string;
     description: string;
-    created_by: string;
     materials: string[];
     competencies: string[];
     create_date: string;

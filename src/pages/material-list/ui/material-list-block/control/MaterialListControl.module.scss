@@ -81,3 +81,33 @@
 .typeButton {
   color: #FFFFFF;
 }
+
+.select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+  background-color: #fff;
+  appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg fill='%23666' viewBox='0 0 24 24' width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.select:focus {
+  border-color: #F91F71;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(249, 31, 113, 0.2);
+}
+
+.select option {
+  font-size: 1rem;
+  padding: 10px;
+}

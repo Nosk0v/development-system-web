@@ -1,22 +1,33 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './MaterialListControl.module.scss';
 
 import { MainButton } from '../../../../../widgets/button/button';
 import { Label } from '../../../../../widgets/input-label/label';
 import { Input } from '../../../../../widgets/input/input';
-import { ChangeEvent, useId } from 'react';
 import { MaterialTypesModal } from '../../../../../widgets/material-types-modal/MaterialTypesModal';
 import { SkillsModal } from '../../../../../widgets/comp-modal/SkillsModal.tsx';
+import { useFetchMaterialTypeQuery } from '../../../../../api/materialApi.ts';
 
-export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) => void }) => {
+interface MaterialListControlProps {
+	onSearch: (query: string) => void;
+	onTypeFilterChange: (typeId: number | null) => void;
+}
+
+export const MaterialListControl = ({ onSearch, onTypeFilterChange }: MaterialListControlProps) => {
 	const navigate = useNavigate();
 	const searchId = useId();
 	const [isMaterialTypesModalOpen, setIsMaterialTypesModalOpen] = useState(false);
 	const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
+	const { data: typesData } = useFetchMaterialTypeQuery();
 
 	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
 		onSearch(event.target.value);
+	};
+
+	const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+		const value = event.target.value;
+		onTypeFilterChange(value === '' ? null : Number(value));
 	};
 
 	const onCreateMaterialClick = () => {
@@ -42,15 +53,23 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 
 	return (
 		<div className={css.wrapper}>
-			{/* Поле поиска */}
 			<Label label="Поиск" color="black" id={searchId}>
 				<Input className={css.input} id={searchId} onChange={handleSearchChange} />
 			</Label>
 
-			{/* Кнопка "Создать" */}
+			<Label label="Тип материала" color="black" id="materialTypeSelect">
+				<select className={css.select} id="materialTypeSelect" onChange={handleTypeChange}>
+					<option value="">Все типы</option>
+					{typesData?.data?.map((type) => (
+						<option key={type.type_id} value={type.type_id}>
+							{type.type}
+						</option>
+					))}
+				</select>
+			</Label>
+
 			<MainButton className={css.mainButton} text="Создать" onClick={onCreateMaterialClick} />
 
-			{/* Остальные кнопки внизу */}
 			<div className={css.bottomButtons}>
 				<MainButton text="Компетенции" className={css.compButton} onClick={onCompClick} />
 				<MainButton text="Список типов материалов" className={css.typeButton} onClick={onMaterialTypesClick} />
@@ -58,7 +77,6 @@ export const MaterialListControl = ({ onSearch }: { onSearch: (query: string) =>
 				<MainButton text="Выйти" className={css.typeButton} onClick={onLogoutClick} />
 			</div>
 
-			{/* Модальные окна */}
 			{isMaterialTypesModalOpen && (
 				<MaterialTypesModal isOpen={isMaterialTypesModalOpen} onClose={() => setIsMaterialTypesModalOpen(false)} />
 			)}
