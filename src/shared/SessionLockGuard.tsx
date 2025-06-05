@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 
 export const SessionLockGuard = ({ children }: { children: React.ReactNode }) => {
     const [isLocked, setIsLocked] = useState(false);
-
+    useEffect(() => {
+        // safety: если токена нет, не блокируем
+        if (!localStorage.getItem('access_token')) {
+            localStorage.removeItem('isSessionLocked');
+            setIsLocked(false);
+        }
+    }, []);
     useEffect(() => {
         const style = document.createElement('style');
         style.innerHTML = `

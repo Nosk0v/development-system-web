@@ -9,7 +9,7 @@ export const BASE_API_URL_DEV = 'http://localhost:25502/api';
 export const BASE_API_URL = 'https://b.service-to.ru/api';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: BASE_API_URL,
+    baseUrl: BASE_API_URL_DEV,
     prepareHeaders: (headers) => {
         const token = localStorage.getItem('access_token');
         if (token) {
@@ -25,7 +25,11 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
     extraOptions
 ) => {
     let result = await baseQuery(args, api, extraOptions);
-
+    if (!localStorage.getItem('access_token')) {
+        localStorage.removeItem('isSessionLocked');
+        localStorage.removeItem('isSessionExpiredShown');
+        localStorage.removeItem('refresh_attempted');
+    }
     if (result.error?.status === 401) {
         const refreshToken = localStorage.getItem('refresh_token');
         const alreadyTriedRefresh = localStorage.getItem('refresh_attempted');

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useFetchMaterialsQuery } from '../../../../../api/materialApi.ts';
+import { useFetchMaterialsQuery, useDeleteMaterialMutation } from '../../../../../api/materialApi.ts';
 import { MaterialListItem } from './item';
 import { toast, ToastContainer } from 'react-toastify';
-import { useDeleteMaterialMutation } from '../../../../../api/materialApi.ts';
 import 'react-toastify/dist/ReactToastify.css';
 import css from './MaterialList.module.scss';
 
@@ -10,10 +9,19 @@ interface Material {
 	material_id: number;
 	title: string;
 	competencies: string[];
+	type_id: number;
 }
 
-export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
-	const { data, error, isLoading, refetch } = useFetchMaterialsQuery(); // Добавляем refetch
+export const MaterialList = ({
+								 searchQuery,
+								 typeFilter,
+								 competencyFilter = [],
+							 }: {
+	searchQuery: string;
+	typeFilter: number | null;
+	competencyFilter?: string[];
+}) => {
+	const { data, error, isLoading, refetch } = useFetchMaterialsQuery();
 	const [materials, setMaterials] = useState<Material[]>([]);
 	const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,22 +29,12 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 
 	useEffect(() => {
 		if (data?.data) {
-			setMaterials(
-				data.data.map((item) => ({
-					...item
-				}))
-			);
+			setMaterials(data.data.map((item) => ({ ...item })));
 		}
 	}, [data]);
 
-	// Отключение прокрутки при открытии модального окна
 	useEffect(() => {
-		if (isModalOpen) {
-			document.body.style.overflow = 'hidden';
-		} else {
-			document.body.style.overflow = '';
-		}
-
+		document.body.style.overflow = isModalOpen ? 'hidden' : '';
 		return () => {
 			document.body.style.overflow = '';
 		};
@@ -56,8 +54,6 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 			try {
 				await deleteMaterial(selectedMaterialId).unwrap();
 				handleMaterialDeleted(selectedMaterialId);
-
-				// Запрос на обновление данных после удаления
 				refetch();
 				toast.success('Материал успешно удалён!');
 			} catch (error) {
@@ -69,21 +65,16 @@ export const MaterialList = ({ searchQuery }: { searchQuery: string }) => {
 		}
 	};
 
-	const handleModalClose = () => {
-		setIsModalOpen(false);
-	};
-
+	const handleModalClose = () => setIsModalOpen(false);
 	const filteredMaterials = materials.filter((material) =>
-		material.title.toLowerCase().includes(searchQuery.toLowerCase())
+		material.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+		(typeFilter === null || material.type_id === typeFilter) &&
+		(competencyFilter.length === 0 ||
+			competencyFilter.every((c) => material.competencies.includes(c)))
 	);
 
-	if (isLoading) {
-		return <div>Загрузка...</div>;
-	}
-
-	if (error) {
-		return <div>Ошибка при загрузке материалов</div>;
-	}
+	if (isLoading) return <div>Загрузка...</div>;
+	if (error) return <div>Ошибка при загрузке материалов</div>;
 
 	return (
 		<div className={css.wrapper}>

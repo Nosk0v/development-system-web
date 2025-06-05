@@ -4,20 +4,33 @@ import { MaterialList } from './list';
 import { MaterialListControl } from './control';
 
 export const MaterialListBlock = () => {
-	const [searchQuery, setSearchQuery] = useState(''); // Состояние для хранения поискового запроса
+	const [searchQuery, setSearchQuery] = useState('');
+	const [typeFilter, setTypeFilter] = useState<number | null>(null);
 
-	// Функция, которая обновляет состояние поискового запроса
 	const handleSearch = (query: string) => {
 		setSearchQuery(query);
 	};
 
+	const handleTypeFilterChange = (typeId: number | null) => {
+		setTypeFilter(typeId);
+	};
+	const [competencyFilter, setCompetencyFilter] = useState<string[]>([]);
+
 	return (
 		<div className={css.wrapper}>
 			<div className={css.listWrapper}>
-				<MaterialList searchQuery={searchQuery} /> {/* Передаем запрос в список */}
+				<MaterialList
+					searchQuery={searchQuery}
+					typeFilter={typeFilter}
+					competencyFilter={competencyFilter}
+				/>
 			</div>
 			<div className={css.controlWrapper}>
-				<MaterialListControl onSearch={handleSearch} />
+				<MaterialListControl
+					onSearch={handleSearch}
+					onTypeFilterChange={handleTypeFilterChange}
+					onCompetencyFilterChange={setCompetencyFilter}
+				/>
 			</div>
 		</div>
 	);

@@ -13,9 +13,13 @@
   justify-content: flex-start;
   gap: 20px;
   width: 100%;
-
-  margin: 0 auto; // центрирование по горизонтали
   box-sizing: border-box;
+}
+
+.list > * {
+  flex: 0 1 calc(25% - 20px);
+  max-width: 365px;
+  min-width: 300px;
 }
 
 .noMaterials {
