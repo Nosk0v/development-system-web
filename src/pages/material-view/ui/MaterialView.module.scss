@@ -121,6 +121,47 @@ label {
   scrollbar-width: thin;
 }
 
+.content.youtube {
+  font-size: 16px;
+  font-weight: normal;
+  color: #555;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  justify-content: center;
+  overflow: hidden;
+  height: 315px; // YouTube стандартная высота
+}
+
+.metadataBlock {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.youtube {
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  justify-content: center;
+  overflow: hidden;
+  height: 315px;
+  width: 560px;
+}
+
+.rightColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center; // ← добавь это
+}
+
 .type {
   font-size: 16px;
   font-weight: bold;

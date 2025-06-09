@@ -10,9 +10,46 @@ export interface ISignUpRequest {
     organization_id: number;
 }
 
+interface UserResponse {
+    email: string;
+    name: string | null;
+    department_id: number;
+    role: number;
+}
+
+interface OrganizationUsersResponse {
+    data: UserResponse[];
+}
+
+interface DeleteUserResponse {
+    message: string;
+}
+
 interface CreateOrganizationRequest {
     name: string;
     prefix: string;
+}
+
+interface UserCourseProgress {
+    user_email: string;
+    user_name: string;
+    course_id: number;
+    course_title: string;
+    completed: boolean;
+    progress: number[];
+}
+
+interface OrganizationCourseProgressResponse {
+    data: UserCourseProgress[];
+}
+
+interface Department {
+    department_id: number;
+    name: string;
+}
+
+interface DepartmentsApiResponse {
+    data: Department[];
 }
 
 interface CreateOrganizationResponse {
@@ -58,6 +95,7 @@ interface CreateCourseRequest {
     created_by: string;
     materials: number[];
     competencies: number[];
+    department_id: number; // ← добавлено
     material_ids?: number[];
 }
 
@@ -67,6 +105,7 @@ interface UpdateCourseRequest {
     created_by: string;
     materials: number[];
     competencies: number[];
+    department_id: number; // ← добавлено
     material_ids?: number[];
 }
 
@@ -229,6 +268,22 @@ export const materialsApi = createApi({
                 return { data: response };
             },
         }),
+        fetchOrganizationUsers: builder.query<OrganizationUsersResponse, { organization_id?: number }>({
+            query: (params) => {
+                const queryString = params.organization_id ? `?organization_id=${params.organization_id}` : '';
+                return `/users/organization${queryString}`;
+            },
+            transformResponse: (response: UserResponse[]): OrganizationUsersResponse => ({ data: response }),
+        }),
+
+// Удаление пользователя (только для SuperAdmin)
+        deleteUser: builder.mutation<DeleteUserResponse, string>({
+            query: (email) => ({
+                url: `/auth/users/${email}`,
+                method: 'DELETE',
+            }),
+            transformResponse: (response: { message: string }): DeleteUserResponse => response,
+        }),
         fetchCompetencies: builder.query<CompetenciesApiResponse, void>({
             query: () => '/competencies',
             transformResponse: (response: Competency[]): CompetenciesApiResponse => {
@@ -315,6 +370,16 @@ export const materialsApi = createApi({
             transformResponse: (response: { material: Material, message: string }): UpdateMaterialResponse => {
                 return response;
             },
+        }),
+
+        fetchDepartments: builder.query<DepartmentsApiResponse, void>({
+            query: () => '/registration/departments',
+            transformResponse: (response: Department[]): DepartmentsApiResponse => ({ data: response }),
+        }),
+
+        fetchOrganizationCourseProgress: builder.query<OrganizationCourseProgressResponse, void>({
+            query: () => '/courses/progress/organization',
+            transformResponse: (response: UserCourseProgress[]): OrganizationCourseProgressResponse => ({ data: response }),
         }),
 
         updateCompetency: builder.mutation<UpdateCompetencyResponse, {competencyId: number, data: UpdateCompetencyRequest}>({
@@ -462,4 +527,8 @@ export const {
     useDeleteRegistrationCodeMutation,
     useCreateOrganizationMutation,
     useDeleteOrganizationMutation,
+    useFetchDepartmentsQuery,
+    useFetchOrganizationCourseProgressQuery,
+    useFetchOrganizationUsersQuery,
+    useDeleteUserMutation,
 } = materialsApi;

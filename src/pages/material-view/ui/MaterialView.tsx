@@ -14,7 +14,16 @@ export const MaterialView = () => {
 	const isAdmin = claims?.role === 0 || claims?.role === 2;
 
 	const { refetch } = useFetchMaterialsQuery();
-
+	const extractYouTubeId = (url: string): string | null => {
+		try {
+			const youtubeRegex =
+				/(?:youtube\.com\/.*v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+			const match = url.match(youtubeRegex);
+			return match ? match[1] : null;
+		} catch {
+			return null;
+		}
+	};
 	const onClose = async () => {
 		try {
 			await refetch();
@@ -61,33 +70,51 @@ export const MaterialView = () => {
 					<button className={css.editButton} onClick={onEdit}>
 						Редактировать
 					</button>
-					)}
+				)}
+			</div>
+
+			<div className={css.header}>
+				<h1 className={css.title}>{material.title}</h1>
+			</div>
+
+			<div className={css.metadataBlock}>
+				<div>
+					<label>Описание:</label>
+					<div className={css.description}>
+						<p>{material.description}</p>
+					</div>
+				</div>
+
+				<div>
+					<label>Тип материала:</label>
+					<div className={css.typeValue}>{material.type_name}</div>
+				</div>
 			</div>
 
 			<div className={css.contentContainer}>
-				{/* Удаляем leftColumn полностью */}
-
 				<div className={css.rightColumn}>
-					<div className={css.header}>
-						<h1 className={css.title}>{material.title}</h1>
-					</div>
-
-					<div>
-						<label>Описание:</label>
-						<div className={css.description}>
-							<p>{material.description}</p>
-						</div>
-					</div>
-
-					<div>
-						<label>Тип материала:</label>
-						<div className={css.typeValue}>{material.type_name}</div>
-					</div>
-
 					<div>
 						<label>Содержание:</label>
-						<div className={css.content}>
-							<p>{material.content}</p>
+						<div
+							className={
+								material.content.includes('youtube.com') || material.content.includes('youtu.be')
+									? css.youtube
+									: css.content
+							}
+						>
+							{material.content.includes('youtube.com') || material.content.includes('youtu.be') ? (
+								<iframe
+									width="100%"
+									height="100%"
+									style={{borderRadius: '8px', border: 'none'}}
+									src={`https://www.youtube.com/embed/${extractYouTubeId(material.content)}`}
+									title="YouTube video player"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+									allowFullScreen
+								/>
+							) : (
+								<p>{material.content}</p>
+							)}
 						</div>
 					</div>
 
@@ -96,8 +123,8 @@ export const MaterialView = () => {
 						<div className={css.competenciesList}>
 							{material.competencies.map((comp) => (
 								<span key={comp} className={css.competency}>
-						{comp}
-					</span>
+								{comp}
+							</span>
 							))}
 						</div>
 					</div>

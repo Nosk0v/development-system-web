@@ -4,6 +4,7 @@ export interface DecodedJWT {
     email: string;
     role: number;
     organization_id?: number;
+    department_id?: number;
     exp: number;
     iat: number;
     token_type: string;
