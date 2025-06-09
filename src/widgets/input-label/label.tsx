@@ -2,7 +2,7 @@ import React from 'react';
 import css from './label.module.scss';
 
 interface InputLabelProps {
-    label?: string,
+    label?: React.ReactNode, // ← было string — стало универсальнее
     fontSize?: string,
     color?: string,
     children?: React.ReactNode,
