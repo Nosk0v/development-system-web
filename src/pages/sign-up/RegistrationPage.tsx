@@ -18,12 +18,23 @@ export const RegistrationPage = () => {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [showPassword, setShowPassword] = useState(false);
 	const [name, setName] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [inviteCode, setInviteCode] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+	const [passwordMismatch, setPasswordMismatch] = useState(false);
 	const emailRegex = /^[\w.-]+@[\d.A-Za-z-]+\.[A-Za-z]{2,6}$/;
 
 	const handleSignUp = async () => {
+		if (password !== confirmPassword) {
+			setPasswordMismatch(true);
+			toast.error('Пароли не совпадают');
+			return;
+		} else {
+			setPasswordMismatch(false);
+		}
+
 		if (!email) {
 			toast.error('Введите email');
 			return;
@@ -112,20 +123,44 @@ export const RegistrationPage = () => {
 						onChange={(e) => setEmail(e.target.value)}
 					/>
 				</Label>
+
 				<Label label="Пароль">
 					<div className={css.passwordField}>
 						<Input
 							type={showPassword ? 'text' : 'password'}
 							placeholder="Введите пароль"
 							value={password}
+							disablePaste={true}
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 						<button
 							type="button"
-							onClick={() => setShowPassword(!showPassword)}
+							onClick={() => {
+								setShowPassword(!showPassword);
+								setConfirmPassword('');
+							}}
 							className={css.eyeButton}
 						>
 							<img src={showPassword ? EyeIcon : EyeOffIcon} alt="Показать пароль" />
+						</button>
+					</div>
+				</Label>
+				<Label label="Подтвердите пароль">
+					<div className={css.passwordField}>
+						<Input
+							type={showConfirmPassword ? 'text' : 'password'}
+							placeholder="Введите пароль повторно"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							disablePaste={true}
+							className={passwordMismatch ? css.inputError : ''}
+						/>
+						<button
+							type="button"
+							onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+							className={css.eyeButton}
+						>
+							<img src={showConfirmPassword ? EyeIcon : EyeOffIcon} alt="Показать пароль" />
 						</button>
 					</div>
 				</Label>

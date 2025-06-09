@@ -26,6 +26,7 @@ export const MaterialList = ({
 	const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [deleteMaterial, { isLoading: isDeleting }] = useDeleteMaterialMutation();
+	const actualSearchQuery = searchQuery ?? localStorage.getItem('filter_query') ?? '';
 
 	useEffect(() => {
 		if (data?.data) {
@@ -67,7 +68,7 @@ export const MaterialList = ({
 
 	const handleModalClose = () => setIsModalOpen(false);
 	const filteredMaterials = materials.filter((material) =>
-		material.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+		material.title.toLowerCase().includes(actualSearchQuery.toLowerCase()) &&
 		(typeFilter === null || material.type_id === typeFilter) &&
 		(competencyFilter.length === 0 ||
 			competencyFilter.every((c) => material.competencies.includes(c)))

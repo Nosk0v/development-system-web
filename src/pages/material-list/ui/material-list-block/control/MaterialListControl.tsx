@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useId } from 'react';
+import { useState, ChangeEvent, useId, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './MaterialListControl.module.scss';
 
@@ -7,8 +7,8 @@ import { Label } from '../../../../../widgets/input-label/label';
 import { Input } from '../../../../../widgets/input/input';
 import { MaterialTypesModal } from '../../../../../widgets/material-types-modal/MaterialTypesModal';
 import { SkillsModal } from '../../../../../widgets/comp-modal/SkillsModal.tsx';
-import {useFetchCompetenciesQuery, useFetchMaterialTypeQuery} from '../../../../../api/materialApi.ts';
-import {CompetencyDropdown} from "./CompetencyDropdown.tsx";
+import { useFetchCompetenciesQuery, useFetchMaterialTypeQuery } from '../../../../../api/materialApi.ts';
+import { CompetencyDropdown } from './CompetencyDropdown.tsx';
 
 interface MaterialListControlProps {
 	onSearch: (query: string) => void;
@@ -21,16 +21,47 @@ export const MaterialListControl = ({ onSearch, onTypeFilterChange, onCompetency
 	const searchId = useId();
 	const [isMaterialTypesModalOpen, setIsMaterialTypesModalOpen] = useState(false);
 	const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
+
 	const { data: typesData } = useFetchMaterialTypeQuery();
 	const { data: competenciesData } = useFetchCompetenciesQuery();
+
+	const [searchQuery, setSearchQuery] = useState('');
+	const [selectedType, setSelectedType] = useState<number | null>(null);
 	const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>([]);
+
+	useEffect(() => {
+		const savedQuery = localStorage.getItem('filter_query') ?? '';
+		const savedType = localStorage.getItem('filter_type');
+		const savedCompetencies = JSON.parse(localStorage.getItem('filter_competencies') ?? '[]');
+
+		setSearchQuery(savedQuery);
+		setSelectedType(savedType ? Number(savedType) : null);
+		setSelectedCompetencies(savedCompetencies);
+
+		onSearch(savedQuery);
+		onTypeFilterChange(savedType ? Number(savedType) : null);
+		onCompetencyFilterChange(savedCompetencies);
+	}, []);
+
 	const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-		onSearch(event.target.value);
+		const value = event.target.value;
+		setSearchQuery(value);
+		localStorage.setItem('filter_query', value);
+		onSearch(value);
 	};
 
 	const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
 		const value = event.target.value;
-		onTypeFilterChange(value === '' ? null : Number(value));
+		const typeValue = value === '' ? null : Number(value);
+		setSelectedType(typeValue);
+		localStorage.setItem('filter_type', value);
+		onTypeFilterChange(typeValue);
+	};
+
+	const onCompetencyFilterChangeLocal = (competencies: string[]) => {
+		setSelectedCompetencies(competencies);
+		localStorage.setItem('filter_competencies', JSON.stringify(competencies));
+		onCompetencyFilterChange(competencies);
 	};
 
 	const onCreateMaterialClick = () => {
@@ -57,11 +88,11 @@ export const MaterialListControl = ({ onSearch, onTypeFilterChange, onCompetency
 	return (
 		<div className={css.wrapper}>
 			<Label label="Поиск" color="black" id={searchId}>
-				<Input className={css.input} id={searchId} onChange={handleSearchChange} />
+				<Input className={css.input} id={searchId} value={searchQuery} onChange={handleSearchChange} />
 			</Label>
 
 			<Label label="Тип материала" color="black" id="materialTypeSelect">
-				<select className={css.select} id="materialTypeSelect" onChange={handleTypeChange}>
+				<select className={css.select} id="materialTypeSelect" value={selectedType ?? ''} onChange={handleTypeChange}>
 					<option value="">Все типы</option>
 					{typesData?.data?.map((type) => (
 						<option key={type.type_id} value={type.type_id}>
@@ -70,14 +101,12 @@ export const MaterialListControl = ({ onSearch, onTypeFilterChange, onCompetency
 					))}
 				</select>
 			</Label>
+
 			{competenciesData?.data && (
 				<CompetencyDropdown
 					competencies={competenciesData.data.map((c) => c.name)}
 					selected={selectedCompetencies}
-					onChange={(updated) => {
-						setSelectedCompetencies(updated);
-						onCompetencyFilterChange(updated);
-					}}
+					onChange={onCompetencyFilterChangeLocal}
 				/>
 			)}
 
@@ -93,6 +122,7 @@ export const MaterialListControl = ({ onSearch, onTypeFilterChange, onCompetency
 			{isMaterialTypesModalOpen && (
 				<MaterialTypesModal isOpen={isMaterialTypesModalOpen} onClose={() => setIsMaterialTypesModalOpen(false)} />
 			)}
+
 			{isSkillModalOpen && (
 				<SkillsModal isOpen={isSkillModalOpen} onClose={() => setIsSkillModalOpen(false)} />
 			)}

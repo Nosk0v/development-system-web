@@ -12,6 +12,7 @@ interface InputProps {
 	onBlur?: () => void;
 	value?: string;
 	type?: React.HTMLInputTypeAttribute;
+	disablePaste?: boolean;
 }
 
 
@@ -26,7 +27,8 @@ export const Input = (props: InputProps) => {
         value,
         onKeyDown,
         onBlur,
-        type = 'text' // <- УСТАНОВИМ значение по умолчанию
+        type = 'text', // <- УСТАНОВИМ значение по умолчанию
+        disablePaste
     } = props;
 
     return (
@@ -42,6 +44,7 @@ export const Input = (props: InputProps) => {
                     onKeyDown={onKeyDown}
                     onBlur={onBlur}
                     type={type} // <- ДОБАВЛЕНО
+                    onPaste={disablePaste ? (e) => e.preventDefault() : undefined}
                 />
             </div>
         </div>
