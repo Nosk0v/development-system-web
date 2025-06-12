@@ -29,15 +29,18 @@ interface CreateOrganizationRequest {
     name: string;
     prefix: string;
 }
-
 interface UserCourseProgress {
     user_email: string;
     user_name: string;
     course_id: number;
     course_title: string;
-    completed: boolean;
-    progress: number[];
+    is_completed: boolean | null;
+    completed_at: string | null;
+    total_materials: number;
+    viewed_materials: number;
+    last_viewed_at: string | null;
 }
+
 
 interface OrganizationCourseProgressResponse {
     data: UserCourseProgress[];

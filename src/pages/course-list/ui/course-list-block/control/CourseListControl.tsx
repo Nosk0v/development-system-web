@@ -11,6 +11,7 @@ import { InviteCodeModal } from '../../../../../widgets/invite-code-modal/Invite
 import { OrganizationModal } from '../../../../../widgets/org-modal/OrganizationModal.tsx';
 import { useFetchCompetenciesQuery } from '../../../../../api/materialApi.ts';
 import { CompetencyDropdown } from "../../../../material-list/ui/material-list-block/control/CompetencyDropdown.tsx";
+import { OrganizationCourseProgressModal } from '../../../../../widgets/org-progress/OrganizationCourseProgressModal.tsx';
 
 interface CourseListControlProps {
 	onSearch: (query: string) => void;
@@ -25,7 +26,7 @@ export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: Course
 	const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 	const [isOrganizationModalOpen, setIsOrganizationModalOpen] = useState(false);
 	const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>([]);
-
+	const [isOrgProgressModalOpen, setIsOrgProgressModalOpen] = useState(false);
 	const { data: competenciesData } = useFetchCompetenciesQuery();
 
 	useEffect(() => {
@@ -103,6 +104,7 @@ export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: Course
 						{isSuperAdmin && (
 							<MainButton text="Организации" className={css.inviteButton} onClick={() => setIsOrganizationModalOpen(true)} />
 						)}
+							<MainButton text="Прогресс организации" className={css.inviteButton} onClick={() => setIsOrgProgressModalOpen(true)} />
 						<MainButton text="Материалы" className={css.compButton} onClick={onMaterialsClick} />
 						<MainButton text="Коды приглашений" className={css.inviteButton} onClick={() => setIsInviteModalOpen(true)} />
 					</>
@@ -114,7 +116,12 @@ export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: Course
 			{isCompletedModalOpen && (
 				<CompletedCoursesModal isOpen={isCompletedModalOpen} onClose={() => setIsCompletedModalOpen(false)} />
 			)}
-
+			{isOrgProgressModalOpen && (
+				<OrganizationCourseProgressModal
+					isOpen={isOrgProgressModalOpen}
+					onClose={() => setIsOrgProgressModalOpen(false)}
+				/>
+			)}
 			{isInviteModalOpen && (
 				<InviteCodeModal isOpen={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)} />
 			)}
