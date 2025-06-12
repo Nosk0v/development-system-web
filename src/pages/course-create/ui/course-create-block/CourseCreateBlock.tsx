@@ -3,7 +3,9 @@ import { toast } from 'react-toastify';
 import {
 	useCreateCourseMutation,
 	useFetchCompetenciesQuery,
-	useFetchMaterialsQuery
+	useFetchMaterialsQuery,
+	useFetchDepartmentsQuery,
+	useFetchOrganizationsQuery,
 } from "../../../../api/materialApi.ts";
 import { CourseForm } from "../../../course-form/CourseForm.tsx";
 import { getUserClaimsFromAccessToken } from "../../../../api/jwt.ts";
@@ -11,11 +13,17 @@ import { getUserClaimsFromAccessToken } from "../../../../api/jwt.ts";
 export const CourseCreateBlock = () => {
 	const { data: competenciesData, isLoading: competenciesLoading, error: competenciesError } = useFetchCompetenciesQuery();
 	const { data: materialsData, isLoading: materialsLoading, error: materialsError } = useFetchMaterialsQuery();
+	const { data: departmentsData, isLoading: departmentsLoading, error: departmentsError } = useFetchDepartmentsQuery();
+	const { data: organizationsData } = useFetchOrganizationsQuery();
 	const [createCourse] = useCreateCourseMutation();
 
 	const claims = getUserClaimsFromAccessToken();
+	const isSuperAdmin = claims?.role === 2;
 	const createdBy = claims?.email ?? '';
+	const organizationIdFromToken = claims?.organization_id ?? null;
 
+	const [selectedOrganizationId, setSelectedOrganizationId] = useState<number | null>(null);
+	const [selectedDepartmentId, setSelectedDepartmentId] = useState<number | null>(null);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [competencies, setCompetencies] = useState<number[]>([]);
@@ -56,12 +64,20 @@ export const CourseCreateBlock = () => {
 			toast.error('Введите описание курса');
 			hasError = true;
 		}
+		if (!selectedDepartmentId) {
+			toast.error('Выберите направление курса');
+			hasError = true;
+		}
 		if (competencies.length === 0) {
 			toast.error('Выберите хотя бы одну компетенцию');
 			hasError = true;
 		}
 		if (materials.length === 0) {
 			toast.error('Выберите хотя бы один материал');
+			hasError = true;
+		}
+		if (isSuperAdmin && !selectedOrganizationId) {
+			toast.error('Выберите организацию');
 			hasError = true;
 		}
 
@@ -73,6 +89,8 @@ export const CourseCreateBlock = () => {
 			created_by: createdBy,
 			materials,
 			competencies,
+			department_id: selectedDepartmentId!,
+			organization_id: isSuperAdmin ? selectedOrganizationId! : organizationIdFromToken!,
 		};
 
 		try {
@@ -84,8 +102,8 @@ export const CourseCreateBlock = () => {
 		}
 	};
 
-	if (competenciesLoading || materialsLoading) return <div>Загрузка...</div>;
-	if (competenciesError || materialsError) return <div>Ошибка загрузки данных</div>;
+	if (competenciesLoading || materialsLoading || departmentsLoading) return <div>Загрузка...</div>;
+	if (competenciesError || materialsError || departmentsError) return <div>Ошибка загрузки данных</div>;
 
 	return (
 		<CourseForm
@@ -105,6 +123,13 @@ export const CourseCreateBlock = () => {
 			handleDescriptionChange={setDescription}
 			onSave={handleSave}
 			mode="create"
+			selectedDepartmentId={selectedDepartmentId}
+			setSelectedDepartmentId={setSelectedDepartmentId}
+			departmentsData={departmentsData?.data ?? []}
+			isSuperAdmin={isSuperAdmin}
+			selectedOrganizationId={selectedOrganizationId}
+			setSelectedOrganizationId={setSelectedOrganizationId}
+			organizationsData={organizationsData?.data ?? []}
 		/>
 	);
 };

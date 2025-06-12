@@ -212,6 +212,8 @@
 .description {
   font-size: 13px;
   color: #666;
+  margin-bottom: 4px; // 👈 добавляем отступ снизу
+  margin-top: 4px;
 }
 
 .completeButton {

@@ -62,10 +62,21 @@ export const MaterialView = () => {
 		const isRuTube = material.content.includes('rutube.ru');
 		const isURL = isValidHttpUrl(material.content);
 
-		if (isURL && !isYouTube && !isRuTube) {
+		// моментальная загрузка видео
+		if (isYouTube || isRuTube) {
+			setIsContentLoaded(true); // видео iframe грузится сам по себе
+			return;
+		}
+
+		// задержка только для обычных ссылок
+		if (isURL) {
 			const timeout = setTimeout(() => setIsContentLoaded(true), 1500);
 			return () => clearTimeout(timeout);
 		}
+
+
+		// текст — грузить сразу
+		setIsContentLoaded(true);
 	}, [material]);
 	if (isLoading) return <div className={css.loading}>Загрузка...</div>;
 	if (error) return <div className={css.error}>Ошибка: {(error as Error).message || 'Не удалось загрузить материал'}</div>;
@@ -78,7 +89,9 @@ export const MaterialView = () => {
 	const isYouTube = material.content.includes('youtube.com') || material.content.includes('youtu.be');
 	const isRuTube = material.content.includes('rutube.ru');
 	const isURL = isValidHttpUrl(material.content);
-
+	if (isYouTube && !extractYouTubeId(material.content)) {
+		return <div className={css.error}>Ошибка: некорректная ссылка на YouTube</div>;
+	}
 	return (
 		<div className={css.wrapper}>
 			<div className={css.buttonContainer}>
@@ -155,7 +168,7 @@ export const MaterialView = () => {
 						)}
 
 						{!isYouTube && !isRuTube && !isURL && (
-							<div className={css.description}>
+							<div className={css.content}>
 								<p>{material.content}</p>
 							</div>
 						)}

@@ -60,7 +60,18 @@ export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: Course
 	};
 
 	const onLogoutClick = () => {
+		// Удаление токенов
 		localStorage.removeItem('access_token');
+
+
+		// Удаление фильтров и связанных данных
+		localStorage.removeItem('filter_query');
+		localStorage.removeItem('filter_type');
+		localStorage.removeItem('filter_competencies');
+		localStorage.removeItem('course_filter_competencies');
+
+
+		// Редирект
 		window.location.replace('/');
 	};
 

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getUserClaimsFromAccessToken } from '../../api/jwt';
 import styles from './InviteCodeModal.module.scss';
-import { useFetchOrganizationsQuery, useCreateRegistrationCodeMutation } from '../../api/materialApi';
+import { useFetchOrganizationsQuery, useCreateRegistrationCodeMutation, useFetchDepartmentsQuery } from '../../api/materialApi';
 import { toast } from 'react-toastify';
+import type { CreateRegistrationCodePayload } from '../../api/materialApi';
 
 interface InviteCodeModalProps {
     isOpen: boolean;
@@ -17,6 +18,8 @@ export const InviteCodeModal = ({ isOpen, onClose }: InviteCodeModalProps) => {
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [generatedCode, setGeneratedCode] = useState<string | null>(null);
+    const { data: departmentsData } = useFetchDepartmentsQuery();
+    const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
     useEffect(() => {
         const claims = getUserClaimsFromAccessToken();
         const role = claims?.role;
@@ -29,7 +32,11 @@ export const InviteCodeModal = ({ isOpen, onClose }: InviteCodeModalProps) => {
         }
     }, []);
 
-
+    useEffect(() => {
+        if (isAdmin) {
+            setSelectedDepartment(null);
+        }
+    }, [isAdmin]);
     const handleCopy = () => {
         if (!generatedCode) return;
         navigator.clipboard.writeText(generatedCode);
@@ -47,14 +54,23 @@ export const InviteCodeModal = ({ isOpen, onClose }: InviteCodeModalProps) => {
         };
     }, [isOpen]);
 
-
     const handleGenerateCode = () => {
         if (!selectedOrg) {
             toast.error('Выберите организацию');
             return;
         }
+        if (!isAdmin && !selectedDepartment) {
+            toast.error('Выберите направление');
+            return;
+        }
 
-        createCode({ organization_id: selectedOrg, is_admin: isAdmin })
+        const payload: CreateRegistrationCodePayload = {
+            organization_id: selectedOrg,
+            is_admin: isAdmin,
+            ...(isAdmin ? {} : { department_id: selectedDepartment! })
+        };
+
+        createCode(payload)
             .unwrap()
             .then((res) => {
                 toast.success('Код успешно создан');
@@ -108,7 +124,21 @@ export const InviteCodeModal = ({ isOpen, onClose }: InviteCodeModalProps) => {
                     </label>
                     <span className={styles.checkboxLabel}>Сделать для администратора</span>
                 </div>
-
+                <div className={styles.fieldGroup}>
+                    <select
+                        className={styles.select}
+                        value={selectedDepartment ?? ''}
+                        onChange={(e) => setSelectedDepartment(Number(e.target.value))}
+                        disabled={isAdmin} // 👈 блокировка при флажке
+                    >
+                        <option value="" disabled>Выберите направление</option>
+                        {departmentsData?.data.map((dep) => (
+                            <option key={dep.department_id} value={dep.department_id}>
+                                {dep.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 {generatedCode && (
                     <>
                         <div onClick={handleCopy} className={styles.codeBlock}>

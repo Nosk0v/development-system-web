@@ -115,10 +115,10 @@ label {
   border-radius: 8px;
   background-color: #fafafa;
   justify-content: center;
-  overflow-y: auto;
-  height: 100px; // Как .description
+  overflow-y: auto; /* Прокрутка */
+  height: 240px;
   user-select: text;
-  scrollbar-width: none;
+  scrollbar-width: thin;
 }
 
 .linkPreview {

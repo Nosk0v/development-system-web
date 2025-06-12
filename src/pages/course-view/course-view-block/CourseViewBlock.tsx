@@ -7,7 +7,8 @@ import {
   useMarkMaterialAsCompletedMutation,
   useFetchMaterialsQuery,
   useIsCourseCompletedQuery,
-  useCompleteCourseMutation
+  useCompleteCourseMutation,
+  useFetchDepartmentsQuery
 } from '../../../api/materialApi.ts';
 
 interface CourseViewBlockProps {
@@ -23,6 +24,10 @@ export const CourseViewBlock = ({ forceRefetch }: CourseViewBlockProps) => {
   const [completeCourse] = useCompleteCourseMutation();
 
   const { data: course, isLoading: courseLoading, refetch: refetchCourse } = useFetchCourseByIdQuery(courseId);
+  const { data: departmentsData } = useFetchDepartmentsQuery();
+  const departmentId = course?.department_id;
+  const departmentName =
+      departmentsData?.data.find(dep => dep.department_id === departmentId)?.name ?? '—';
   const { data: progress, refetch: refetchProgress } = useFetchCourseProgressQuery(courseId);
   const { data: completedStatus, refetch: refetchCompletedStatus } = useIsCourseCompletedQuery(courseId);
   const { data: allMaterials } = useFetchMaterialsQuery();
@@ -85,6 +90,9 @@ export const CourseViewBlock = ({ forceRefetch }: CourseViewBlockProps) => {
         <div className={css.courseInfo}>
           <h1 className={css.title}>{course.title}</h1>
           <p className={css.description}>{course.description}</p>
+          <p className={css.description}>
+            <strong>Направление:</strong> {departmentName}
+          </p>
         </div>
 
         <div className={css.meta}>

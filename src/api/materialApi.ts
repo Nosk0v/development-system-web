@@ -87,6 +87,7 @@ interface Course {
     competencies: string[];
     create_date: string;
     material_ids: number[];
+    department_id: number;
 }
 
 interface CreateCourseRequest {
@@ -95,7 +96,8 @@ interface CreateCourseRequest {
     created_by: string;
     materials: number[];
     competencies: number[];
-    department_id: number; // ← добавлено
+    department_id: number;
+    organization_id: number; // 👈 обязательно
     material_ids?: number[];
 }
 
@@ -105,7 +107,8 @@ interface UpdateCourseRequest {
     created_by: string;
     materials: number[];
     competencies: number[];
-    department_id: number; // ← добавлено
+    department_id: number;
+    organization_id?: number;
     material_ids?: number[];
 }
 
@@ -232,6 +235,11 @@ interface CreateCompetencyResponse {
     message: string;
 }
 
+export interface CreateRegistrationCodePayload {
+    organization_id: number;
+    is_admin: boolean;
+    department_id?: number;
+}
 
 export const materialsApi = createApi({
     reducerPath: 'materialsApi',
@@ -453,7 +461,7 @@ export const materialsApi = createApi({
             transformResponse: (response: Organization[]) => ({ data: response }),
         }),
 
-        createRegistrationCode: builder.mutation<RegistrationCodeResponse, { organization_id: number; is_admin: boolean }>({
+        createRegistrationCode: builder.mutation<RegistrationCodeResponse, CreateRegistrationCodePayload>({
             query: (data) => ({
                 url: '/registration/code',
                 method: 'POST',
