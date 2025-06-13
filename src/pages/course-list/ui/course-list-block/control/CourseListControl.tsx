@@ -12,6 +12,7 @@ import { OrganizationModal } from '../../../../../widgets/org-modal/Organization
 import { useFetchCompetenciesQuery } from '../../../../../api/materialApi.ts';
 import { CompetencyDropdown } from "../../../../material-list/ui/material-list-block/control/CompetencyDropdown.tsx";
 import { OrganizationCourseProgressModal } from '../../../../../widgets/org-progress/OrganizationCourseProgressModal.tsx';
+import {ManageUsersModal} from "../../../../../widgets/man-user/ManageUsersModal.tsx";
 
 interface CourseListControlProps {
 	onSearch: (query: string) => void;
@@ -28,6 +29,7 @@ export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: Course
 	const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>([]);
 	const [isOrgProgressModalOpen, setIsOrgProgressModalOpen] = useState(false);
 	const { data: competenciesData } = useFetchCompetenciesQuery();
+	const [isManageUsersModalOpen, setIsManageUsersModalOpen] = useState(false);
 
 	useEffect(() => {
 		const savedQuery = localStorage.getItem('course_filter_query') ?? '';
@@ -78,6 +80,8 @@ export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: Course
 
 	const claims = getUserClaimsFromAccessToken();
 	const isAdmin = claims?.role === 0 || claims?.role === 2;
+	const isOrgAdmin = claims?.role === 0
+
 	const isSuperAdmin = claims?.role === 2;
 
 	return (
@@ -104,7 +108,14 @@ export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: Course
 						{isSuperAdmin && (
 							<MainButton text="Организации" className={css.inviteButton} onClick={() => setIsOrganizationModalOpen(true)} />
 						)}
-							<MainButton text="Прогресс организации" className={css.inviteButton} onClick={() => setIsOrgProgressModalOpen(true)} />
+						{isOrgAdmin && (
+						<MainButton text="Прогресс пользователей" className={css.inviteButton} onClick={() => setIsOrgProgressModalOpen(true)} />
+						)}
+							<MainButton
+							text="Управление пользователями"
+							className={css.inviteButton}
+							onClick={() => setIsManageUsersModalOpen(true)}
+						/>
 						<MainButton text="Материалы" className={css.compButton} onClick={onMaterialsClick} />
 						<MainButton text="Коды приглашений" className={css.inviteButton} onClick={() => setIsInviteModalOpen(true)} />
 					</>
@@ -124,6 +135,9 @@ export const CourseListControl = ({ onSearch, onCompetencyFilterChange }: Course
 			)}
 			{isInviteModalOpen && (
 				<InviteCodeModal isOpen={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)} />
+			)}
+			{isManageUsersModalOpen && (
+				<ManageUsersModal isOpen={isManageUsersModalOpen} onClose={() => setIsManageUsersModalOpen(false)} />
 			)}
 
 			{isOrganizationModalOpen && (

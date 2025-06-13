@@ -13,7 +13,7 @@ export interface ISignUpRequest {
 interface UserResponse {
     email: string;
     name: string | null;
-    department_id: number;
+    department_id: number | null;
     role: number;
 }
 
@@ -287,10 +287,10 @@ export const materialsApi = createApi({
             transformResponse: (response: UserResponse[]): OrganizationUsersResponse => ({ data: response }),
         }),
 
-// Удаление пользователя (только для SuperAdmin)
+
         deleteUser: builder.mutation<DeleteUserResponse, string>({
             query: (email) => ({
-                url: `/auth/users/${email}`,
+                url: `/users/${email}`,
                 method: 'DELETE',
             }),
             transformResponse: (response: { message: string }): DeleteUserResponse => response,
