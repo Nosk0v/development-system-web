@@ -81,7 +81,17 @@ export const MaterialUpdateForm = ({
                     />
                 </Label>
 
-                <Label label="Описание материала">
+                <Label  label={
+                    <div className={css.labelWithTooltip}>
+                        <span>Контент материала</span>
+                        <span
+                            className={css.tooltipIcon}
+                            data-tooltip="Если вы добавляете ссылку на видео или статью, указывайте только саму ссылку в формате https://example.com. Предпросмотр подгружается автоматически."
+                        >
+                                ?
+                            </span>
+                    </div>
+                }>
                     <TextArea
                         value={description}
                         onChange={(e) => handleDescriptionChange(e.target.value)}

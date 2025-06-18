@@ -103,8 +103,8 @@ export const MaterialForm = ({
                                 className={css.tooltipIcon}
                                 data-tooltip="Если вы добавляете ссылку на видео или статью, указывайте только саму ссылку в формате https://example.com. Предпросмотр подгружается автоматически."
                             >
-        ?
-      </span>
+                                ?
+                            </span>
                         </div>
                     }
                 >
