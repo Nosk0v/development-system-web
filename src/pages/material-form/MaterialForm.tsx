@@ -89,8 +89,10 @@ export const MaterialForm = ({
                 <Label label="Описание материала">
                     <TextArea
                         value={description}
-                        height={100}
                         onChange={(e) => handleDescriptionChange(e.target.value)}
+                        minRows={3}
+                        maxRows={8}
+                        placeholder="Введите краткое описание..."
                     />
                 </Label>
                 <Label
@@ -108,8 +110,10 @@ export const MaterialForm = ({
                 >
                     <TextArea
                         value={content}
-                        height={200}
                         onChange={(e) => handleContentChange(e.target.value)}
+                        minRows={6}
+                        maxRows={16}
+                        placeholder="Введите текст, видео-ссылку или статью..."
                     />
                 </Label>
                 <Label label="Компетенции">

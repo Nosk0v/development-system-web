@@ -169,7 +169,7 @@ export const MaterialView = () => {
 
 						{!isYouTube && !isRuTube && !isURL && (
 							<div className={css.content}>
-								<p>{material.content}</p>
+								{material.content.replace(/\\n/g, '\n').replace(/\\t/g, '\t')}
 							</div>
 						)}
 					</div>

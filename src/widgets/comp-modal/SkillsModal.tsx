@@ -26,6 +26,7 @@ export const SkillsModal = ({ isOpen, onClose }: SkillsModalProps) => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [editCompetency, setEditCompetency] = useState<{ competency_id: number; name: string; description: string } | null>(null);
 
+
     useEffect(() => {
         if (isOpen) {
             refetch();

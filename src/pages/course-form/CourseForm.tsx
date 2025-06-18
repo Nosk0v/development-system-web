@@ -94,11 +94,15 @@ export const CourseForm = ({
                 </Label>
 
                 <Label label="Описание курса">
-                    <TextArea
-                        value={description}
-                        height={140}
-                        onChange={(e) => handleDescriptionChange(e.target.value)}
-                    />
+                    <Label label="Описание курса">
+                        <TextArea
+                            value={description}
+                            onChange={(e) => handleDescriptionChange(e.target.value)}
+                            placeholder="Кратко опишите цель и содержание курса..."
+                            minRows={5}
+                            maxRows={12}
+                        />
+                    </Label>
                 </Label>
 
                 {/* 👇 Добавлен выбор направления */}

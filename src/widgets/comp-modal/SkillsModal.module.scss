@@ -151,7 +151,8 @@ h2 {
   flex: 2;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 25px;
 }
 
 .actions {
@@ -188,5 +189,23 @@ h2 {
   }
   100% {
     opacity: 1;
+  }
+}
+
+// Новый класс для раскрывающегося описания
+.competencyDescription {
+  font-size: 1rem;
+  color: #666;
+  margin-left: 20px;
+  max-height: 1.2em; // 1 строка
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+
+  &.expanded {
+    white-space: normal;
+    max-height: 300px; // ограничим разумной высотой
+    overflow-y: auto;
   }
 }

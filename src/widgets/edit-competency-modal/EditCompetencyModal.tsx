@@ -97,7 +97,8 @@ export const EditCompetencyModal = ({
                     placeholder="Введите описание компетенции"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    height={100}
+                    minRows={5}
+                    maxRows={12}
                 />
                 <div className={styles.actions}>
                     <button onClick={onClose} className={styles.cancelButton}>Отмена</button>

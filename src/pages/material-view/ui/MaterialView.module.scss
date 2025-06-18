@@ -116,7 +116,7 @@ label {
   background-color: #fafafa;
   justify-content: center;
   overflow-y: auto; /* Прокрутка */
-  height: 240px;
+  height: 500px;
   user-select: text;
   scrollbar-width: thin;
 }
@@ -266,4 +266,23 @@ label {
   font-size: 14px;
   color: #444;
   text-align: center;
+}
+
+.textBlock {
+  white-space: pre-line; /* обрабатывает \n как перенос строки */
+  font-size: 16px;
+  font-weight: normal;
+  color: #555;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+  overflow-y: auto;
+  height: 240px;
+  user-select: text;
+  scrollbar-width: thin;
+}
+
+.content {
+  white-space: pre-line;
 }

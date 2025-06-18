@@ -2,31 +2,34 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  padding: 0 20px; // немного воздуха по краям
+  padding: 0 20px;
+  width: calc(100vw - 320px);
   box-sizing: border-box;
 }
 
+// FLEX-адаптив для карточек
 .list {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 20px;
   width: 100%;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
 .list > * {
-  flex: 0 1 calc(25% - 20px);
+  flex: 1 1 calc(25% - 40px); // 4 карточки в ряд с учётом отступов
   max-width: 365px;
   min-width: 300px;
 }
 
+/* Остальное остаётся как есть */
 .noMaterials {
-  position: absolute;         // Абсолютное позиционирование
-  top: 50%;                    // Центрируем по вертикали
-  left: 45%;                   // Центрируем по горизонтали
-  transform: translate(-50%, -50%);  // Корректируем для точного центрирования
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,12 +45,12 @@
   margin-bottom: 10px;
 }
 
-/* Модальное окно */
+/* Модальное окно и прочее — без изменений */
 .modal {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Центрирование */
+  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
@@ -57,7 +60,6 @@
   pointer-events: auto;
 }
 
-/* Контент модального окна */
 .modalContent {
   background: white;
   padding: 30px;
@@ -69,30 +71,28 @@
   animation: slideIn 0.3s ease-out;
 }
 
-/* Действия в модальном окне */
 .modalActions {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  gap: 15px; /* Пространство между кнопками */
+  gap: 15px;
   flex-wrap: wrap;
 }
 
 .modalActions button {
-  padding: 15px 30px; /* Увеличенные отступы для более вытянутых кнопок */
+  padding: 15px 30px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  flex: 1 1 45%; /* Делаем кнопки гибкими, чтобы они занимали больше ширины */
-  min-width: 150px; /* Устанавливаем минимальную ширину для кнопок */
+  flex: 1 1 45%;
+  min-width: 150px;
   text-align: center;
 }
 
-/* Кнопка "Да" */
 .modalActions button:first-of-type {
-  background-color: #F91F71; /* Красный цвет кнопки */
+  background-color: #F91F71;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -104,8 +104,6 @@
   background-color: #db3070;
 }
 
-
-/* Кнопка "Нет" */
 .modalActions button:last-of-type {
   background: #e5e5e5;
   color: #333;
@@ -115,35 +113,15 @@
   background: #ccc;
 }
 
-/* Анимации */
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 @keyframes slideIn {
-  0% {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  0% { transform: translateY(-10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
-
-
-
-  .list > * {
-    flex: 1 1 calc(25% - 40px); // по 4 карточки в ряд с отступами
-    max-width: 365px;
-    min-width: 300px;
-  }
-
 
 @media (max-width: 1280px) {
   .list > * {
@@ -151,17 +129,14 @@
   }
 }
 
-
 @media (max-width: 1024px) {
   .list > * {
-    flex: 1 1 calc(50% - 40px); // 2 в ряд на планшетах
-
+    flex: 1 1 calc(50% - 40px); // 2 карточки
   }
 }
 
 @media (max-width: 640px) {
   .list > * {
-    flex: 1 1 100%; // 1 в ряд на мобилках
-
+    flex: 1 1 100%; // 1 карточка
   }
 }

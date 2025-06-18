@@ -85,8 +85,9 @@ export const CreateCompetencyModal = ({ isOpen, onClose, onCompetencyCreated }: 
                 />
 
                 <TextArea
-                    placeholder="Введите описание компетенции"
-                    height={100}
+                    placeholder="Введите описание компетенции.."
+                    minRows={4}
+                    maxRows={12}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
