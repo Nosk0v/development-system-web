@@ -17,23 +17,24 @@ export const CreateMaterialTypeModal = ({ isOpen, onClose, onTypeCreated }: Crea
 
     const handleCreateType = async () => {
         const typeExists = materialTypesData?.data.some(
-            (type: { type: string }) => type.type.toLowerCase() === newTypeName.toLowerCase()
+            (type: { type: string }) =>
+                type.type.trim().toLowerCase() === newTypeName.trim().toLowerCase()
         );
 
         if (typeExists) {
             toast.error("Тип материала с таким названием уже существует.");
             return;
         }
-        if (newTypeName.length > 30) {
+        if (newTypeName.trim().length > 30) {
             toast.error("Название типа материала должно не превышать 30 символов.");
             return;
         }
-        if (newTypeName.length < 2) {
+        if (newTypeName.trim().length < 2) {
             toast.error("Название типа материала должно содержать минимум 2 символа.");
             return;
         }
         try {
-            await createMaterialType({type: newTypeName}).unwrap();
+            await createMaterialType({type: newTypeName.trim()}).unwrap();
             toast.success("Тип материала успешно создан.");
             setNewTypeName('');
             onTypeCreated();

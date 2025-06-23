@@ -6,18 +6,29 @@ import {
 	useFetchMaterialsQuery,
 	useFetchDepartmentsQuery,
 	useFetchOrganizationsQuery,
+	useFetchCoursesQuery,
 } from "../../../../api/materialApi.ts";
 import { CourseForm } from "../../../course-form/CourseForm.tsx";
 import { getUserClaimsFromAccessToken } from "../../../../api/jwt.ts";
+import type { DecodedJWT } from "../../../../api/jwt.ts";
 
 export const CourseCreateBlock = () => {
 	const { data: competenciesData, isLoading: competenciesLoading, error: competenciesError } = useFetchCompetenciesQuery();
 	const { data: materialsData, isLoading: materialsLoading, error: materialsError } = useFetchMaterialsQuery();
 	const { data: departmentsData, isLoading: departmentsLoading, error: departmentsError } = useFetchDepartmentsQuery();
 	const { data: organizationsData } = useFetchOrganizationsQuery();
+	const { data: allCoursesData, refetch: refetchCourses } = useFetchCoursesQuery();
 	const [createCourse] = useCreateCourseMutation();
 
-	const claims = getUserClaimsFromAccessToken();
+	const [claims, setClaims] = useState<DecodedJWT | null>(null);
+
+	useEffect(() => {
+		const parsedClaims = getUserClaimsFromAccessToken();
+		if (parsedClaims) {
+			setClaims(parsedClaims);
+		}
+	}, []);
+
 	const isSuperAdmin = claims?.role === 2;
 	const createdBy = claims?.email ?? '';
 	const organizationIdFromToken = claims?.organization_id ?? null;
@@ -54,6 +65,11 @@ export const CourseCreateBlock = () => {
 	}, [materialsData]);
 
 	const handleSave = async () => {
+		if (!claims) {
+			toast.error('Не удалось определить пользователя');
+			return;
+		}
+
 		let hasError = false;
 
 		if (!title) {
@@ -83,6 +99,18 @@ export const CourseCreateBlock = () => {
 
 		if (hasError || !createdBy) return;
 
+		await refetchCourses();
+
+		const isDuplicateTitle = allCoursesData?.data?.some(
+			(course) =>
+				course.title.trim().toLowerCase() === title.trim().toLowerCase()
+		);
+
+		if (isDuplicateTitle) {
+			toast.error('Курс с таким названием уже существует в этой организации');
+			return;
+		}
+
 		const newCourse = {
 			title,
 			description,
@@ -95,6 +123,7 @@ export const CourseCreateBlock = () => {
 
 		try {
 			await createCourse(newCourse).unwrap();
+			await refetchCourses();
 			toast.success('Курс успешно создан!');
 		} catch (error) {
 			console.error('Ошибка при создании курса:', error);

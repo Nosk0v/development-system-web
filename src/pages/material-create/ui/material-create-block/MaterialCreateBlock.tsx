@@ -1,12 +1,13 @@
 import { useState, useEffect} from 'react';
 import { MaterialForm } from '../../../material-form/MaterialForm.tsx';
-import { useCreateMaterialMutation, useFetchCompetenciesQuery } from '../../../../api/materialApi.ts';
+import { useCreateMaterialMutation, useFetchCompetenciesQuery, useFetchMaterialsQuery } from '../../../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 
 export const MaterialCreateBlock = () => {
 	// Запрос компетенций с использованием хука
 	const { data: competenciesData, error, isLoading } = useFetchCompetenciesQuery();
 	const [createMaterial] = useCreateMaterialMutation();
+	const { data: allMaterialsData } = useFetchMaterialsQuery();
 
 	// Состояния для формы
 	const [competencies, setCompetencies] = useState<number[]>([]);
@@ -65,6 +66,14 @@ export const MaterialCreateBlock = () => {
 		if (competencies.length === 0) {
 			toast.error('Пожалуйста, выберите хотя бы одну компетенцию!');
 			hasError = true;
+		}
+
+		const isDuplicate = allMaterialsData?.data?.some(
+			(material) => material.title?.trim().toLowerCase() === title.trim().toLowerCase()
+		);
+		if (isDuplicate) {
+			toast.error('Материал с таким названием уже существует.');
+			return;
 		}
 
 		if (hasError) return;

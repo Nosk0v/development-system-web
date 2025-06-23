@@ -114,6 +114,16 @@ export const MaterialUpdateBlock = () => {
 			return;
 		}
 
+		const duplicate = data?.data.some((item) =>
+			item.material_id !== Number(id) &&
+			item.title?.trim().toLowerCase() === title.trim().toLowerCase()
+		);
+
+		if (duplicate) {
+			toast.error('Материал с таким названием уже существует.');
+			return;
+		}
+
 		try {
 			const updatedMaterialData = {
 				title,

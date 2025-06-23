@@ -3,6 +3,20 @@ import { useCreateOrganizationMutation, useDeleteOrganizationMutation, useFetchO
 import { toast } from 'react-toastify';
 import styles from './OrganizationModal.module.scss';
 
+const cyrillicToLatinMap: Record<string, string> = {
+    а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh',
+    з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o',
+    п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'h', ц: 'ts',
+    ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+};
+
+const transliterate = (text: string): string => {
+    return text.split('').map(char => {
+        const lower = char.toLowerCase();
+        return cyrillicToLatinMap[lower] ?? char;
+    }).join('');
+};
+
 interface OrganizationModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -14,30 +28,39 @@ export const OrganizationModal = ({ isOpen, onClose }: OrganizationModalProps) =
     const { data, refetch } = useFetchOrganizationsQuery();
 
     const [orgName, setOrgName] = useState('');
-    const [prefix, setPrefix] = useState('');
     const [selectedOrg, setSelectedOrg] = useState<number | null>(null);
     const [orgIdToDelete, setOrgIdToDelete] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
+    const generatedPrefix = transliterate(orgName).replace(/[^a-zA-Z]/g, '').toLowerCase().slice(0, 40);
+
     const handleCreate = () => {
-        if (!orgName || !prefix) {
+        if (!orgName || !generatedPrefix) {
             toast.error("Введите название организации и префикс");
             return;
         }
 
-        const prefixRegex = /^[a-zA-Z]{1,10}$/;
-        if (!prefixRegex.test(prefix)) {
-            toast.error("Префикс должен содержать только латинские буквы и быть не длиннее 10 символов");
+        const prefixRegex = /^[a-zA-Z]{1,40}$/;
+        if (!prefixRegex.test(generatedPrefix)) {
+            toast.error("Префикс должен содержать только латинские буквы и быть не длиннее 40 символов");
             return;
         }
 
-        createOrganization({ name: orgName, prefix })
+        const duplicate = data?.data.some(
+            (org) => org.name.trim().toLowerCase() === orgName.trim().toLowerCase()
+        );
+        if (duplicate) {
+            toast.error("Организация с таким названием уже существует");
+            return;
+        }
+
+
+        createOrganization({ name: orgName, prefix: generatedPrefix })
             .unwrap()
             .then(() => {
                 toast.success("Организация создана");
                 setOrgName('');
-                setPrefix('');
                 refetch();
             })
             .catch(() => toast.error("Ошибка при создании организации"));
@@ -88,18 +111,8 @@ export const OrganizationModal = ({ isOpen, onClose }: OrganizationModalProps) =
                         value={orgName}
                         onChange={(e) => setOrgName(e.target.value)}
                     />
-                    <input
-                        className={styles.input}
-                        type="text"
-                        placeholder="Префикс (например MTI)"
-                        value={prefix}
-                        onChange={(e) => {
-                            const raw = e.target.value;
-                            const filtered = raw.replace(/[^a-zA-Z]/g, '').slice(0, 10);
-                            setPrefix(filtered);
-                        }}
-                    />
                 </div>
+                <p className={styles.prefixPreview}>Ваш префикс: <strong>{generatedPrefix}</strong></p>
 
                 <p className={styles.deleteLabel}>Удалить организацию</p>
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Input } from '../input/input.tsx';
 import { TextArea } from '../textarea/textarea.tsx';
-import { useCreateCompetencyMutation } from '../../api/materialApi.ts';
+import { useCreateCompetencyMutation, useFetchCompetenciesQuery } from '../../api/materialApi.ts';
 import { toast } from 'react-toastify';
 import styles from './CreateCompetencyModal.module.scss';
 
@@ -14,6 +14,7 @@ interface CreateCompetencyModalProps {
 export const CreateCompetencyModal = ({ isOpen, onClose, onCompetencyCreated }: CreateCompetencyModalProps) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const { data: allCompetenciesData } = useFetchCompetenciesQuery();
     const [createCompetency] = useCreateCompetencyMutation();
 
     const handleCreateCompetency = () => {
@@ -31,6 +32,15 @@ export const CreateCompetencyModal = ({ isOpen, onClose, onCompetencyCreated }: 
         }
         if (description.length > 400) {
             toast.error("Описание компетенции не должно превышать 400 символов.");
+            return;
+        }
+
+        const isDuplicate = allCompetenciesData?.data?.some(
+            (comp) => comp.name.trim().toLowerCase() === name.trim().toLowerCase()
+        );
+
+        if (isDuplicate) {
+            toast.error("Компетенция с таким названием уже существует.");
             return;
         }
 

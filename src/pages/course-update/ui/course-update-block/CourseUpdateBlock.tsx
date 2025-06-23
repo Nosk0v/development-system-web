@@ -5,7 +5,8 @@ import {
     useFetchCompetenciesQuery,
     useFetchMaterialsQuery,
     useUpdateCourseMutation,
-    useFetchDepartmentsQuery
+    useFetchDepartmentsQuery,
+    useFetchCoursesQuery
 } from '../../../../api/materialApi.ts';
 import { CourseForm } from '../../../course-form/CourseForm.tsx';
 import { toast } from 'react-toastify';
@@ -22,6 +23,7 @@ export const CourseUpdateBlock = () => {
     const { data: competenciesData } = useFetchCompetenciesQuery();
     const { data: materialsData } = useFetchMaterialsQuery();
     const { data: departmentsData } = useFetchDepartmentsQuery();
+    const { data: allCoursesData } = useFetchCoursesQuery();
     const [updateCourse] = useUpdateCourseMutation();
 
     const [title, setTitle] = useState('');
@@ -133,6 +135,17 @@ export const CourseUpdateBlock = () => {
             toast.error('Пожалуйста, выберите направление!');
             return;
         }
+
+        const duplicate = allCoursesData?.data.some((item) =>
+            item.course_id !== courseId &&
+            item.title?.trim().toLowerCase() === title.trim().toLowerCase()
+        );
+
+        if (duplicate) {
+            toast.error('Курс с таким названием уже существует.');
+            return;
+        }
+
         console.log("Обновление курса:");
         console.log("courseId:", courseId);
         console.log("title:", title);
